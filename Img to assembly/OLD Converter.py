@@ -1,11 +1,18 @@
 from PIL import Image
-im = Image.open('Hisoka.bmp')
-
+im = Image.open('Hisoka.bmp') # I have not tried other formats but they should work too.
 pixels = list(im.getdata())
-width, height = im.size
 C = []
+
+# Used pallete: https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/VGA_palette_with_black_borders.svg/1200px-VGA_palette_with_black_borders.svg.png
+# This pallete is the default 256 colors in the Tasm/Masm Extension for VS code, Note that the original asm86 only supported the first 16 colors
+# So make sure while drawing your art to pick (via color picker) from this palette, btw: Krita(~30mb) is a great and easy app for creating pixel art:
+# How to set up Krita for pixel art(5 mins): https://www.youtube.com/watch?v=aaRzNTCanIQ
+# Nice Pixel art tutorials playlist (each video is 5~15 mins): https://www.youtube.com/playlist?list=PLmac3HPrav-9UWt-ahViIZxpyQxJ2wPSH
+
 D = {
-(254, 254, 254): 0, 
+(254, 254, 254): 0, # I use 0 as an escape pixel(I don't draw the pixel if it is colored 0)
+	  	    # It is okay tho to use black(0) as escaping since there are other codes for the same color like 16, 248..255. 
+		    # I use (254, 254, 254) in the background of the images before passing them to this script
 (0, 0, 170): 1, 
 (0, 170, 0): 2, 
 (0, 170, 170): 3, 
@@ -252,7 +259,7 @@ D = {
 (45, 65, 65): 244, 
 (45, 61, 65): 245, 
 (45, 53, 65): 246, 
-(45, 49, 65): 247, 
+(45, 49, 65): 247 
 }
 
 for i in pixels:
@@ -260,17 +267,19 @@ for i in pixels:
 
 print(pixels)
 
-#Reverse array if in assembly you are drawing from width & height down to 0 & 0 (reversed iteration)
-#C = [str(ele) for ele in reversed(C)] 
+#Reverse array if -in assembly- you are drawing from width & height down to 0 & 0 (reversed iteration)
+#else remove the line below
+C = [str(ele) for ele in reversed(C)] 
 
 
 StrC = "img DB "
 
+#Split the array into multiple lines cause it will be too long for one line for the tasm/masm.
 for i in range(len(C)):
     if i % 40 == 39:
-      StrC = StrC + C[i] +" "+ "\n DB " 
+      StrC = StrC + str(C[i]) +" "+ "\n DB " 
     else:
-      StrC = StrC +C[i]+", "
+      StrC = StrC + str(C[i]) +", "
 
 StrC = StrC[:-2]
 print(StrC)
