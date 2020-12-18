@@ -260,7 +260,9 @@ for i in pixels:
 
 print(pixels)
 
-C = [str(ele) for ele in reversed(C)] 
+#Reverse array if in assembly you are drawing from width & height down to 0 & 0 (reversed iteration)
+#C = [str(ele) for ele in reversed(C)] 
+
 
 StrC = "img DB "
 
