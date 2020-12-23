@@ -33,6 +33,14 @@ ERASE_MOVEMENT MACRO UP, DOWN, LEFT, RIGHT
 	               jz  BackRight
 	
 ENDM
+clearWholeScreen MACRO
+MOV            AX,0600H                	;06 TO SCROLL & 00 FOR FULLJ SCREEN
+	                MOV            BH,00H                  	;ATTRIBUTE BACKGROUND AND FOREGROUND
+	                MOV            CX,0000H                	;STARTING COORDINATES
+	                MOV            DX,184FH                	;ENDING COORDINATES
+	                INT            10H                     	;FOR VIDEO DISPLAY
+	                
+	ENDM
 ;///////////////////////////////Macros////////////////////////////////////
 .model small
 ;///////////////////////////////Data Initializations////////////////////////////////////
@@ -253,8 +261,8 @@ ENDM
 	               DB          09h, 01h, 01h, 01h, 01h, 09h, 01h, 01h, 01h, 01h, 09h, 01h, 01h, 01h, 09h, 01h, 01h, 01h, 09h, 01h
 	               DB          01h, 09h, 01h, 01h, 09h, 01h
 	;@
-	getName        DB          "Your name: $"
-	enterValidName DB          "Please, enter a valid name: $"
+	getName        DB          " Your name: $"
+	enterValidName DB          " Please, enter a valid name: $"
 	playerName1    DB          21,?,21 dup("$")
 	               firstScreen label byte
 	               DB          '  ',0ah,0dh                                                                                                          	; new line
@@ -296,7 +304,7 @@ ENDM
 	               DB          '  ',0ah,0dh                                                                                                          	; new line
 	               DB          '                                   ||',0ah,0dh
 	               DB          '   ================================||',0ah,0dh
-	               DB          '       ||            Bye !         ||',0ah,0dh
+	               DB          '       ||           Bye Bye        ||',0ah,0dh
 	               DB          '       || ================================',0ah,0dh
 	               DB          '       ||                           ',0ah,0dh
 	               DB          '$',0ah,0dh
@@ -321,15 +329,15 @@ MAIN PROC FAR
 	                mov            dx, si
 	                int            21h
 
-; TODO check of the name is valid
-					; mov bp, offset playerName1 + 1
-	                ; or           [bp], 0
-	                ; jnz            mainMenuLoop
+	; TODO check of the name is valid
+	; mov bp, offset playerName1 + 1
+	; or           [bp], 0
+	; jnz            mainMenuLoop
 
-	                ; mov            ah,09h
-	                ; lea            dx, enterValidName      	; ask for a valid player's name
-	                ; int            21h
-	                ; jmp            getNameLoop
+	; mov            ah,09h
+	; lea            dx, enterValidName      	; ask for a valid player's name
+	; int            21h
+	; jmp            getNameLoop
 
 	mainMenuLoop:   
 	                mov            ax, graphicsMode        	; enter graphicsMode to delete the screen
@@ -342,19 +350,16 @@ MAIN PROC FAR
 	                int            16h
 	                jz             CheckInMainMenu         	; check if there is any input
 
-	                mov            ah,1                    	; fetch the key from the keyboard buffer
-	                int            16h
-
 	                cmp            ah,3Bh                  	; F1
 	                jz             firstScreenLoop
 
 	                cmp            ah,3ch                  	; F2
 	                jz             gameLoop
 
-	                cmp            al,01h                  	; ESC
+	                cmp            al,1Bh                  	; ESC
 	                jz             exitProg
 					
-	                jmp            CheckInMainMenu ; not working yet
+	                jmp            CheckInMainMenu         	; not working yet
 
 	gameLoop:                                              	;NOTE:since we are using words, we will use the value '2' to traverse pixels
 	;//////////////////////////////initializations////////////////////////////////////
@@ -369,16 +374,21 @@ MAIN PROC FAR
 	;///////////////////////////////////////////////////////////////////////////////////////
 	                jmp            gameLoop
 	exitProg:       
-	                mov            ax, graphicsMode        	; enter graphicsMode
+	                clearWholeScreen
 	                mov            ah,09h
 	                lea            dx, byebye              	; show the first screen
 	                int            21h
+					
 	                HLT
+	; mov            ah, 4ch                 	;stop execution
+	; int            21h
 MAIN ENDP
 
 	;//////////////////////////////Procedures//////////////////////////////////////////////
 GENERATE_OFFSET PROC                                   		; genertaing new offsets for the ship
 	                MOVEMENT       11H, 1FH, 1EH, 20H
+	                cmp            al,1Bh                  	; ESC
+	                jz             exitProg
 	ReadKey:                                               	; get the pressed key from the user
 	                call           Eraseship
 	                call           Drawship
