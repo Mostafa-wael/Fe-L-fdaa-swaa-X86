@@ -34,11 +34,11 @@ ERASE_MOVEMENT MACRO UP, DOWN, LEFT, RIGHT
 	
 ENDM
 clearWholeScreen MACRO
-MOV            AX,0600H                	;06 TO SCROLL & 00 FOR FULLJ SCREEN
-	                MOV            BH,00H                  	;ATTRIBUTE BACKGROUND AND FOREGROUND
-	                MOV            CX,0000H                	;STARTING COORDINATES
-	                MOV            DX,184FH                	;ENDING COORDINATES
-	                INT            10H                     	;FOR VIDEO DISPLAY
+	                 MOV AX,0600H	;06 TO SCROLL & 00 FOR FULL SCREEN
+	                 MOV BH,00H  	;ATTRIBUTE BACKGROUND AND FOREGROUND
+	                 MOV CX,0000H	;STARTING COORDINATES
+	                 MOV DX,320  	;ENDING COORDINATES
+	                 INT 10H     	;FOR VIDEO DISPLAY
 	                
 	ENDM
 ;///////////////////////////////Macros////////////////////////////////////
@@ -301,33 +301,42 @@ MOV            AX,0600H                	;06 TO SCROLL & 00 FOR FULLJ SCREEN
 	               DB          '       ||                                                    ',0ah,0dh
 	               DB          '$',0ah,0dh
 	               byebye      label byte
-	               DB          '  ',0ah,0dh                                                                                                          	; new line
+	               DB          '  ',0ah,0dh
+	               DB          '                                   ||',0ah,0dh
+	               DB          '                                   ||',0ah,0dh
+	               DB          '                                   ||',0ah,0dh
+	               DB          '                                   ||',0ah,0dh
 	               DB          '                                   ||',0ah,0dh
 	               DB          '   ================================||',0ah,0dh
 	               DB          '       ||           Bye Bye        ||',0ah,0dh
 	               DB          '       || ================================',0ah,0dh
 	               DB          '       ||                           ',0ah,0dh
+	               DB          '       ||                           ',0ah,0dh
+	               DB          '       ||                           ',0ah,0dh
+	               DB          '       ||                           ',0ah,0dh
+	               DB          '       ||                           ',0ah,0dh
 	               DB          '$',0ah,0dh
+				   
 ;///////////////////////////////Data Initializations////////////////////////////////////
 .code
 MAIN PROC FAR
-	                mov            AX,@data                	;initializing the data segemnt
-	                mov            DS,AX
+	                mov              AX,@data                	;initializing the data segemnt
+	                mov              DS,AX
 	firstScreenLoop:
-	                mov            ax, graphicsMode        	; enter graphicsMode
+	                mov              ax, graphicsMode        	; enter graphicsMode
 
-	                mov            ah,09h
-	                lea            dx, firstScreen         	; show the first screen
-	                int            21h
+	                mov              ah,09h
+	                lea              dx, firstScreen         	; show the first screen
+	                int              21h
 
-	                mov            ah,09h
-	                lea            dx, getName             	; ask for player's name
-	                int            21h
+	                mov              ah,09h
+	                lea              dx, getName             	; ask for player's name
+	                int              21h
 
-	getNameLoop:    lea            si, playerName1         	; get player's name
-	                mov            ah, 0Ah
-	                mov            dx, si
-	                int            21h
+	getNameLoop:    lea              si, playerName1         	; get player's name
+	                mov              ah, 0Ah
+	                mov              dx, si
+	                int              21h
 
 	; TODO check of the name is valid
 	; mov bp, offset playerName1 + 1
@@ -340,44 +349,44 @@ MAIN PROC FAR
 	; jmp            getNameLoop
 
 	mainMenuLoop:   
-	                mov            ax, graphicsMode        	; enter graphicsMode to delete the screen
+	                mov              ax, graphicsMode        	; enter graphicsMode to delete the screen
 
-	                mov            ah,09h
-	                lea            dx, mainMenu            	; show the main menu
-	                int            21h
+	                mov              ah,09h
+	                lea              dx, mainMenu            	; show the main menu
+	                int              21h
 
-	CheckInMainMenu:mov            ah,0                    	;  ah:al = scan code: ASCII code
-	                int            16h
-	                jz             CheckInMainMenu         	; check if there is any input
+	CheckInMainMenu:mov              ah,0                    	;  ah:al = scan code: ASCII code
+	                int              16h
+	                jz               CheckInMainMenu         	; check if there is any input
 
-	                cmp            ah,3Bh                  	; F1
-	                jz             firstScreenLoop
+	                cmp              ah,3Bh                  	; F1
+	                jz               firstScreenLoop
 
-	                cmp            ah,3ch                  	; F2
-	                jz             gameLoop
+	                cmp              ah,3ch                  	; F2
+	                jz               gameLoop
 
-	                cmp            al,1Bh                  	; ESC
-	                jz             exitProg
+	                cmp              al,1Bh                  	; ESC
+	                jz               exitProg
 					
-	                jmp            CheckInMainMenu         	; not working yet
+	                jmp              CheckInMainMenu         	; not working yet
 
-	gameLoop:                                              	;NOTE:since we are using words, we will use the value '2' to traverse pixels
+	gameLoop:                                                	;NOTE:since we are using words, we will use the value '2' to traverse pixels
 	;//////////////////////////////initializations////////////////////////////////////
-	                mov            ax, graphicsMode
-	                int            10h
-	                call           Drawship                	;this subroutine is responsible for drawing the ship using its cooardinates
+	                mov              ax, graphicsMode
+	                int              10h
+	                call             Drawship                	;this subroutine is responsible for drawing the ship using its cooardinates
 	;//////////////////////////////Interacting with the user////////////////////////////////////
-	CHECK:          mov            ah,1
-	                int            16h
-	                jz             CHECK                   	; check if there is any input
-	                CALL           GENERATE_OFFSET         	; TO GENERATE THE new OFFSET OF THE ship
+	CHECK:          mov              ah,1
+	                int              16h
+	                jz               CHECK                   	; check if there is any input
+	                CALL             GENERATE_OFFSET         	; TO GENERATE THE new OFFSET OF THE ship
 	;///////////////////////////////////////////////////////////////////////////////////////
-	                jmp            gameLoop
+	                jmp              gameLoop
 	exitProg:       
 	                clearWholeScreen
-	                mov            ah,09h
-	                lea            dx, byebye              	; show the first screen
-	                int            21h
+	                mov              ah,09h
+	                lea              dx, byebye              	; show the first screen
+	                int              21h
 					
 	                HLT
 	; mov            ah, 4ch                 	;stop execution
@@ -385,143 +394,156 @@ MAIN PROC FAR
 MAIN ENDP
 
 	;//////////////////////////////Procedures//////////////////////////////////////////////
-GENERATE_OFFSET PROC                                   		; genertaing new offsets for the ship
-	                MOVEMENT       11H, 1FH, 1EH, 20H
-	                cmp            al,1Bh                  	; ESC
-	                jz             exitProg
-	ReadKey:                                               	; get the pressed key from the user
-	                call           Eraseship
-	                call           Drawship
+GENERATE_OFFSET PROC                                     		; genertaing new offsets for the ship
+	                MOVEMENT         11H, 1FH, 1EH, 20H
+	                cmp              al,1Bh                  	; ESC
+	                jz               exitProg
+	ReadKey:                                                 	; get the pressed key from the user
+	                call             Eraseship
+	                call             Drawship
 
-	                mov            ah,0                    	;wait for a key to be pressed and put it in ah, ah:al = scan code: ASCII code
-	                int            16h
+	                mov              ah,0                    	;wait for a key to be pressed and put it in ah, ah:al = scan code: ASCII code
+	                int              16h
 
-	                mov            cx, 0                   	; initialize cx to use it to iterate over the shipSize
-	                jmp            CHECK
+	                mov              cx, 0                   	; initialize cx to use it to iterate over the shipSize
+	                jmp              CHECK
 	;///////////////////////////////////////////////////////////////////////////////////////
 	MoveUp:         
 	;checking for boundaries
-	                mov            BX,[DI]
-	                cmp            BX, minY
-	                jz             ReadKey
+	                mov              BX,[DI]
+	                cmp              BX, minY
+	                jz               ReadKey
 	;moveUP
-	                inc            cx
-	                mov            BX,[DI]
-	                dec            BX                      	;decrement y, we can use SUB [DI], 2h but it's not compatabile with other versions of assembelers
-	                mov            [DI],BX
+	                inc              cx
+	                mov              BX,[DI]
+	                dec              BX                      	;decrement y, we can use SUB [DI], 2h but it's not compatabile with other versions of assembelers
+	                mov              [DI],BX
 
-	                add            DI, 2
-	                cmp            cx,shipSize             	; do this for all the pixels of the ship
-	                jnz            MoveUp
+	                add              DI, 2
+	                cmp              cx,shipSize             	; do this for all the pixels of the ship
+	                jnz              MoveUp
 
-	                jmp            ReadKey
+	                jmp              ReadKey
 
 	MoveDown:       
 	;checking for boundaries
-	                mov            BX,[DI + shipSize*2 - 4]	; as we want to check for the bottom of the ship
-	                cmp            BX, maxY
-	                jz             ReadKey
+	                mov              BX,[DI + shipSize*2 - 4]	; as we want to check for the bottom of the ship
+	                cmp              BX, maxY
+	                jz               ReadKey
 	;MoveDown
-	                inc            cx
-	                mov            BX,[DI]
-	                inc            BX                      	;increment y
-	                mov            [DI],BX
+	                inc              cx
+	                mov              BX,[DI]
+	                inc              BX                      	;increment y
+	                mov              [DI],BX
 
-	                add            DI, 2
-	                cmp            cx,shipSize             	;do this for all the pixels of the ship
-	                jnz            MoveDown
+	                add              DI, 2
+	                cmp              cx,shipSize             	;do this for all the pixels of the ship
+	                jnz              MoveDown
 
-	                jmp            ReadKey
+	                jmp              ReadKey
 
 	MoveLeft:       
 	;checking for boundaries
-	                mov            BX,[SI]
-	                cmp            BX, minX
-	                jz             ReadKey
+	                mov              BX,[SI]
+	                cmp              BX, minX
+	                jz               ReadKey
 	;MoveLeft
-	                inc            cx
-	                mov            BX,[SI]
-	                dec            BX                      	;decrement x
-	                mov            [SI],BX
+	                inc              cx
+	                mov              BX,[SI]
+	                dec              BX                      	;decrement x
+	                mov              [SI],BX
 
-	                add            SI, 2
-	                cmp            cx,shipSize             	;do this for all the pixels of the ship
-	                jnz            MoveLeft
+	                add              SI, 2
+	                cmp              cx,shipSize             	;do this for all the pixels of the ship
+	                jnz              MoveLeft
 	          
-	                jmp            ReadKey
+	                jmp              ReadKey
 
 	MoveRight:      
 	;checking for boundaries
-	                mov            BX,[SI]
-	                cmp            BX, maxX
-	                jz             ReadKey
+	                mov              BX,[SI]
+	                cmp              BX, maxX
+	                jz               ReadKey
 	;MoveRight
-	                inc            cx
-	                mov            BX,[SI]
-	                inc            BX                      	;increment x
-	                mov            [SI],BX
+	                inc              cx
+	                mov              BX,[SI]
+	                inc              BX                      	;increment x
+	                mov              [SI],BX
 
-	                add            SI, 2
-	                cmp            cx,shipSize             	;do this for all the pixels of the ship
-	                jnz            MoveRight
+	                add              SI, 2
+	                cmp              cx,shipSize             	;do this for all the pixels of the ship
+	                jnz              MoveRight
 
-	                jmp            ReadKey
+	                jmp              ReadKey
 	                ret
 
 GENERATE_OFFSET ENDP
 Drawship PROC
 	; initialize containers
-	                mov            SI, offset shipX        	;shipY is (shipX index + size * 2) so we can use Si for both
-	                mov            DI, offset shipC
-	                mov            Bx ,shipSize
+	                mov              SI, offset shipX        	;shipY is (shipX index + size * 2) so we can use Si for both
+	                mov              DI, offset shipC
+	                mov              Bx ,shipSize
  
-	                mov            ah,0ch                  	;Draw Pixel Command
+	                mov              ah,0ch                  	;Draw Pixel Command
 	back:           
-	                push           bx
-	                mov            bx, 0
-	                add            bx, shipSize
-	                add            bx, shipSize
-	                mov            al, [DI]                	; use white color for testing
-	                mov            cx,[SI]                 	;Column X
-	                mov            dx,[SI][BX]             	;Row Y
-	                int            10h                     	;draw the pixel
-	                add            SI,2                    	;move to the next shipX&Y
-	                add            DI,1                    	;move to the next shipC
-	                pop            bx
-	                dec            bx
-	                jnz            back                    	;loop over the ship size
+	                push             bx
+	                mov              bx, 0
+	                add              bx, shipSize
+	                add              bx, shipSize
+	                mov              al, [DI]                	; use white color for testing
+	                mov              cx,[SI]                 	;Column X
+	                mov              dx,[SI][BX]             	;Row Y
+	                int              10h                     	;draw the pixel
+	                add              SI,2                    	;move to the next shipX&Y
+	                add              DI,1                    	;move to the next shipC
+	                pop              bx
+	                dec              bx
+	                jnz              back                    	;loop over the ship size
 	                ret
 Drawship ENDP
 Eraseship PROC
 	; initialize containers
-	                mov            SI, offset shipX        	;shipY is (shipX index + size * 2) so we can use Si for both
-	                mov            DI, offset shipY        	;shipY is (shipX index + size * 2) so we can use Si for both
+	                mov              SI, offset shipX        	;shipY is (shipX index + size * 2) so we can use Si for both
+	                mov              DI, offset shipY        	;shipY is (shipX index + size * 2) so we can use Si for both
 
-	                mov            Bx ,shipSize
-	                mov            al, 0h
+	                mov              Bx ,shipSize
+	                mov              al, 0h
 	back2:          
-	                ERASE_MOVEMENT 11H, 1FH, 1EH, 20H
+	                ERASE_MOVEMENT   11H, 1FH, 1EH, 20H
  
 
-	BackUp:         inc            dx
-	                jmp            DrawBlack
-	BackDown:       dec            dx
-	                jmp            DrawBlack
-	BackLeft:       inc            cx
-	                jmp            DrawBlack
-	BackRight:      dec            cx
-	                jmp            DrawBlack
+	BackUp:         inc              dx
+	                jmp              DrawBlack
+	BackDown:       dec              dx
+	                jmp              DrawBlack
+	BackLeft:       inc              cx
+	                jmp              DrawBlack
+	BackRight:      dec              cx
+	                jmp              DrawBlack
 		
-	DrawBlack:      push           ax
-	                mov            ah,0ch                  	;Draw Pixel Command
-	                int            10h                     	;draw the pixel
-	                pop            ax
-	                add            SI,2                    	;move to the next shipX&Y
-	                add            DI,2                    	;move to the next shipX&Y
-	                dec            bx
+	DrawBlack:      push             ax
+	                mov              ah,0ch                  	;Draw Pixel Command
+	                int              10h                     	;draw the pixel
+	                pop              ax
+	                add              SI,2                    	;move to the next shipX&Y
+	                add              DI,2                    	;move to the next shipX&Y
+	                dec              bx
 	;add  bp, 1 ;adding differnet colors to each pixel
-	                jnz            back2                   	;loop over the ship size
+	                jnz              back2                   	;loop over the ship size
 	                ret
 Eraseship ENDP
 ;//////////////////////////////Procedures//////////////////////////////////////////////
         END MAIN
+		
+@comment
+		TODO:
+		1. new features:
+		1.1. reading images -> hossam
+		1.2. bounding box -> yahya
+		1.3. second player -> gimy
+
+		2. error handling -> mostafa
+		2.1. null names
+		2.2. F1, F2
+		2.3. clear screen
+		@
