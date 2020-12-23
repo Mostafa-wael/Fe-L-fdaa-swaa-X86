@@ -1,0 +1,5 @@
+https://stackoverflow.com/questions/43794402/avoid-blinking-flickering-when-drawing-graphics-in-8086-real-mode
+https://stackoverflow.com/questions/29572266/what-is-the-best-way-to-move-an-object-on-the-screen/29579522#29579522
+https://stackoverflow.com/questions/43487546/how-to-use-pages-in-assembly-tasm
+https://stackoverflow.com/questions/13241594/double-buffering-assembly-x86
+http://employees.oneonta.edu/higgindm/assembly/video_games.htm
