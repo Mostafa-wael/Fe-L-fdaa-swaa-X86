@@ -28,14 +28,17 @@ clearWholeScreen MACRO
 ;///////////////////////////////Data Initializations////////////////////////////////////
 .data
 	; constrains depend on the graphics mode
-	graphicsMode   equ         0013h
+	graphicsMode   equ         4F02h
 	offsetX        dw         6h 	;position of first from left pixel
-	offsetY         dw         20h 	;position of first from top pixel
+	offsetY         dw         100 	;position of first from top pixel
 	SizeX           equ         32		;img Width
 	SizeY           equ         32		;img Height
 	SizeC			equ			1024
-	maxY			equ			200
-	maxX			equ			160
+	maxY			equ			360
+	maxX			equ			320
+	planeSpeed		equ			4
+	minY			equ			80
+	minX			equ			4	;don't make this 0
 	shipC  			DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
  					DB 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151, 77 
 					DB 151, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 151, 151, 77, 151, 77, 19, 0, 0, 0, 0, 0 
@@ -174,6 +177,7 @@ MAIN PROC FAR
 	gameLoop:                                                	;NOTE:since we are using words, we will use the value '2' to traverse pixels
 	;//////////////////////////////initializations////////////////////////////////////
 	                mov              ax, graphicsMode
+					mov				 bx, 0100h
 	                int              10h
 	                call             Drawship                	;this subroutine is responsible for drawing the ship using its cooardinates
 	;//////////////////////////////Interacting with the user////////////////////////////////////
@@ -216,9 +220,9 @@ GENERATE_OFFSET PROC
 	;checking for boundaries
 	;moveUP
 					mov				 bx, offsetY
-	                cmp              bx, 0
+	                cmp              bx, minY
 	                jna              ReadKey
-					dec				 bx
+					sub				 bx, planeSpeed
 					mov				 DI, offset offsetY
 					mov				 [DI], bx
 
@@ -232,7 +236,7 @@ GENERATE_OFFSET PROC
 					add				 cx, sizeY
 	                cmp              cx, maxY
 	                jnb               ReadKey
-					inc				 bx
+					add				 bx,planeSpeed
 					mov				 DI, offset offsetY
 					mov				 [DI], bx
 
@@ -241,9 +245,9 @@ GENERATE_OFFSET PROC
 	MoveLeft:       
 	;checking for boundaries
 					mov				 bx, offsetX
-	                cmp              bx, 0
+	                cmp              bx, minX
 	                jna               ReadKey
-					dec				 bx
+					sub				 bx, planeSpeed
 					mov				 DI, offset offsetX
 					mov				 [DI], bx
 	          
@@ -256,7 +260,7 @@ GENERATE_OFFSET PROC
 					add				 cx, sizeX
 	                cmp              cx, maxX
 	                jnb               ReadKey
-					inc				 bx
+					add				 bx, planeSpeed
 					mov				 DI, offset offsetX
 					mov				 [DI], bx
 
