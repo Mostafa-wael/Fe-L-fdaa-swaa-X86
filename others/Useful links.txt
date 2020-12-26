@@ -3,3 +3,6 @@ https://stackoverflow.com/questions/29572266/what-is-the-best-way-to-move-an-obj
 https://stackoverflow.com/questions/43487546/how-to-use-pages-in-assembly-tasm
 https://stackoverflow.com/questions/13241594/double-buffering-assembly-x86
 http://employees.oneonta.edu/higgindm/assembly/video_games.htm
+https://stackoverflow.com/questions/8607451/mouse-with-int-33h-in-asm-not-working
+https://www.reddit.com/r/asm/comments/7tcoir/help_tasm_getting_the_mouse_coordinates_in_vga/
+https://stackoverflow.com/questions/48648548/graphics-mode-in-assembly-8086
