@@ -1,4 +1,5 @@
 ;///////////////////////////////Macros////////////////////////////////////
+.model huge
 MOVEMENT MACRO UP, DOWN, LEFT, RIGHT
 	
 	         mov cx, 0
@@ -23,7 +24,7 @@ clearWholeScreen MACRO
 	                 INT 10H     	;FOR VIDEO DISPLAY     
 	ENDM
 ;///////////////////////////////Macros////////////////////////////////////
-.model small
+
 ;///////////////////////////////Data Initializations////////////////////////////////////
 .data
 	; constrains depend on the graphics mode
@@ -198,7 +199,7 @@ MAIN PROC FAR
 MAIN ENDP
 
 	;//////////////////////////////Procedures//////////////////////////////////////////////
-GENERATE_OFFSET PROC
+GENERATE_OFFSET PROC near
 
 	                cmp              al,1Bh            	; ESC
 	                jz               exitProg
@@ -267,7 +268,7 @@ GENERATE_OFFSET PROC
 	                ret
 
 GENERATE_OFFSET ENDP
-Drawship PROC
+Drawship PROC	near
 	; initialize containers
 	                mov              SI, offset shipC
 	                mov              cx, SizeX         	;Column X
@@ -294,7 +295,7 @@ Drawship PROC
 	                jmp              Drawit
 	alldrawn:       ret
 Drawship ENDP
-Eraseship PROC
+Eraseship PROC near
 	; initialize containers
 	                mov              SI, offset shipC  	;shipY is (shipX index + size * 2) so we can use Si for both
 	                mov              cx, SizeX         	;Column X
