@@ -17,11 +17,9 @@ MOVEMENT MACRO UP, DOWN, LEFT, RIGHT
 	         jz  MoveRight
 ENDM
 clearWholeScreen MACRO
-	                 MOV AX,0600H	;06 TO SCROLL & 00 FOR FULL SCREEN
-	                 MOV BH,00H  	;ATTRIBUTE BACKGROUND AND FOREGROUND
-	                 MOV CX,0000H	;STARTING COORDINATES
-	                 MOV DX,320  	;ENDING COORDINATES
-	                 INT 10H     	;FOR VIDEO DISPLAY     
+	                 mov ah, 0
+	                 mov al, 3
+	                 INT 10H  	;FOR VIDEO DISPLAY
 	ENDM
 ;///////////////////////////////Macros////////////////////////////////////
 
@@ -331,9 +329,6 @@ Eraseship ENDP
 @comment
 		TODO:
 		1. new features:
-		1.1. reading images -> hossam
-		1.2. bounding box -> yahya
-		1.3. second player -> gimy
 
 		2. error handling -> mostafa
 		2.1. null names
