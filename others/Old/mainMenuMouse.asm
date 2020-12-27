@@ -1,16 +1,3 @@
-checkInButton MACRO mousePos, buttonStart, buttonSize		; if true bl = 1 else, bl = 0
-	              local false, true
-	; true iff greater than start and less than end
-	              mov   bl, 1
-	              cmp   mousePos, buttonStart
-	              jb    false
-	              sub   mousePos, buttonSize
-	              cmp   mousePos, buttonStart
-	              ja    false
-	              jmp   true
-	false:        mov   bl, 0
-	true:         
-ENDM
 clearWholeScreen MACRO
 	                 mov ah, 0
 	                 mov al, 3
@@ -868,7 +855,7 @@ clearWholeScreen MACRO
 	endX           equ           420                                                                                                                                                                                                   	; 414 + 6
 	;
 	arrowOffset   label word
-	arrowOffsetX   dw            184
+	arrowOffsetX   dw            424
 	arrowOffsetY   dw            216
 	                                                                                                                                                                                                   	;, 280, 344
 	arrowSizeX     equ           32
@@ -892,7 +879,7 @@ MAIN PROC FAR
 	                    mov              bx, 0100h            	; BX = 81FFh
 	                    int              10h
 	                
-	;call background
+	call background
 	                    call             drawgamebtn
 	                    call             drawchatbtn
 	                    call             drawexitbtn
