@@ -138,10 +138,10 @@ clearWholeScreen MACRO
 	BulletSpeed     DB          1
 	BulletOffsetX   DW          100 DUP(0)
 	BulletOffsetY   DW          100 DUP(0)
-	BulletDirection DB          100 DUP(0)
+	BulletDirection DW          100 DUP(0)
 	BulletCount     DB          0
 
-    CurrentBullet   DB          0
+	CurrentBullet   DB          0
 
 				   
 ;///////////////////////////////Data Initializations////////////////////////////////////
@@ -204,14 +204,14 @@ MAIN PROC FAR
 	                   int              10h
 	                   call             Drawship                  	;this subroutine is responsible for drawing the ship using its cooardinates
 	;//////////////////////////////Interacting with the user////////////////////////////////////
-                        mov              SI, 0
-    CHECK:             
+	                   mov              DI, 0
+	CHECK:             
 	                   mov              bx, offset BulletDirection
-                       mov              cx, [SI][BX]
+	                   mov              cx, [DI][BX]
 	                   cmp              cx, 0
 	                   JZ               NextBullet
-	                   ;cmp              BulletOffsetX, 633
-	                   ;jg               StopBullet
+	;cmp              BulletOffsetX, 633
+	;jg               StopBullet
 	                   CALL             EraseBullet
 	                   CALL             Bullet_Offset
 	                   CALL             DrawBullet
@@ -222,8 +222,8 @@ MAIN PROC FAR
 	;                   CALL             EraseBullet
 
 	NextBullet:        
-	                   inc              SI
-	                   cmp              SI, 100
+	                   ADD              DI, 2
+	                   cmp              DI, 100
 	                   jnz              CHECK
 
 	ContinueBullet:    
@@ -254,15 +254,14 @@ MAIN ENDP
 
 	;//////////////////////////////Procedures//////////////////////////////////////////////
 Bullet_Offset PROC near
-	                   ;cmp              BulletDirection, 1
-	                   ;JNZ              Bullete_Offset_ret
+	;cmp              BulletDirection, 1
+	;JNZ              Bullete_Offset_ret
 	                   push             ax
-                       mov              cl, BulletSpeed
+	                   mov              cl, BulletSpeed
 	                   mov              ch, 0
-                       mov              bx, offset BulletOffsetX
-
+	                   mov              bx, offset BulletOffsetX
 	                   add              [Di][bx], cx
-                        pop             ax
+	                   pop              ax
 	Bullete_Offset_ret:ret
 Bullet_Offset ENDP
 
