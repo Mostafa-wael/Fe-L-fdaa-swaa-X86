@@ -136,10 +136,12 @@ clearWholeScreen MACRO
 	BulletXSize     equ         5
 	BulletYSize     equ         4
 	BulletSpeed     DB          1
-	BulletOffsetX   DW          0
-	BulletOffsetY   DW          0
-	BulletDirection DW          0
+	BulletOffsetX   DW          100 DUP(0)
+	BulletOffsetY   DW          100 DUP(0)
+	BulletDirection DW          100 DUP(0)
+	BulletCount     DB          0
 
+	CurrentBullet   DB          0
 
 				   
 ;///////////////////////////////Data Initializations////////////////////////////////////
@@ -147,6 +149,7 @@ clearWholeScreen MACRO
 MAIN PROC FAR
 	                   mov              AX,@data                  	;initializing the data segemnt
 	                   mov              DS,AX
+                       jmp gameLoop
 	firstScreenLoop:   
 	                   mov              ax, graphicsMode          	; enter graphicsMode
 
@@ -202,26 +205,39 @@ MAIN PROC FAR
 	                   int              10h
 	                   call             Drawship                  	;this subroutine is responsible for drawing the ship using its cooardinates
 	;//////////////////////////////Interacting with the user////////////////////////////////////
+	                   mov              DI, 0
 	CHECK:             
+	                   mov              ah,1
+	                   int              16h
+	                   jz               CHECK                     	; check if there is any input
+
+	                   CMP              ah, 21H
+	                   jnz              ContinueBullet
 	                   mov              bx, offset BulletDirection
-	                   mov              cx, bx
+	                   mov              cx, [DI][BX]
 	                   cmp              cx, 0
-	                   JZ               ContinueBullet
-	                   cmp              BulletOffsetX, 633
+	                   JZ               NextBullet
+	                   cmp              BulletOffsetX[DI], 633
 	                   jg               StopBullet
+	                   cmp              [bx][di], 0
+	                   jmp              NextBullet
 	                   CALL             EraseBullet
 	                   CALL             Bullet_Offset
 	                   CALL             DrawBullet
 	                   delay            65000
-	                   jmp              ContinueBullet
+	                   jmp              NextBullet
 
-	StopBullet:        mov              BulletDirection, 0
+	StopBullet:        mov              [bx][di], 0
 	                   CALL             EraseBullet
 
+	NextBullet:        
+	                   ADD              DI, 2
+	                   cmp              DI, 100
+	                   jnz              CHECK
+
 	ContinueBullet:    
-	                   mov              ah,1
-	                   int              16h
-	                   jz               CHECK                     	; check if there is any input
+
+
 	; Can Be Changed
 	; ///////////////////////////////////////////////////////////////
 	;---------------------------------------------------------------
@@ -245,13 +261,13 @@ MAIN ENDP
 
 	;//////////////////////////////Procedures//////////////////////////////////////////////
 Bullet_Offset PROC near
-					   cmp              BulletDirection, 1
-					   JNZ              Bullete_Offset_ret
+	;cmp              BulletDirection, 1
+	;JNZ              Bullete_Offset_ret
 	                   push             ax
 	                   mov              cl, BulletSpeed
 	                   mov              ch, 0
 	                   mov              bx, offset BulletOffsetX
-	                   add              bx, cx
+	                   add              [Di][bx], cx
 	                   pop              ax
 	Bullete_Offset_ret:ret
 Bullet_Offset ENDP
@@ -336,15 +352,24 @@ GENERATE_OFFSET PROC near
 	                   jmp              ReadKey
 
 	Fire:              
+	                   mov              bx, 0ffffh
+	                   mov              SI, offset BulletDirection
+	NextBulletIndex:   
+                       inc              SI
+                       inc              bx
+	                   cmp              [SI], 1
+	                   je               NextBulletIndex
+	                   
+    
 	                   mov              dx, 1
-	                   mov              BulletDirection, dx       	; For Right Direction
+	                   mov              [SI], dx       	; For Right Direction
 
 	; For x
                     
 	                   mov              dX, offsetX
 	                   add              DX, sizeX
 	                   INC              DX
-	                   MOV              BulletOffsetX, DX
+	                   MOV              BulletOffsetX[bx], DX
                 
 	; For y
 
@@ -365,7 +390,7 @@ GENERATE_OFFSET PROC near
 	                   pop              ax
 	                   add              dx, offsetY
 
-	                   mov              BulletOffsetY, dx
+	                   mov              BulletOffsetY[bx], dx
 	                   jmp              ReadFire
 
 	                   ret
@@ -440,12 +465,12 @@ DrawBullet PROC near
 	                   mov              bl, [SI]                  	;use color from array color for testing
 	                   and              bl, bl
 	                   JZ               Bulletback
-	                   add              cx, BulletOffsetX
-	                   add              dx, BulletOffsetY
+	                   add              cx, BulletOffsetX[di]
+	                   add              dx, BulletOffsetY[di]
 	                   mov              al, [SI]                  	;  use color from array color for testing
 	                   int              10h                       	;  draw the pixel
-	                   sub              cx, BulletOffsetX
-	                   sub              dx, BulletOffsetY
+	                   sub              cx, BulletOffsetX[di]
+	                   sub              dx, BulletOffsetY[di]
 
 	Bulletback:        
 	                   inc              SI
@@ -473,11 +498,11 @@ EraseBullet PROC near
 	                   mov              bl, [SI]                  	;  use color from array color for testing
 	                   and              bl, bl
 	                   JZ               back2Bullet
-	                   add              cx, BulletOffsetX
-	                   add              dx, BulletOffsetY
+	                   add              cx, BulletOffsetX[di]
+	                   add              dx, BulletOffsetY[di]
 	                   int              10h                       	;  draw the pixel
-	                   sub              cx, BulletOffsetX
-	                   sub              dx, BulletOffsetY
+	                   sub              cx, BulletOffsetX[di]
+	                   sub              dx, BulletOffsetY[di]
 
 	back2Bullet:       
 	                   inc              SI
