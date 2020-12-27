@@ -1,4 +1,4 @@
-.model small
+.model small ; main menu using mouse 
 .data
 	graphicsMode  equ 4F02h
 	gamebtnOffset dw  226, 204
