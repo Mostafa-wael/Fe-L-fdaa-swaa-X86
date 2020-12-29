@@ -245,7 +245,7 @@ MAIN PROC FAR
 	                   CALL             GENERATE_OFFSET           	; TO GENERATE THE new OFFSET OF THE ship
 
 	; ;///////////////////////////////////////////////////////////////////////////////////////
-	                   jmp              gameLoop
+	                   jmp              CHECK
 
 	exitProg:          
 	                   clearWholeScreen
@@ -353,11 +353,12 @@ GENERATE_OFFSET PROC near
 
 	Fire:              
 	                   mov              bx, 0ffffh
-	                   mov              SI, offset BulletDirection
+	                   mov              SI, offset BulletDirection - 2 
 	NextBulletIndex:   
-                       inc              SI
-                       inc              bx
-	                   cmp              [SI], 1
+                       add				SI, 2
+                       add              bx, 2
+					   mov 				dx, 1
+	                   cmp              [SI], dx
 	                   je               NextBulletIndex
 	                   
     
@@ -369,10 +370,8 @@ GENERATE_OFFSET PROC near
 	                   mov              dX, offsetX
 	                   add              DX, sizeX
 	                   INC              DX
-	                   MOV              BulletOffsetX[bx], DX
-                
+	                   MOV              BulletOffsetX[bx], DX     
 	; For y
-
 	                   mov              dx, sizeY
 	                   sub              dx, BulletYSize
 

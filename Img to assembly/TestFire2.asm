@@ -167,7 +167,6 @@ MAIN PROC FAR
 	; mov bp, offset playerName1 + 1
 	; or           [bp], 0
 	; jnz            mainMenuLoop
-
 	; mov            ah,09h
 	; lea            dx, enterValidName      	; ask for a valid player's name
 	; int            21h
@@ -203,8 +202,7 @@ MAIN PROC FAR
 	                   call             Drawship                  	;this subroutine is responsible for drawing the ship using its cooardinates
 	;//////////////////////////////Interacting with the user////////////////////////////////////
 	CHECK:             
-	                   mov              bx, offset BulletDirection
-	                   mov              cx, bx
+	                   mov              cx, BulletDirection
 	                   cmp              cx, 0
 	                   JZ               ContinueBullet
 	                   cmp              BulletOffsetX, 633
@@ -229,7 +227,7 @@ MAIN PROC FAR
 	                   CALL             GENERATE_OFFSET           	; TO GENERATE THE new OFFSET OF THE ship
 
 	; ;///////////////////////////////////////////////////////////////////////////////////////
-	                   jmp              gameLoop
+	                   jmp              CHECK
 
 	exitProg:          
 	                   clearWholeScreen
@@ -251,7 +249,7 @@ Bullet_Offset PROC near
 	                   mov              cl, BulletSpeed
 	                   mov              ch, 0
 	                   mov              bx, offset BulletOffsetX
-	                   add              bx, cx
+	                   add              [bx], cx
 	                   pop              ax
 	Bullete_Offset_ret:ret
 Bullet_Offset ENDP
