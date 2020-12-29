@@ -1032,6 +1032,7 @@ MAIN PROC FAR
 	                    jmp              CheckInMainMenu
 
 	enterbtn:           cmp              ah, 01ch                 	; enter
+		            	jne              CheckInMainMenu			; added to prevent other buttons from doing enter's action
 	                    cmp              arrowoffsetY, arrowAtExit
 	                    je               exitProg
 	                    cmp              arrowoffsetY, arrowAtChat
