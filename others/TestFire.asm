@@ -1,5 +1,5 @@
 ;///////////////////////////////Macros////////////////////////////////////
-.model huge
+.model compact
 MOVEMENT MACRO UP, DOWN, LEFT, RIGHT, FIRE_BTN
 	
 	         mov cx, 0

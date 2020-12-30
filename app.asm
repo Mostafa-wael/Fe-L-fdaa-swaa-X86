@@ -85,7 +85,7 @@ clearWholeScreen MACRO
 	                DB          '      ||            Please, Enter your name               ||',0ah,0dh
 	                DB          '      ||       Then, press Enter to start the game        ||',0ah,0dh
 	                DB          '      ||                                                  ||',0ah,0dh
-	                DB          '      ||             ** MAX 21 CHARCHTERS **              ||',0ah,0dh
+	                DB          '      ||             ** MAX 20 CHARCHTERS **              ||',0ah,0dh
 	                DB          '      ||                                                  ||',0ah,0dh
 	                DB          '      || =======================================================',0ah,0dh
 	                DB          '      ||                                                    ',0ah,0dh
