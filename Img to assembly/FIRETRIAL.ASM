@@ -136,9 +136,10 @@ clearWholeScreen MACRO
 	BulletXSize     equ         5
 	BulletYSize     equ         4
 	BulletSpeed     DB          1
+	MAXBULLET       equ         100
 	BulletOffset    DW          200 DUP(0)
 	BulletDirection DB          100 DUP(0)
-
+    MAXBULLETLEFT   equ         633
 
 				   
 ;///////////////////////////////Data Initializations////////////////////////////////////
@@ -208,19 +209,18 @@ MAIN PROC FAR
 	                   mov              Al, [SI]
 	                   CMP              Al, 0
 	                   JE               ContinueBullet
-	                   CMP              [DI], 633
-	                   JGE              StopBullet
 	                   CALL             EraseBullet
+	                   CMP              [DI], MAXBULLETLEFT
+	                   JGE              StopBullet
 	                   CALL             Bullet_Offset
 	                   CALL             DrawBullet
 	                   jmp              ContinueBullet
 	StopBullet:        mov              dl, 0
 	                   mov              [SI], dl
-	                   CALL             EraseBullet
 	ContinueBullet:    INC              BX
 	                   ADD              SI, 1
 	                   ADD              DI, 4
-	                   CMP              BX, 100
+	                   CMP              BX, MAXBULLET
 	                   JE               ContinueBullets
 	                   JMP              CHECKBULLETS
 
@@ -260,7 +260,7 @@ Bullet_Offset PROC near
 	                   mov              cl, BulletSpeed
 	                   mov              ch, 0
 	                   add              [DI], cx
-                       pop              BX
+	                   pop              BX
 	                   pop              ax
 	Bullete_Offset_ret:ret
 Bullet_Offset ENDP
@@ -286,7 +286,7 @@ GENERATE_OFFSET PROC near
 	                   jmp              CHECK
 
 	ReadFire:          
-	                   call             DrawBullet
+	;call             DrawBullet
 
 	                   mov              ah,0                   	;wait for a key to be pressed and put it in ah, ah:al = scan code: ASCII code
 	                   int              16h
@@ -350,7 +350,7 @@ GENERATE_OFFSET PROC near
 	findEmptyBullet:   MOV              DL, 0
 	                   CMP              [SI], DL
 	                   JE               found
-	                   CMP              BX, 100
+	                   CMP              BX, MAXBULLET
 	                   JE               notFound
 	                   INC              BX
 	                   INC              SI
@@ -358,13 +358,13 @@ GENERATE_OFFSET PROC near
     
 	notFound:          ret
 
-	found:             mov              dx, 1
+	found:             mov              dl, 1
+	                   mov              [SI], dl               	; For Right Direction
 	                   LEA              DI, BulletOffset
 	                   ADD              DI, BX
 	                   ADD              DI, BX
-                       ADD              DI, BX
 	                   ADD              DI, BX
-	                   mov              [SI], dx               	; For Right Direction
+	                   ADD              DI, BX
 
 	; For x
                     
