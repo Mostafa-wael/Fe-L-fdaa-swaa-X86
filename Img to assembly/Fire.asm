@@ -136,29 +136,28 @@ clearWholeScreen MACRO
 	BulletXSize     equ         5
 	BulletYSize     equ         4
 	BulletSpeed     DB          1
-	BulletOffsetX   DW          0
-	BulletOffsetY   DW          0
-	BulletDirection DW          0
+	BulletOffset    DW          100 DUP(0)
+	BulletDirection DB          100 DUP(0)
 
 
 				   
 ;///////////////////////////////Data Initializations////////////////////////////////////
 .code
 MAIN PROC FAR
-	                   mov              AX,@data                  	;initializing the data segemnt
+	                   mov              AX,@data               	;initializing the data segemnt
 	                   mov              DS,AX
 	firstScreenLoop:   
-	                   mov              ax, graphicsMode          	; enter graphicsMode
+	                   mov              ax, graphicsMode       	; enter graphicsMode
 
 	                   mov              ah,09h
-	                   lea              dx, firstScreen           	; show the first screen
+	                   lea              dx, firstScreen        	; show the first screen
 	                   int              21h
 
 	                   mov              ah,09h
-	                   lea              dx, getName               	; ask for player's name
+	                   lea              dx, getName            	; ask for player's name
 	                   int              21h
 
-	getNameLoop:       lea              si, playerName1           	; get player's name
+	getNameLoop:       lea              si, playerName1        	; get player's name
 	                   mov              ah, 0Ah
 	                   mov              dx, si
 	                   int              21h
@@ -173,58 +172,67 @@ MAIN PROC FAR
 	; jmp            getNameLoop
 
 	mainMenuLoop:      
-	                   mov              ax, graphicsMode          	; enter graphicsMode to delete the screen
+	                   mov              ax, graphicsMode       	; enter graphicsMode to delete the screen
 
 	                   mov              ah, 09h
-	                   lea              dx, mainMenu              	; show the main menu
+	                   lea              dx, mainMenu           	; show the main menu
 	                   int              21h
 
-	CheckInMainMenu:   mov              ah,0                      	;  ah:al = scan code: ASCII code
+	CheckInMainMenu:   mov              ah,0                   	;  ah:al = scan code: ASCII code
 	                   int              16h
-	                   jz               CheckInMainMenu           	; check if there is any input
+	                   jz               CheckInMainMenu        	; check if there is any input
 
-	                   cmp              ah,3Bh                    	; F1
+	                   cmp              ah,3Bh                 	; F1
 	                   jz               firstScreenLoop
 
-	                   cmp              ah,3ch                    	; F2
+	                   cmp              ah,3ch                 	; F2
 	                   jz               gameLoop
 
-	                   cmp              al,1Bh                    	; ESC
+	                   cmp              al,1Bh                 	; ESC
 	                   jz               exitProg
 					
-	                   jmp              CheckInMainMenu           	; not working yet
+	                   jmp              CheckInMainMenu        	; not working yet
 
-	gameLoop:                                                     	;NOTE:since we are using words, we will use the value '2' to traverse pixels
+	gameLoop:                                                  	;NOTE:since we are using words, we will use the value '2' to traverse pixels
 	                   mov              ax, graphicsMode
 	;//////////////////////////////initializations////////////////////////////////////
 	                   mov              bx, 0100h
 	                   int              10h
-	                   call             Drawship                  	;this subroutine is responsible for drawing the ship using its cooardinates
+	                   call             Drawship               	;this subroutine is responsible for drawing the ship using its cooardinates
 	;//////////////////////////////Interacting with the user////////////////////////////////////
 	CHECK:             
-	                   mov              cx, BulletDirection
-	                   cmp              cx, 0
-	                   JZ               ContinueBullet
-	                   cmp              BulletOffsetX, 633
-	                   jg               StopBullet
+	                   mov              BX, 0
+	                   LEA              SI, BulletDirection
+	                   LEA              DI, BulletOffset
+	CHECKBULLETS:      mov              AX, [SI]
+	                   CMP              AX, 0
+	                   JE               ContinueBullet
+	                   CMP              [DI], 633
+	                   JG               StopBullet
 	                   CALL             EraseBullet
 	                   CALL             Bullet_Offset
 	                   CALL             DrawBullet
 	                   delay            65000
 	                   jmp              ContinueBullet
-
-	StopBullet:        mov              BulletDirection, 0
+	StopBullet:        mov              dl, 0
+	                   mov              [SI], dl
 	                   CALL             EraseBullet
+	ContinueBullet:    INC              BX
+	                   ADD              SI, 1
+	                   ADD              DI, 4
+	                   CMP              BX, 100
+	                   JE               ContinueBullets
+	                   JMP              CHECKBULLETS
 
-	ContinueBullet:    
+	ContinueBullets:   
 	                   mov              ah,1
 	                   int              16h
-	                   jz               CHECK                     	; check if there is any input
+	                   jz               CHECK                  	; check if there is any input
 	; Can Be Changed
 	; ///////////////////////////////////////////////////////////////
 	;---------------------------------------------------------------
 
-	                   CALL             GENERATE_OFFSET           	; TO GENERATE THE new OFFSET OF THE ship
+	                   CALL             GENERATE_OFFSET        	; TO GENERATE THE new OFFSET OF THE ship
 
 	; ;///////////////////////////////////////////////////////////////////////////////////////
 	                   jmp              CHECK
@@ -232,7 +240,7 @@ MAIN PROC FAR
 	exitProg:          
 	                   clearWholeScreen
 	                   mov              ah,09h
-	                   lea              dx, byebye                	; show the first screen
+	                   lea              dx, byebye             	; show the first screen
 	                   int              21h
 					
 	                   HLT
@@ -243,44 +251,46 @@ MAIN ENDP
 
 	;//////////////////////////////Procedures//////////////////////////////////////////////
 Bullet_Offset PROC near
-					   cmp              BulletDirection, 1
-					   JNZ              Bullete_Offset_ret
+	                   mov              dl, 1
+	                   cmp              [SI], dl
+	                   JNZ              Bullete_Offset_ret
 	                   push             ax
+	                   push             bx
 	                   mov              cl, BulletSpeed
 	                   mov              ch, 0
-	                   mov              bx, offset BulletOffsetX
-	                   add              [bx], cx
+	                   add              [DI], cx
 	                   pop              ax
+	                   pop              BX
 	Bullete_Offset_ret:ret
 Bullet_Offset ENDP
 
 
 GENERATE_OFFSET PROC near
 
-	                   cmp              al,1Bh                    	; ESC
+	                   cmp              al,1Bh                 	; ESC
 	                   jz               exitProg
 	                   cmp              ah, 21H
 	                   jz               DontErase
-	                   call             Eraseship                 	; get the pressed key from the user
+	                   call             Eraseship              	; get the pressed key from the user
 	DontErase:         MOVEMENT         11H, 1FH, 1EH, 20H, 21H
 
 
 	ReadKey:           
 	                   call             Drawship
 
-	                   mov              ah,0                      	;wait for a key to be pressed and put it in ah, ah:al = scan code: ASCII code
+	                   mov              ah,0                   	;wait for a key to be pressed and put it in ah, ah:al = scan code: ASCII code
 	                   int              16h
 
-	                   mov              cx, 0                     	; initialize cx to use it to iterate over the shipSize
+	                   mov              cx, 0                  	; initialize cx to use it to iterate over the shipSize
 	                   jmp              CHECK
 
 	ReadFire:          
 	                   call             DrawBullet
 
-	                   mov              ah,0                      	;wait for a key to be pressed and put it in ah, ah:al = scan code: ASCII code
+	                   mov              ah,0                   	;wait for a key to be pressed and put it in ah, ah:al = scan code: ASCII code
 	                   int              16h
 
-	                   mov              cx, 0                     	; initialize cx to use it to iterate over the Bullet Size
+	                   mov              cx, 0                  	; initialize cx to use it to iterate over the Bullet Size
 	                   jmp              CHECK
 	;///////////////////////////////////////////////////////////////////////////////////////
 	MoveUp:            
@@ -334,15 +344,31 @@ GENERATE_OFFSET PROC near
 	                   jmp              ReadKey
 
 	Fire:              
-	                   mov              dx, 1
-	                   mov              BulletDirection, dx       	; For Right Direction
+	                   mov              bx, 0
+	                   LEA              SI, BulletDirection
+	findEmptyBullet:   MOV              DL, 0
+	                   CMP              [SI], DL
+	                   JE               found
+	                   CMP              BX, 100
+	                   JE               notFound
+	                   INC              BX
+	                   INC              SI
+	                   JMP              findEmptyBullet
+
+	notFound:          ret
+
+	found:             mov              dx, 1
+	                   LEA              DI, BulletOffset
+	                   ADD              DI, BX
+	                   ADD              DI, BX
+	                   mov              [SI], dx               	; For Right Direction
 
 	; For x
                     
 	                   mov              dX, offsetX
 	                   add              DX, sizeX
 	                   INC              DX
-	                   MOV              BulletOffsetX, DX
+	                   MOV              [DI], DX
                 
 	; For y
 
@@ -363,7 +389,7 @@ GENERATE_OFFSET PROC near
 	                   pop              ax
 	                   add              dx, offsetY
 
-	                   mov              BulletOffsetY, dx
+	                   mov              [DI] + 2, dx
 	                   jmp              ReadFire
 
 	                   ret
@@ -372,56 +398,56 @@ GENERATE_OFFSET ENDP
 Drawship PROC	near
 	; initialize containers
 	                   mov              SI, offset shipC
-	                   mov              cx, SizeX                 	;Column X
-	                   mov              dx, SizeY                 	;Row Y
-	                   mov              ah, 0ch                   	;Draw Pixel Command
+	                   mov              cx, SizeX              	;Column X
+	                   mov              dx, SizeY              	;Row Y
+	                   mov              ah, 0ch                	;Draw Pixel Command
 	Drawit:            
-	                   mov              bl, [SI]                  	;use color from array color for testing
+	                   mov              bl, [SI]               	;use color from array color for testing
 	                   and              bl, bl
 	                   JZ               back
 	                   add              cx, offsetX
 	                   add              dx, offsety
-	                   mov              al, [SI]                  	;  use color from array color for testing
-	                   int              10h                       	;  draw the pixel
+	                   mov              al, [SI]               	;  use color from array color for testing
+	                   int              10h                    	;  draw the pixel
 	                   sub              cx, offsetX
 	                   sub              dx, offsety
 
 	back:              
 	                   inc              SI
-	                   DEC              Cx                        	;  loop iteration in x direction
-	                   JNZ              Drawit                    	;  check if we can draw c urrent x and y and excape the y iteration
-	                   mov              Cx, SizeX                 	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                   DEC              DX                        	;  loop iteration in y direction
-	                   JZ               alldrawn                  	;  both x and y reached 00 so finish drawing
+	                   DEC              Cx                     	;  loop iteration in x direction
+	                   JNZ              Drawit                 	;  check if we can draw c urrent x and y and excape the y iteration
+	                   mov              Cx, SizeX              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                   DEC              DX                     	;  loop iteration in y direction
+	                   JZ               alldrawn               	;  both x and y reached 00 so finish drawing
 	                   jmp              Drawit
 	alldrawn:          ret
 Drawship ENDP
 Eraseship PROC near
 	; initialize containers
-	                   mov              SI, offset shipC          	;shipY is (shipX index + size * 2) so we can use Si for both
-	                   mov              cx, SizeX                 	;Column X
-	                   mov              dx, SizeY                 	;Row Y
+	                   mov              SI, offset shipC       	;shipY is (shipX index + size * 2) so we can use Si for both
+	                   mov              cx, SizeX              	;Column X
+	                   mov              dx, SizeY              	;Row Y
 	                   push             ax
-	                   mov              ah, 0ch                   	;Draw Pixel Command
-	                   mov              al, 0h                    	;to be replaced with background
+	                   mov              ah, 0ch                	;Draw Pixel Command
+	                   mov              al, 0h                 	;to be replaced with background
 	
 	Drawit2:           
-	                   mov              bl, [SI]                  	;  use color from array color for testing
+	                   mov              bl, [SI]               	;  use color from array color for testing
 	                   and              bl, bl
 	                   JZ               back2
 	                   add              cx, offsetX
 	                   add              dx, offsety
-	                   int              10h                       	;  draw the pixel
+	                   int              10h                    	;  draw the pixel
 	                   sub              cx, offsetX
 	                   sub              dx, offsety
 
 	back2:             
 	                   inc              SI
-	                   DEC              Cx                        	;  loop iteration in x direction
-	                   JNZ              Drawit2                   	;  check if we can draw c urrent x and y and excape the y iteration
-	                   mov              Cx, SizeX                 	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                   DEC              DX                        	;  loop iteration in y direction
-	                   JZ               alldrawn2                 	;  both x and y reached 00 so finish drawing
+	                   DEC              Cx                     	;  loop iteration in x direction
+	                   JNZ              Drawit2                	;  check if we can draw c urrent x and y and excape the y iteration
+	                   mov              Cx, SizeX              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                   DEC              DX                     	;  loop iteration in y direction
+	                   JZ               alldrawn2              	;  both x and y reached 00 so finish drawing
 	                   jmp              Drawit2
 	alldrawn2:         pop              ax
 	                   ret
@@ -430,63 +456,73 @@ Eraseship ENDP
 
 DrawBullet PROC near
 	; initialize containers
+	                   push             SI
+	                   push             BX
+	                   push             AX
 	                   mov              SI, offset Bullet
-	                   mov              cx, BulletXSize           	;Column X
-	                   mov              dx, BulletYSize           	;Row Y
-	                   mov              ah, 0ch                   	;Draw Pixel Command
+	                   mov              cx, BulletXSize        	;Column X
+	                   mov              dx, BulletYSize        	;Row Y
+	                   mov              ah, 0ch                	;Draw Pixel Command
 	BulletDrawit:      
-	                   mov              bl, [SI]                  	;use color from array color for testing
+	                   mov              bl, [SI]               	;use color from array color for testing
 	                   and              bl, bl
 	                   JZ               Bulletback
-	                   add              cx, BulletOffsetX
-	                   add              dx, BulletOffsetY
-	                   mov              al, [SI]                  	;  use color from array color for testing
-	                   int              10h                       	;  draw the pixel
-	                   sub              cx, BulletOffsetX
-	                   sub              dx, BulletOffsetY
+	                   add              cx, [DI]
+	                   add              dx, [DI] + 2
+	                   mov              al, [SI]               	;  use color from array color for testing
+	                   int              10h                    	;  draw the pixel
+	                   sub              cx, [DI]
+	                   sub              dx, [DI] + 2
 
 	Bulletback:        
 	                   inc              SI
-	                   DEC              Cx                        	;  loop iteration in x direction
-	                   JNZ              BulletDrawit              	;  check if we can draw c urrent x and y and excape the y iteration
-	                   mov              Cx, BulletXSize           	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                   DEC              DX                        	;  loop iteration in y direction
-	                   JZ               Bulletalldrawn            	;  both x and y reached 00 so finish drawing
+	                   DEC              Cx                     	;  loop iteration in x direction
+	                   JNZ              BulletDrawit           	;  check if we can draw c urrent x and y and excape the y iteration
+	                   mov              Cx, BulletXSize        	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                   DEC              DX                     	;  loop iteration in y direction
+	                   JZ               Bulletalldrawn         	;  both x and y reached 00 so finish drawing
 	                   jmp              BulletDrawit
-	Bulletalldrawn:    ret
+	Bulletalldrawn:    pop              AX
+	                   POP              BX
+	                   POP              SI
+	                   ret
 DrawBullet ENDP
 
 
 EraseBullet PROC near
 	; initialize containers
-	                   mov              SI, offset Bullet         	;shipY is (shipX index + size * 2) so we can use Si for both
+	                   PUSH             SI
+	                   mov              SI, offset Bullet      	;shipY is (shipX index + size * 2) so we can use Si for both
+	                   PUSH             BX
 
-	                   mov              Cx, BulletXSize           	;Column X
-	                   mov              dx, BulletYSize           	;Row Y
+	                   mov              Cx, BulletXSize        	;Column X
+	                   mov              dx, BulletYSize        	;Row Y
 	                   push             ax
-	                   mov              ah, 0ch                   	;Draw Pixel Command
-	                   mov              al, 0h                    	;to be replaced with background
+	                   mov              ah, 0ch                	;Draw Pixel Command
+	                   mov              al, 0h                 	;to be replaced with background
 	
 	Drawit2Bullet:     
-	                   mov              bl, [SI]                  	;  use color from array color for testing
+	                   mov              bl, [SI]               	;  use color from array color for testing
 	                   and              bl, bl
 	                   JZ               back2Bullet
-	                   add              cx, BulletOffsetX
-	                   add              dx, BulletOffsetY
-	                   int              10h                       	;  draw the pixel
-	                   sub              cx, BulletOffsetX
-	                   sub              dx, BulletOffsetY
+	                   add              cx, [DI]
+	                   add              dx, [DI] + 2
+	                   int              10h                    	;  draw the pixel
+	                   sub              cx, [DI]
+	                   sub              dx, [DI] + 2
 
 	back2Bullet:       
 	                   inc              SI
-	                   DEC              cx                        	;  loop iteration in x direction
-	                   JNZ              Drawit2Bullet             	;  check if we can draw c urrent x and y and excape the y iteration
-	                   mov              cx, BulletXSize           	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                   DEC              dx                        	;  loop iteration in y direction
-	                   JZ               alldrawn2Bullet           	;  both x and y reached 00 so finish drawing
+	                   DEC              cx                     	;  loop iteration in x direction
+	                   JNZ              Drawit2Bullet          	;  check if we can draw c urrent x and y and excape the y iteration
+	                   mov              cx, BulletXSize        	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                   DEC              dx                     	;  loop iteration in y direction
+	                   JZ               alldrawn2Bullet        	;  both x and y reached 00 so finish drawing
 	                   jmp              Drawit2Bullet
 	alldrawn2Bullet:   
 	                   pop              ax
+	                   POP              BX
+	                   POP              SI
 	                   ret
 EraseBullet ENDP
 
