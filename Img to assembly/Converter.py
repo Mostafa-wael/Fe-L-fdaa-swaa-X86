@@ -1,5 +1,5 @@
 from PIL import Image
-filename = 'Bullet.png'
+filename = 'NameBox.png'
 im = Image.open(filename)
 width, height = im.size
 pixels = list(im.getdata())
