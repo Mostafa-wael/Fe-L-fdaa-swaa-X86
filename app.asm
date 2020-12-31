@@ -19,112 +19,15 @@ ENDM
 clearWholeScreen MACRO
 	                 mov ah, 0
 	                 mov al, 3
-	                 INT 10H  	;FOR VIDEO DISPLAY
+	                 INT 10H             	;FOR VIDEO DISPLAY
+
+	                 mov ax, graphicsMode	; return to the graphicsMode
+	                 mov bx, 0100h       	; BX = 81FFh
+	                 int 10h
 	ENDM
 ;///////////////////////////////Macros////////////////////////////////////
 ;///////////////////////////////Data Initializations////////////////////////////////////
 .data
-	; constrains depend on the graphics mode
-	graphicsMode    equ         4F02h
-	offsetX         dw          6h                                                                                                                                                                                                    	;position of first from left pixel
-	offsetY         dw          100                                                                                                                                                                                                   	;position of first from top pixel
-	SizeX           equ         32                                                                                                                                                                                                    	;img Width
-	SizeY           equ         32                                                                                                                                                                                                    	;img Height
-	SizeC           equ         1024
-	maxY            equ         360
-	maxX            equ         320
-	planeSpeed      equ         4
-	minY            equ         80
-	minX            equ         4
-	;////////////////////////////////
-	gamebtnOffsetX  equ         226
-	gamebtnOffsetY  equ         204
-	;
-	    
-	chatbtnOffsetX  equ         226
-	chatbtnOffsetY  equ         268
-	;
-	               
-	exitbtnOffsetX  equ         226
-	exitbtnOffsetY  equ         332
-	;
-	buttonSizeX     equ         188
-	buttonSizeY     equ         56
-	;
-	startX          equ         220                                                                                                                                                                                                   	; 226 - 6
-	endX            equ         420                                                                                                                                                                                                   	; 414 + 6
-	;
-	                arrowOffset label word
-	arrowOffsetX    dw          184
-	arrowOffsetY    dw          216
-	arrowOffsetXRev dw          424
-	;
-	arrowSizeX      equ         32
-	arrowSizeY      equ         32
-	arrowStep       equ         64
-	arrowAtgame     equ         216
-	arrowAtChat     equ         280
-	arrowAtExit     equ         344
-	;
-	logoOffset      dw          203,24
-	logoSizeX       equ         214
-	logoSizeY       equ         157
-	;////////////////////////////////     	                                                                                                                                                                                      	;don't make this 0
-	getName         DB          " Your name: $"
-	enterValidName  DB          " Please, enter a valid name: $"
-	playerName1     DB          21,?,21 dup("$")
-	                firstScreen label byte
-	                DB          '  ',0ah,0dh                                                                                                                                                                                          	; new line
-	                DB          '                                                          ||',0ah,0dh
-	                DB          '   =======================================================||',0ah,0dh
-	                DB          '      ||                                                  ||',0ah,0dh
-	                DB          '      ||            #### FE L FDA SWAAA ####              ||',0ah,0dh
-	                DB          '      ||                                                  ||',0ah,0dh
-	                DB          '      ||--------------------------------------------------||',0ah,0dh
-	                DB          '      ||                                                  ||',0ah,0dh
-	                DB          '      ||            Please, Enter your name               ||',0ah,0dh
-	                DB          '      ||       Then, press Enter to start the game        ||',0ah,0dh
-	                DB          '      ||                                                  ||',0ah,0dh
-	                DB          '      ||             ** MAX 21 CHARCHTERS **              ||',0ah,0dh
-	                DB          '      ||                                                  ||',0ah,0dh
-	                DB          '      || =======================================================',0ah,0dh
-	                DB          '      ||                                                    ',0ah,0dh
-	                DB          '$',0ah,0dh
-	                mainMenu    label byte
-	                DB          '  ',0ah,0dh                                                                                                                                                                                          	; new line
-	                DB          '                                                           ||',0ah,0dh
-	                DB          '                                                           ||',0ah,0dh
-	                DB          '                                                           ||',0ah,0dh
-	                DB          '   ========================================================||',0ah,0dh
-	                DB          '       ||                                                  ||',0ah,0dh
-	                DB          '       ||            Press, F1 to beign chatting           ||',0ah,0dh
-	                DB          '       ||            Press, F2 to start the game           ||',0ah,0dh
-	                DB          '       ||            Press, ESC to exit the prgram         ||',0ah,0dh
-	                DB          '       ||                                                  ||',0ah,0dh
-	                DB          '       ||--------------------------------------------------||',0ah,0dh
-	                DB          '       ||                     chat...                      ||',0ah,0dh
-	                DB          '       || ========================================================',0ah,0dh
-	                DB          '       ||                                                    ',0ah,0dh
-	                DB          '       ||                                                    ',0ah,0dh
-	                DB          '       ||                                                    ',0ah,0dh
-	                DB          '$',0ah,0dh
-	                byebye      label byte
-	                DB          '  ',0ah,0dh
-	                DB          '                                   ||',0ah,0dh
-	                DB          '                                   ||',0ah,0dh
-	                DB          '                                   ||',0ah,0dh
-	                DB          '                                   ||',0ah,0dh
-	                DB          '                                   ||',0ah,0dh
-	                DB          '   ================================||',0ah,0dh
-	                DB          '       ||           Bye Bye        ||',0ah,0dh
-	                DB          '       || ================================',0ah,0dh
-	                DB          '       ||                           ',0ah,0dh
-	                DB          '       ||                           ',0ah,0dh
-	                DB          '       ||                           ',0ah,0dh
-	                DB          '       ||                           ',0ah,0dh
-	                DB          '       ||                           ',0ah,0dh
-	                DB          '$',0ah,0dh
-				   
 	;///////////////////////////////Data Initializations////////////////////////////////////
 	;//////////////////////////////////////Art/////////////////////////////////////////////
 	                arrow       label byte
@@ -959,7 +862,107 @@ clearWholeScreen MACRO
 	
 	
 	
+	
 	;//////////////////////////////////////Art/////////////////////////////////////////////
+	; constrains depend on the graphics mode
+	graphicsMode    equ         4F02h
+	offsetX         dw          6h                                                                                                                                                                                                    	;position of first from left pixel
+	offsetY         dw          100                                                                                                                                                                                                   	;position of first from top pixel
+	SizeX           equ         32                                                                                                                                                                                                    	;img Width
+	SizeY           equ         32                                                                                                                                                                                                    	;img Height
+	SizeC           equ         1024
+	maxY            equ         360
+	maxX            equ         320
+	planeSpeed      equ         4
+	minY            equ         80
+	minX            equ         4
+	;////////////////////////////////
+	gamebtnOffsetX  equ         226
+	gamebtnOffsetY  equ         204
+	;
+	    
+	chatbtnOffsetX  equ         226
+	chatbtnOffsetY  equ         268
+	;
+	               
+	exitbtnOffsetX  equ         226
+	exitbtnOffsetY  equ         332
+	;
+	buttonSizeX     equ         188
+	buttonSizeY     equ         56
+	;
+	                arrowOffset label word
+	arrowOffsetX    dw          184
+	arrowOffsetY    dw          216
+	arrowOffsetXRev dw          424
+	;
+	arrowSizeX      equ         32
+	arrowSizeY      equ         32
+	arrowStep       equ         64
+	arrowAtgame     equ         216
+	arrowAtChat     equ         280
+	arrowAtExit     equ         344
+	;
+	logoOffset      dw          203,24
+	logoSizeX       equ         214
+	logoSizeY       equ         157
+	;////////////////////////////////     	                                                                                                                                                                                      	;don't make this 0
+	getName         DB          " Your name: $"
+	enterValidName  DB          " Please, enter a valid name: $"
+	playerName1     DB          21,?,21 dup("$")
+	                firstScreen label byte
+	                DB          '  ',0ah,0dh                                                                                                                                                                                          	; new line
+	                DB          '                                                          ||',0ah,0dh
+	                DB          '   =======================================================||',0ah,0dh
+	                DB          '      ||                                                  ||',0ah,0dh
+	                DB          '      ||            #### FE L FDA SWAAA ####              ||',0ah,0dh
+	                DB          '      ||                                                  ||',0ah,0dh
+	                DB          '      ||--------------------------------------------------||',0ah,0dh
+	                DB          '      ||                                                  ||',0ah,0dh
+	                DB          '      ||            Please, Enter your name               ||',0ah,0dh
+	                DB          '      ||       Then, press Enter to start the game        ||',0ah,0dh
+	                DB          '      ||                                                  ||',0ah,0dh
+	                DB          '      ||             ** MAX 21 CHARCHTERS **              ||',0ah,0dh
+	                DB          '      ||                                                  ||',0ah,0dh
+	                DB          '      || =======================================================',0ah,0dh
+	                DB          '      ||                                                    ',0ah,0dh
+	                DB          '$',0ah,0dh
+	                mainMenu    label byte
+	                DB          '  ',0ah,0dh                                                                                                                                                                                          	; new line
+	                DB          '                                                           ||',0ah,0dh
+	                DB          '                                                           ||',0ah,0dh
+	                DB          '                                                           ||',0ah,0dh
+	                DB          '   ========================================================||',0ah,0dh
+	                DB          '       ||                                                  ||',0ah,0dh
+	                DB          '       ||            Press, F1 to beign chatting           ||',0ah,0dh
+	                DB          '       ||            Press, F2 to start the game           ||',0ah,0dh
+	                DB          '       ||            Press, ESC to exit the prgram         ||',0ah,0dh
+	                DB          '       ||                                                  ||',0ah,0dh
+	                DB          '       ||--------------------------------------------------||',0ah,0dh
+	                DB          '       ||                     chat...                      ||',0ah,0dh
+	                DB          '       || ========================================================',0ah,0dh
+	                DB          '       ||                                                    ',0ah,0dh
+	                DB          '       ||                                                    ',0ah,0dh
+	                DB          '       ||                                                    ',0ah,0dh
+	                DB          '$',0ah,0dh
+	                byebye      label byte
+	                DB          '  ',0ah,0dh
+	                DB          '                                   ||',0ah,0dh
+	                DB          '                                   ||',0ah,0dh
+	                DB          '                                   ||',0ah,0dh
+	                DB          '                                   ||',0ah,0dh
+	                DB          '                                   ||',0ah,0dh
+	                DB          '   ================================||',0ah,0dh
+	                DB          '       ||           Bye Bye        ||',0ah,0dh
+	                DB          '       || ================================',0ah,0dh
+	                DB          '       ||                           ',0ah,0dh
+	                DB          '       ||                           ',0ah,0dh
+	                DB          '       ||                           ',0ah,0dh
+	                DB          '       ||                           ',0ah,0dh
+	                DB          '       ||                           ',0ah,0dh
+	                DB          '$',0ah,0dh
+				   
+
 .code
 MAIN PROC FAR
 	                    mov              AX,@data                 	;initializing the data segemnt
@@ -996,9 +999,7 @@ MAIN PROC FAR
 	;///////////////////////////////Main Menu////////////////////////////////////
 	mainMenuLoop:       
 	                    clearWholeScreen
-	                    mov              ax, graphicsMode         	; enter graphicsMode
-	                    mov              bx, 0100h                	; BX = 81FFh
-	                    int              10h
+	                   
 	;call             background
 	                    call             drawgamebtn
 	                    call             drawchatbtn
@@ -1032,7 +1033,7 @@ MAIN PROC FAR
 	                    jmp              CheckInMainMenu
 
 	enterbtn:           cmp              ah, 01ch                 	; enter
-		            	jne              CheckInMainMenu			; added to prevent other buttons from doing enter's action
+	                    jne              CheckInMainMenu          	; added to prevent other buttons from doing enter's action
 	                    cmp              arrowoffsetY, arrowAtExit
 	                    je               exitProg
 	                    cmp              arrowoffsetY, arrowAtChat

@@ -149,6 +149,7 @@ MAIN PROC FAR
 	firstScreenLoop:   
 	                   mov              ax, graphicsMode       	; enter graphicsMode
 
+					   jmp gameLoop
 	                   mov              ah,09h
 	                   lea              dx, firstScreen        	; show the first screen
 	                   int              21h

@@ -77,7 +77,7 @@ clearWholeScreen MACRO
 	getName         DB          " Your name: $"
 	enterValidName  DB          " Please, enter a valid name: $"
 	playerName1     DB          21,?,21 dup("$")
-	                firstScreen label byte
+	firstScreen label byte
 	                DB          '  ',0ah,0dh                                                                                                                                                                  	; new line
 	                DB          '                                                          ||',0ah,0dh
 	                DB          '   =======================================================||',0ah,0dh
