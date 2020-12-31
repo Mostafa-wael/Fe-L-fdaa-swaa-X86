@@ -19,17 +19,11 @@ ENDM
 clearWholeScreen MACRO
 	                 mov ah, 0
 	                 mov al, 3
-	                 INT 10H             	;FOR VIDEO DISPLAY
-
-	                 mov ax, graphicsMode	; return to the graphicsMode
-	                 mov bx, 0100h       	; BX = 81FFh
-	                 int 10h
+	                 INT 10H  	;FOR VIDEO DISPLAY
 	ENDM
 ;///////////////////////////////Macros////////////////////////////////////
 ;///////////////////////////////Data Initializations////////////////////////////////////
 .data
-<<<<<<< HEAD
-=======
 	; constrains depend on the graphics mode
 	graphicsMode    equ         4F02h
 	offsetX         dw          6h                                                                                                                                                                                                    	;position of first from left pixel
@@ -42,6 +36,16 @@ clearWholeScreen MACRO
 	planeSpeed      equ         4
 	minY            equ         80
 	minX            equ         4
+
+
+
+	minY2           equ         80
+	minX2           equ         320  
+    	maxY2           equ         360
+	maxX2           equ         640
+    	offsetX2        dw          608                                                                                                                                                                              	;position of first from left pixel
+	offsetY2        dw          100 
+
 	;////////////////////////////////
 	gamebtnOffsetX  equ         226
 	gamebtnOffsetY  equ         204
@@ -131,7 +135,6 @@ clearWholeScreen MACRO
 	                DB          '       ||                           ',0ah,0dh
 	                DB          '$',0ah,0dh
 				   
->>>>>>> 01d5ad38c05c2ee87dd9282463bc84615a410c4d
 	;///////////////////////////////Data Initializations////////////////////////////////////
 	;//////////////////////////////////////Art/////////////////////////////////////////////
 	                arrow       label byte
@@ -966,107 +969,7 @@ clearWholeScreen MACRO
 	
 	
 	
-	
 	;//////////////////////////////////////Art/////////////////////////////////////////////
-	; constrains depend on the graphics mode
-	graphicsMode    equ         4F02h
-	offsetX         dw          6h                                                                                                                                                                                                    	;position of first from left pixel
-	offsetY         dw          100                                                                                                                                                                                                   	;position of first from top pixel
-	SizeX           equ         32                                                                                                                                                                                                    	;img Width
-	SizeY           equ         32                                                                                                                                                                                                    	;img Height
-	SizeC           equ         1024
-	maxY            equ         360
-	maxX            equ         320
-	planeSpeed      equ         4
-	minY            equ         80
-	minX            equ         4
-	;////////////////////////////////
-	gamebtnOffsetX  equ         226
-	gamebtnOffsetY  equ         204
-	;
-	    
-	chatbtnOffsetX  equ         226
-	chatbtnOffsetY  equ         268
-	;
-	               
-	exitbtnOffsetX  equ         226
-	exitbtnOffsetY  equ         332
-	;
-	buttonSizeX     equ         188
-	buttonSizeY     equ         56
-	;
-	                arrowOffset label word
-	arrowOffsetX    dw          184
-	arrowOffsetY    dw          216
-	arrowOffsetXRev dw          424
-	;
-	arrowSizeX      equ         32
-	arrowSizeY      equ         32
-	arrowStep       equ         64
-	arrowAtgame     equ         216
-	arrowAtChat     equ         280
-	arrowAtExit     equ         344
-	;
-	logoOffset      dw          203,24
-	logoSizeX       equ         214
-	logoSizeY       equ         157
-	;////////////////////////////////     	                                                                                                                                                                                      	;don't make this 0
-	getName         DB          " Your name: $"
-	enterValidName  DB          " Please, enter a valid name: $"
-	playerName1     DB          21,?,21 dup("$")
-	                firstScreen label byte
-	                DB          '  ',0ah,0dh                                                                                                                                                                                          	; new line
-	                DB          '                                                          ||',0ah,0dh
-	                DB          '   =======================================================||',0ah,0dh
-	                DB          '      ||                                                  ||',0ah,0dh
-	                DB          '      ||            #### FE L FDA SWAAA ####              ||',0ah,0dh
-	                DB          '      ||                                                  ||',0ah,0dh
-	                DB          '      ||--------------------------------------------------||',0ah,0dh
-	                DB          '      ||                                                  ||',0ah,0dh
-	                DB          '      ||            Please, Enter your name               ||',0ah,0dh
-	                DB          '      ||       Then, press Enter to start the game        ||',0ah,0dh
-	                DB          '      ||                                                  ||',0ah,0dh
-	                DB          '      ||             ** MAX 21 CHARCHTERS **              ||',0ah,0dh
-	                DB          '      ||                                                  ||',0ah,0dh
-	                DB          '      || =======================================================',0ah,0dh
-	                DB          '      ||                                                    ',0ah,0dh
-	                DB          '$',0ah,0dh
-	                mainMenu    label byte
-	                DB          '  ',0ah,0dh                                                                                                                                                                                          	; new line
-	                DB          '                                                           ||',0ah,0dh
-	                DB          '                                                           ||',0ah,0dh
-	                DB          '                                                           ||',0ah,0dh
-	                DB          '   ========================================================||',0ah,0dh
-	                DB          '       ||                                                  ||',0ah,0dh
-	                DB          '       ||            Press, F1 to beign chatting           ||',0ah,0dh
-	                DB          '       ||            Press, F2 to start the game           ||',0ah,0dh
-	                DB          '       ||            Press, ESC to exit the prgram         ||',0ah,0dh
-	                DB          '       ||                                                  ||',0ah,0dh
-	                DB          '       ||--------------------------------------------------||',0ah,0dh
-	                DB          '       ||                     chat...                      ||',0ah,0dh
-	                DB          '       || ========================================================',0ah,0dh
-	                DB          '       ||                                                    ',0ah,0dh
-	                DB          '       ||                                                    ',0ah,0dh
-	                DB          '       ||                                                    ',0ah,0dh
-	                DB          '$',0ah,0dh
-	                byebye      label byte
-	                DB          '  ',0ah,0dh
-	                DB          '                                   ||',0ah,0dh
-	                DB          '                                   ||',0ah,0dh
-	                DB          '                                   ||',0ah,0dh
-	                DB          '                                   ||',0ah,0dh
-	                DB          '                                   ||',0ah,0dh
-	                DB          '   ================================||',0ah,0dh
-	                DB          '       ||           Bye Bye        ||',0ah,0dh
-	                DB          '       || ================================',0ah,0dh
-	                DB          '       ||                           ',0ah,0dh
-	                DB          '       ||                           ',0ah,0dh
-	                DB          '       ||                           ',0ah,0dh
-	                DB          '       ||                           ',0ah,0dh
-	                DB          '       ||                           ',0ah,0dh
-	                DB          '$',0ah,0dh
-				   
-
 .code
 MAIN PROC FAR
 	                    mov              AX,@data                 	;initializing the data segemnt
@@ -1103,7 +1006,9 @@ MAIN PROC FAR
 	;///////////////////////////////Main Menu////////////////////////////////////
 	mainMenuLoop:       
 	                    clearWholeScreen
-	                   
+	                    mov              ax, graphicsMode         	; enter graphicsMode
+	                    mov              bx, 0100h                	; BX = 81FFh
+	                    int              10h
 	;call             background
 	                    call             drawgamebtn
 	                    call             drawchatbtn
@@ -1137,7 +1042,7 @@ MAIN PROC FAR
 	                    jmp              CheckInMainMenu
 
 	enterbtn:           cmp              ah, 01ch                 	; enter
-	                    jne              CheckInMainMenu          	; added to prevent other buttons from doing enter's action
+		            	jne              CheckInMainMenu			; added to prevent other buttons from doing enter's action
 	                    cmp              arrowoffsetY, arrowAtExit
 	                    je               exitProg
 	                    cmp              arrowoffsetY, arrowAtChat
@@ -1151,14 +1056,37 @@ MAIN PROC FAR
 	                    mov              ax, graphicsMode
 	                    mov              bx, 0100h
 	                    int              10h
-	                    call             Drawship                 	;this subroutine is responsible for drawing the ship using its cooardinates
+                        call Drawship
+	                    call             Drawship2                 	;this subroutine is responsible for drawing the ship using its cooardinates
 	;////////////////////////////Interacting with the user////////////////////////////
 	CHECK:              mov              ah,1
 	                    int              16h
 	                    jz               CHECK                    	; check if there is any input
-	                    CALL             GENERATE_OFFSET          	; TO GENERATE THE new OFFSET OF THE ship
+                        cmp ah, 11H
+                        jz Ship1
+                        cmp ah, 1FH
+                        jz Ship1
+                        cmp ah, 1EH
+                        jz Ship1
+                        cmp ah, 20H
+                        jz Ship1
+
+                        cmp ah, 48H
+                        jz Ship2
+                        cmp ah, 50H
+                        jz Ship2
+                        cmp ah, 4BH
+                        jz Ship2
+                        cmp ah, 4DH
+                        jz Ship2
+                    Ship1:    
+                        call GENERATE_OFFSET
+                        jmp gameLoop
+                    Ship2:    
+	                    CALL             GENERATE_OFFSET2          	; TO GENERATE THE new OFFSET OF THE ship
+                        jmp gameLoop
 	;/////////////////////////////////////////////////////////////////////////////////
-	                    jmp              gameLoop
+	                    ;jmp              gameLoop
 	;///////////////////////////////Exit Program/////////////////////////////////////
 	exitProg:           
 	                    clearWholeScreen
@@ -1239,6 +1167,93 @@ GENERATE_OFFSET PROC near
 	                    ret
 
 GENERATE_OFFSET ENDP
+
+GENERATE_OFFSET2 PROC near
+
+	                ;cmp              al,1Bh            	; ESC
+	                ;jz               exitProg
+	                call             Eraseship2         	; get the pressed key from the user
+	                ;MOVEMENT         11H, 1FH, 1EH, 20H
+
+	         mov cx, 0
+
+                    cmp ah,48H
+                    jz  MoveUp2
+
+                    cmp ah,50H
+                    jz  MoveDown2
+
+                    cmp ah,4BH
+                    jz  MoveLeft2
+
+                    cmp ah,4DH
+                    jz  MoveRight2
+
+
+
+	ReadKey2:        
+	                call             Drawship2
+
+	                mov              ah,0              	;wait for a key to be pressed and put it in ah, ah:al = scan code: ASCII code
+	                int              16h
+
+	                mov              cx, 0             	; initialize cx to use it to iterate over the shipSize
+	                jmp              CHECK
+	;///////////////////////////////////////////////////////////////////////////////////////
+	MoveUp2:         
+	;checking for boundaries
+	;moveUP
+	                mov              bx, offsetY2
+	                cmp              bx, minY2
+	                jna              ReadKey2
+	                sub              bx, planeSpeed
+	                mov              DI, offset offsetY2
+	                mov              [DI], bx
+
+	                jmp              ReadKey2
+
+	MoveDown2:       
+	;checking for boundaries
+	;MoveDown
+	                mov              bx, offsetY2
+	                mov              cx, bx
+	                add              cx, sizeY
+	                cmp              cx, maxY2
+	                jnb              ReadKey2
+	                add              bx,planeSpeed
+	                mov              DI, offset offsetY2
+	                mov              [DI], bx
+
+	                jmp              ReadKey2
+
+	MoveLeft2:       
+	;checking for boundaries
+	                mov              bx, offsetX2
+	                cmp              bx, minX2
+	                jna              ReadKey2
+	                sub              bx, planeSpeed
+	                mov              DI, offset offsetX2
+	                mov              [DI], bx
+	          
+	                jmp              ReadKey2
+
+	MoveRight2:      
+	;checking for boundaries
+	                mov              bx, offsetX2
+	                mov              cx, bx
+	                add              cx, sizeX
+	                cmp              cx, maxX2
+	                jnb              ReadKey2
+	                add              bx, planeSpeed
+	                mov              DI, offset offsetX2
+	                mov              [DI], bx
+
+	                jmp              ReadKey2
+	                ret
+
+GENERATE_OFFSET2 ENDP
+
+
 Drawship PROC	near
 	; initialize containers
 	                    mov              SI, offset shipC
@@ -1296,6 +1311,72 @@ Eraseship PROC near
 	alldrawn2:          pop              ax
 	                    ret
 Eraseship ENDP
+
+
+
+Drawship2 PROC	near
+	; initialize containers
+	                mov              SI, offset shipC
+	                mov              cx, 0         	;Column X
+	                mov              dx, SizeY         	;Row Y
+	                mov              ah, 0ch           	;Draw Pixel Command
+	Drawit12:         
+	                mov              bl, [SI]          	;use color from array color for testing
+	                and              bl, bl
+	                JZ               back12
+	                add              cx, offsetX2
+	                add              dx, offsety2
+	                mov              al, [SI]          	;  use color from array color for testing
+	                int              10h               	;  draw the pixel
+	                sub              cx, offsetX2
+	                sub              dx, offsety2
+
+	back12:           
+	                inc              SI
+	                INC              Cx                	;  loop iteration in x direction
+                    CMP CX, SizeX
+	                JNZ              Drawit12            	;  check if we can draw c urrent x and y and excape the y iteration
+	                mov              Cx, 0         	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                DEC              DX                	;  loop iteration in y direction
+	                JZ               alldrawn12          	;  both x and y reached 00 so finish drawing
+	                jmp              Drawit12
+	alldrawn12:       ret
+Drawship2 ENDP
+
+
+Eraseship2 PROC near
+	; initialize containers
+	                mov              SI, offset shipC  	;shipY is (shipX index + size * 2) so we can use Si for both
+	                mov              cx, 0         	;Column X
+	                mov              dx, SizeY         	;Row Y
+	                push             ax
+	                mov              ah, 0ch           	;Draw Pixel Command
+	                mov              al, 0h            	;to be replaced with background
+	
+	Drawit22:        
+	                mov              bl, [SI]          	;  use color from array color for testing
+	                and              bl, bl
+	                JZ               back22
+	                add              cx, offsetX2
+	                add              dx, offsety2
+	                int              10h               	;  draw the pixel
+	                sub              cx, offsetX2
+	                sub              dx, offsety2
+
+	back22:          
+	                inc              SI
+	                INC              Cx                	;  loop iteration in x direction
+                    CMP CX, SizeX
+	                JNZ              Drawit22           	;  check if we can draw c urrent x and y and excape the y iteration
+	                mov              Cx, 0         	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                DEC              DX                	;  loop iteration in y direction
+	                JZ               alldrawn22         	;  both x and y reached 00 so finish drawing
+	                jmp              Drawit22
+	alldrawn22:      pop              ax
+	                ret
+Eraseship2 ENDP
+
+
 drawgamebtn PROC near
 	; initialize containers
 	                    mov              SI, offset gamebtn
