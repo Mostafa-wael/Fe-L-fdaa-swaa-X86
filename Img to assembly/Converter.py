@@ -1,5 +1,5 @@
 from PIL import Image
-filename = 'Hisoka2.bmp'
+filename = 'Mikasa Plane.png'
 im = Image.open(filename)
 width, height = im.size
 pixels = list(im.getdata())
@@ -301,6 +301,9 @@ for i in range(len(C)):
         StrC = StrC + str(C[i]) + ", "
 
 StrC = StrC[:-2]
+output = open("ImageResult.txt", "a")
+output.write(StrC)
+output.close()
 print("imgW equ", width)
 print("imgH equ", height)
 print(StrC)
