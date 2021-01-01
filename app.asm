@@ -32,7 +32,7 @@ ENDM
 ;///////////////////////////////Macros////////////////////////////////////
 ;///////////////////////////////Data Initializations////////////////////////////////////
 .data
-	;
+	; keys
 	key_upArrow     equ         048h
 	key_downArrow   equ         050h
 	key_leftArrow   equ         04Bh
@@ -46,11 +46,10 @@ ENDM
 	key_a           equ         1EH
 	key_d           equ         20h
 	key_f           equ         21h
-
 	; constrains depend on the graphics mode
 	graphicsModeAX  equ         4F02h
 	graphicsModeBX  equ         0100h
-	delayValue      equ         65000
+	delayDuration   equ         65000
 	;
 	shipOffsetX1    dw          6h                                                                                                                                                                                                    	;position of first from left pixel
 	shipOffsetY1    dw          240                                                                                                                                                                                                   	;position of first from top pixel
@@ -1511,13 +1510,12 @@ MAIN PROC FAR
 	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
 	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
 	                              int              10h
-	                              call             background
+									call background
 	                              call             drawgamebtn
 	                              call             drawchatbtn
 	                              call             drawexitbtn
 	                              call             drawArrows
 	                              call             drawLogo
-
 	CheckInMainMenu:              
 	                              mov              ah,0                                                                                 	;  ah:al = scan code: ASCII code
 	                              int              16h
@@ -1910,7 +1908,7 @@ updateBullets proc NEAR
 	                              JMP              updateBullets_CHECKBULLETS
 
 	updateBullets_ContinueBullets:
-	                              delay            delayValue
+	                              delay            delayDuration
 
 updateBullets endp
 
