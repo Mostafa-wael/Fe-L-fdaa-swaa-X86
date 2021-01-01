@@ -2925,7 +2925,7 @@ DrawHealthbar2 PROC near
 	                              mov              cx, 400
 	                              mov              dx, screenMaxY1+20                                                                   	;Row Y
 	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	ERASE_H_Border2:              
+	ERASE_H_Border2:              	
 	                              mov              al, 0b2h                                                                             	;  use color from array color for testing
 	                              int              10h                                                                                  	;  draw the pixel
 	                              inc              Cx                                                                                   	;  loop iteration in x direction
