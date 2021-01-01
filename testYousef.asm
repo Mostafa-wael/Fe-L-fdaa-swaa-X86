@@ -1085,13 +1085,13 @@ MAIN PROC FAR
 	                    call             Drawship
 	                    call             Drawship2                	;this subroutine is responsible for drawing the ship using its cooardinates
 	;////////////////////////////Interacting with the user////////////////////////////
-	CHECK:       
-    CMP HEALTH1, 0
-    JE exitProg       
+	CHECK:              
+	                    CMP              HEALTH1, 0
+	                    JE               exitProg
 
-    CMP HEALTH2, 0
-    JE exitProg    
-call BulletChecker
+	                    CMP              HEALTH2, 0
+	                    JE               exitProg
+	                    call             BulletChecker
 	ContinueBullets:    
 	                    delay            65000
 
@@ -1722,49 +1722,49 @@ BulletChecker PROC NEAR
 	                    JLE              CheckY1_Up
 
 	                    mov              dx, OffsetX2
-	Sub dx, 6
+	                    Sub              dx, 6
 	                    CMP              [DI], dx
 	                    JGE              CheckY2_Up
 
 	                    CALL             Bullet_Offset
 	                    CALL             DrawBullet
 	                    jmp              ContinueBullet
-	CheckY1_Up:
-	mov dx, [DI] + 2 
-	mov cx, offsetY
+	CheckY1_Up:         
+	                    mov              dx, [DI] + 2
+	                    mov              cx, offsetY
 	;add cx, 16
-	CMP dx, Cx
-	jge CheckY1_Down
-	jmp StopBullet
+	                    CMP              dx, Cx
+	                    jge              CheckY1_Down
+	                    jmp              StopBullet
 
-	CheckY1_Down:
-		mov dx, [DI] + 2 
-	mov cx, offsetY
-	add cx, SizeY
-	CMP dx, Cx
-	jle BulletCollusion
-	jmp StopBullet
+	CheckY1_Down:       
+	                    mov              dx, [DI] + 2
+	                    mov              cx, offsetY
+	                    add              cx, SizeY
+	                    CMP              dx, Cx
+	                    jle              BulletCollusion
+	                    jmp              StopBullet
 
-		CheckY2_Up:
-	mov dx, [DI] + 2 
-	mov cx, offsetY2
+	CheckY2_Up:         
+	                    mov              dx, [DI] + 2
+	                    mov              cx, offsetY2
 	;add cx, 16
-	CMP dx, Cx
-	jge CheckY2_Down
-	jmp StopBullet
+	                    CMP              dx, Cx
+	                    jge              CheckY2_Down
+	                    jmp              StopBullet
 
-	CheckY2_down:
-		mov dx, [DI] + 2 
-	mov cx, offsetY2
-	add cx, SizeY
-	CMP dx, Cx
-	jle BulletCollusion
+	CheckY2_down:       
+	                    mov              dx, [DI] + 2
+	                    mov              cx, offsetY2
+	                    add              cx, SizeY
+	                    CMP              dx, Cx
+	                    jle              BulletCollusion
 
 	StopBullet:         mov              dl, 0
 	                    mov              [SI], dl
 	                    JMP              ContinueBullet
 
-							ContinueBullet:     INC              BX
+	ContinueBullet:     INC              BX
 	                    ADD              SI, 1
 	                    ADD              DI, 4
 	                    CMP              BX, MAXBULLET
@@ -1790,7 +1790,7 @@ BulletChecker PROC NEAR
 
 
 
-ENDCHECKBULLET: ret
+	ENDCHECKBULLET:     ret
 BulletChecker ENDP
 
 
