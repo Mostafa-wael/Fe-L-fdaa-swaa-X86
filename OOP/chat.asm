@@ -33,12 +33,31 @@ initializaScreen MACRO
 	                 mov dl,79	; lower right X
 	                 int 10h
     ENDM
+getCursorPos macro rowCol
+	             mov ah,3
+	             mov bx, 0
+	             int 10h
+	             mov rowCol, dx
+ENDM
+setCursorPos macro rowCol
+	             mov ah,2      	;Move Cursor
+	             mov dx, rowCol
+	             int 10h
+endm
+.stack 64
 .data
-value          DB ?
+	place1 DW 0
+place2 DW 1279
 .code
 MAIN PROC FAR
+	          mov              AX, @data
+	          mov              DS, AX
 
-	          mov              ah,13h
+	          mov              ah, 0
+	          mov              al, 3
+	          INT              10H           	;to clear the screen
+
+	          mov              ah,13h        	; enter the graphics mode
 	          int              21h
 	          initializaPort
 	          initializaScreen
@@ -48,23 +67,40 @@ MAIN PROC FAR
 	          mov              dx , 3FDH     	; Line Status Register
 	sendData: In               al , dx       	; Read Line Status
 	          test             al , 00100000b
-	          JZ               getData      	; Not empty, can't send data then, go to get data
+	          JZ               getData       	; Not empty, can't send data then, go to get data
 	;If empty put the VALUE in Transmit data register
+	CHECK:    
+	          mov              ah,1
+	          int              16h           	;Get key pressed (do not wait for a key-AH:scancode,AL:ASCII)
+	          jz               getData
+	          setCursorPos     place1
+
+	          mov              ah,0
+	          int              16h           	;Get key pressed (Wait for a key-AH:scancode,AL:ASCII)
+
+	          mov              ah,2          	;Display Char
+	          mov              dl,al
+	          int              21h
+	          getCursorPos     place1
+        
 	          mov              dx , 3F8H     	; Transmit data register
-	          mov              al,VALUE
-	          out              dx , al
+	          out              dx , al       	; value read from the keyboard is in al
 	;//////////////////////////////
 	;Check that Data is Ready
 	          mov              dx , 3FDH     	; Line Status Register
 	getData:  in               al , dx
 	          test             al , 1
-	          JZ               sendData       	; Not Ready, can't get data then, go to send data
+	          JZ               sendData      	; Not Ready, can't get data then, go to send data
 	;If Ready read the VALUE in Receive data register
 	          mov              dx , 03F8H
-	          in               al , dx
-	          mov              VALUE , al
+	          in               al , dx       	; put the read value in al
+	          setCursorPos     place2
+	          mov              ah,2          	;Display Char
+	          mov              dl,al
+	          int              21h
+	          getCursorPos     place2
 	;//////////////////////////////
-	          jmp              startChat        
+	          jmp              startChat
 	          mov              ah,4ch
 	          int              21h
 main endp
