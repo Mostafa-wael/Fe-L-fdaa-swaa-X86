@@ -1514,6 +1514,14 @@ MAIN PROC FAR
 	                              call             drawgamebtn
 	                              call             drawchatbtn
 	                              call             drawexitbtn
+								  call             eraseArrows
+								  add			   arrowoffsetY, arrowStep
+								  call             eraseArrows
+								  add			   arrowoffsetY, arrowStep
+								  call             eraseArrows
+								  sub			   arrowoffsetY, arrowStep
+								  sub			   arrowoffsetY, arrowStep
+
 	                              call             drawArrows
 	                              call             drawLogo
 	CheckInMainMenu:              
@@ -2416,7 +2424,6 @@ background PROC near
 	                              Mul              CL                                                                                   	;  \   > Multuply CL*Cl and Store in AX
 
 
-	;/////////////THIS LINE CHOOSES THE PATTERN TO BE DRAWN\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	                              add              bx, AX
 	                              xchg             ax,bx
 	                              mov              bl, 8
@@ -2430,17 +2437,6 @@ background PROC near
 	                              pop              dx
 	                              pop              cx                                                                                   	;execute the configuration
 	background_start:             
-	                              mov              AX, 0                                                                                	;  |
-	                              mov              AL, DL                                                                               	;  |  > Multuply DL*Dl and Store in AX then BX
-	                              Mul              DL                                                                                   	;  |
-	                              mov              bx, AX                                                                               	;  |
-	                              mov              AL, CL                                                                               	;  \
-	                              Mul              CL                                                                                   	;  \   > Multuply CL*Cl and Store in AX
-
-
-	;/////////////THIS LINE CHOOSES THE PATTERN TO BE DRAWN\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	                              add              bx, AX                                                                               	;  Relation between DL^2 and CL^2, Sub : X2-Y2 = Hyberbolic Patterns, Add: X2+Y2 = Circular, OR/AND: Rectangular, Xor: Diagonal
-        
         
 	                              DEC              CX                                                                                   	;  loop iteration in x direction
 	                              JNZ              TRY                                                                                  	;  check if we can draw current x and y and excape the y iteration
@@ -2516,15 +2512,39 @@ eraseArrows PROC near
 	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
 	                              mov              al, 0h                                                                               	;to be replaced with background
 	
-	eraseArrows_drawIt:           
+	eraseArrows_drawIt:          
 	                              mov              bl, [SI]                                                                             	;  use color from array color for testing
 	                              and              bl, bl
 	                              JZ               eraseArrows_back
-	                              add              cx, arrowoffset
-	                              add              dx, arrowoffset + 2
+								  add              cx, arrowoffsetX
+	                              add              dx, arrowoffsetY
 	                              int              10h                                                                                  	;  draw the pixel
-	                              sub              cx, arrowoffset
-	                              sub              dx, arrowoffset + 2
+	                              sub              cx, arrowoffsetX
+	                              sub              dx, arrowoffsetY 
+		                          push             cx
+	                              push             dx
+	                              mov              AX, 0                                                                                	;  |
+	                              mov              AL, DL                                                                               	;  |  > Multuply DL*Dl and Store in AX then BX
+	                              Mul              DL                                                                                   	;  |
+	                              mov              bx, AX                                                                               	;  |
+	                              mov              AL, CL                                                                               	;  \
+	                              Mul              CL                                                                                   	;  \   > Multuply CL*Cl and Store in AX
+
+
+	                              add              bx, AX
+	                              xchg             ax,bx
+	                              mov              bl, 8
+	                              mov              ah, 0
+
+	                              div              bl
+	                              xchg             al,ah
+	                              add              al, 7fh
+	                              MOV              AH,0Ch
+								  add              cx, arrowoffsetX
+	                              add              dx, arrowoffsetY                                                                            	;set the configuration to writing a pixel
+	                              INT              10h
+	                              pop              dx
+	                              pop              cx 
 
 	eraseArrows_back:             
 	                              inc              SI
@@ -2553,6 +2573,30 @@ eraseArrows PROC near
 	                              int              10h                                                                                  	;  draw the pixel
 	                              sub              cx, arrowoffsetXRev
 	                              sub              dx, arrowoffsetY
+								  push             cx
+	                              push             dx
+	                              mov              AX, 0                                                                                	;  |
+	                              mov              AL, DL                                                                               	;  |  > Multuply DL*Dl and Store in AX then BX
+	                              Mul              DL                                                                                   	;  |
+	                              mov              bx, AX                                                                               	;  |
+	                              mov              AL, CL                                                                               	;  \
+	                              Mul              CL                                                                                   	;  \   > Multuply CL*Cl and Store in AX
+
+
+	                              add              bx, AX
+	                              xchg             ax,bx
+	                              mov              bl, 8
+	                              mov              ah, 0
+
+	                              div              bl
+	                              xchg             al,ah
+	                              add              al, 7fh
+	                              MOV              AH,0Ch
+								  add              cx, arrowoffsetXRev
+	                              add              dx, arrowoffsetY                                                                            	;set the configuration to writing a pixel
+	                              INT              10h
+	                              pop              dx
+	                              pop              cx 
 
 	eraseArrows_backR:            
 	                              inc              SI
