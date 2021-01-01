@@ -1,6 +1,6 @@
 .model COMPACT
 ;///////////////////////////////Macros////////////////////////////////////
-delay macro duration
+delay MACRO duration
 	      local lp
 	      push  cx
 	      mov   cx, duration
@@ -13,21 +13,21 @@ clearWholeScreen MACRO
 	                 mov al, 3
 	                 INT 10H  	;FOR VIDEO DISPLAY
 	ENDM
-inputToMoveShip macro UP, DOWN, LEFT, RIGHT, FIRE_BTN, movShip1_label		; pass the keys and the label to jump to
+inputToMoveShip macro UP, DOWN, LEFT, RIGHT, FIRE_BTN, movShip_label		; pass the keys and the label to jump to
 	                cmp ah,UP
-	                jz  movShip1_label
+	                jz  movShip_label
 
 	                cmp ah,DOWN
-	                jz  movShip1_label
+	                jz  movShip_label
 
 	                cmp ah,LEFT
-	                jz  movShip1_label
+	                jz  movShip_label
 
 	                cmp ah,RIGHT
-	                jz  movShip1_label
+	                jz  movShip_label
 
 	                cmp ah, FIRE_BTN
-	                jz  movShip1_label
+	                jz  movShip_label
 ENDM
 ;///////////////////////////////Macros////////////////////////////////////
 ;///////////////////////////////Data Initializations////////////////////////////////////
