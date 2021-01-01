@@ -1,5 +1,5 @@
 .model COMPACT
-.stack 32
+.stack 64
 .data
 	; For First Screen
 	; Characters
@@ -514,236 +514,237 @@
 
 .code
 MAIN PROC FAR
-	                        mov  ax, @Data
-	                        mov  ds, ax
-	                        mov  ax, 4F02h              	; enter graphicsMode 4F02h
-	                        mov  bx, 0100h              	; BX = 81FFh
-	                        int  10h
+	                        mov ax, @Data
+	                        mov ds, ax
+	                        mov ax, 4F02h              	; enter graphicsMode 4F02h
+	                        mov bx, 0100h              	; BX = 81FFh
+	                        int 10h
 
-							;hlt
 							
 	; Draw Characters
-	                        ;call drawFirstChar
-	                        ;call drawSecondChar
-	                        ;call drawThirdChar
-	                        ;call drawFourthChar
-	                        ;call drawFifthChar
+	call drawFirstChar
+	call drawSecondChar
+	call drawThirdChar
+	call drawFourthChar
+	call drawFifthChar
 
 	; Draw Planes
-	                        ;call drawFirstShip
-	                        ;call drawSecondShip
-	                        ;call drawThirdShip
+	call drawFirstShip
+	call drawSecondShip
+	call drawThirdShip
+	                        mov ah,4ch
+	                        int 21h
                    
 MAIN ENDP
 
 
-drawFirstChar PROC 
+drawFirstChar PROC
 	; initialize containers
-	                        mov  SI, offset Fenn
-	                        mov  cx, charSizeX          	;Column X
-	                        mov  dx, charSizeY          	;Row Y
-	                        mov  ah, 0ch                	;Draw Pixel Command
+	                        mov SI, offset Fenn
+	                        mov cx, charSizeX          	;Column X
+	                        mov dx, charSizeY          	;Row Y
+	                        mov ah, 0ch                	;Draw Pixel Command
 	drawFirstChar_drawIt:   
-	                        mov  bl, [SI]               	;use color from array color for testing
-	                        and  bl, bl
-	                        JZ   drawFirstChar_back
-	                        add  cx, firstCharOffsetX
-	                        add  dx, charOffsetY
-	                        mov  al, [SI]               	;  use color from array color for testing
-	                        int  10h                    	;  draw the pixel
-	                        sub  cx, firstCharOffsetX
-	                        sub  dx, charOffsetY
+	                        mov bl, [SI]               	;use color from array color for testing
+	                        and bl, bl
+	                        JZ  drawFirstChar_back
+	                        add cx, firstCharOffsetX
+	                        add dx, charOffsetY
+	                        mov al, [SI]               	;  use color from array color for testing
+	                        int 10h                    	;  draw the pixel
+	                        sub cx, firstCharOffsetX
+	                        sub dx, charOffsetY
 	drawFirstChar_back:     
-	                        inc  SI
-	                        DEC  Cx                     	;  loop iteration in x direction
-	                        JNZ  drawFirstChar_drawIt   	;  check if we can draw current x and y and excape the y iteration
-	                        mov  Cx, charSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                        DEC  DX                     	;  loop iteration in y direction
-	                        JZ   drawFirstChar_alldrawn 	;  both x and y reached 00 so finish drawing
-	                        jmp  drawFirstChar_drawIt
+	                        inc SI
+	                        DEC Cx                     	;  loop iteration in x direction
+	                        JNZ drawFirstChar_drawIt   	;  check if we can draw current x and y and excape the y iteration
+	                        mov Cx, charSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                        DEC DX                     	;  loop iteration in y direction
+	                        JZ  drawFirstChar_alldrawn 	;  both x and y reached 00 so finish drawing
+	                        jmp drawFirstChar_drawIt
 	drawFirstChar_alldrawn: ret
 drawFirstChar ENDP
-drawSecondChar PROC 
+drawSecondChar PROC
 	; initialize containers
-	                        mov  SI, offset Mikasa
-	                        mov  cx, charSizeX          	;Column X
-	                        mov  dx, charSizeY          	;Row Y
-	                        mov  ah, 0ch                	;Draw Pixel Command
+	                        mov SI, offset Mikasa
+	                        mov cx, charSizeX          	;Column X
+	                        mov dx, charSizeY          	;Row Y
+	                        mov ah, 0ch                	;Draw Pixel Command
 	drawSecondChar_drawIt:  
-	                        mov  bl, [SI]               	;use color from array color for testing
-	                        and  bl, bl
-	                        JZ   drawSecondChar_back
-	                        add  cx, secondCharOffsetX
-	                        add  dx, charOffsetY
-	                        mov  al, [SI]               	;  use color from array color for testing
-	                        int  10h                    	;  draw the pixel
-	                        sub  cx, secondCharOffsetX
-	                        sub  dx, charOffsetY
+	                        mov bl, [SI]               	;use color from array color for testing
+	                        and bl, bl
+	                        JZ  drawSecondChar_back
+	                        add cx, secondCharOffsetX
+	                        add dx, charOffsetY
+	                        mov al, [SI]               	;  use color from array color for testing
+	                        int 10h                    	;  draw the pixel
+	                        sub cx, secondCharOffsetX
+	                        sub dx, charOffsetY
 	drawSecondChar_back:    
-	                        inc  SI
-	                        DEC  Cx                     	;  loop iteration in x direction
-	                        JNZ  drawSecondChar_drawIt  	;  check if we can draw current x and y and excape the y iteration
-	                        mov  Cx, charSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                        DEC  DX                     	;  loop iteration in y direction
-	                        JZ   drawSecondChar_alldrawn	;  both x and y reached 00 so finish drawing
-	                        jmp  drawSecondChar_drawIt
+	                        inc SI
+	                        DEC Cx                     	;  loop iteration in x direction
+	                        JNZ drawSecondChar_drawIt  	;  check if we can draw current x and y and excape the y iteration
+	                        mov Cx, charSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                        DEC DX                     	;  loop iteration in y direction
+	                        JZ  drawSecondChar_alldrawn	;  both x and y reached 00 so finish drawing
+	                        jmp drawSecondChar_drawIt
 	drawSecondChar_alldrawn:ret
 drawSecondChar ENDP
-drawThirdChar PROC 
+drawThirdChar PROC
 	; initialize containers
-	                        mov  SI, offset Hisoka
-	                        mov  cx, charSizeX          	;Column X
-	                        mov  dx, charSizeY          	;Row Y
-	                        mov  ah, 0ch                	;Draw Pixel Command
+	                        mov SI, offset Hisoka
+	                        mov cx, charSizeX          	;Column X
+	                        mov dx, charSizeY          	;Row Y
+	                        mov ah, 0ch                	;Draw Pixel Command
 	drawThirdChar_drawIt:   
-	                        mov  bl, [SI]               	;use color from array color for testing
-	                        and  bl, bl
-	                        JZ   drawThirdChar_back
-	                        add  cx, thirdCharOffsetX
-	                        add  dx, charOffsetY
-	                        mov  al, [SI]               	;  use color from array color for testing
-	                        int  10h                    	;  draw the pixel
-	                        sub  cx, thirdCharOffsetX
-	                        sub  dx, charOffsetY
+	                        mov bl, [SI]               	;use color from array color for testing
+	                        and bl, bl
+	                        JZ  drawThirdChar_back
+	                        add cx, thirdCharOffsetX
+	                        add dx, charOffsetY
+	                        mov al, [SI]               	;  use color from array color for testing
+	                        int 10h                    	;  draw the pixel
+	                        sub cx, thirdCharOffsetX
+	                        sub dx, charOffsetY
 	drawThirdChar_back:     
-	                        inc  SI
-	                        DEC  Cx                     	;  loop iteration in x direction
-	                        JNZ  drawThirdChar_drawIt   	;  check if we can draw current x and y and excape the y iteration
-	                        mov  Cx, charSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                        DEC  DX                     	;  loop iteration in y direction
-	                        JZ   drawThirdChar_alldrawn 	;  both x and y reached 00 so finish drawing
-	                        jmp  drawThirdChar_drawIt
+	                        inc SI
+	                        DEC Cx                     	;  loop iteration in x direction
+	                        JNZ drawThirdChar_drawIt   	;  check if we can draw current x and y and excape the y iteration
+	                        mov Cx, charSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                        DEC DX                     	;  loop iteration in y direction
+	                        JZ  drawThirdChar_alldrawn 	;  both x and y reached 00 so finish drawing
+	                        jmp drawThirdChar_drawIt
 	drawThirdChar_alldrawn: ret
 drawThirdChar ENDP
-drawFourthChar PROC 
+drawFourthChar PROC
 	; initialize containers
-	                        mov  SI, offset Fenn
-	                        mov  cx, charSizeX          	;Column X
-	                        mov  dx, charSizeY          	;Row Y
-	                        mov  ah, 0ch                	;Draw Pixel Command
+	                        mov SI, offset Fenn
+	                        mov cx, charSizeX          	;Column X
+	                        mov dx, charSizeY          	;Row Y
+	                        mov ah, 0ch                	;Draw Pixel Command
 	drawFourthChar_drawIt:  
-	                        mov  bl, [SI]               	;use color from array color for testing
-	                        and  bl, bl
-	                        JZ   drawFourthChar_back
-	                        add  cx, fourthCharOffsetX
-	                        add  dx, charOffsetY
-	                        mov  al, [SI]               	;  use color from array color for testing
-	                        int  10h                    	;  draw the pixel
-	                        sub  cx, fourthCharOffsetX
-	                        sub  dx, charOffsetY
+	                        mov bl, [SI]               	;use color from array color for testing
+	                        and bl, bl
+	                        JZ  drawFourthChar_back
+	                        add cx, fourthCharOffsetX
+	                        add dx, charOffsetY
+	                        mov al, [SI]               	;  use color from array color for testing
+	                        int 10h                    	;  draw the pixel
+	                        sub cx, fourthCharOffsetX
+	                        sub dx, charOffsetY
 	drawFourthChar_back:    
-	                        inc  SI
-	                        DEC  Cx                     	;  loop iteration in x direction
-	                        JNZ  drawFourthChar_drawIt  	;  check if we can draw current x and y and excape the y iteration
-	                        mov  Cx, charSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                        DEC  DX                     	;  loop iteration in y direction
-	                        JZ   drawFourthChar_alldrawn	;  both x and y reached 00 so finish drawing
-	                        jmp  drawFourthChar_drawIt
+	                        inc SI
+	                        DEC Cx                     	;  loop iteration in x direction
+	                        JNZ drawFourthChar_drawIt  	;  check if we can draw current x and y and excape the y iteration
+	                        mov Cx, charSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                        DEC DX                     	;  loop iteration in y direction
+	                        JZ  drawFourthChar_alldrawn	;  both x and y reached 00 so finish drawing
+	                        jmp drawFourthChar_drawIt
 	drawFourthChar_alldrawn:ret
 drawFourthChar ENDP
-drawFifthChar PROC 
+drawFifthChar PROC
 	; initialize containers
-	                        mov  SI, offset Fenn
-	                        mov  cx, charSizeX          	;Column X
-	                        mov  dx, charSizeY          	;Row Y
-	                        mov  ah, 0ch                	;Draw Pixel Command
+	                        mov SI, offset Fenn
+	                        mov cx, charSizeX          	;Column X
+	                        mov dx, charSizeY          	;Row Y
+	                        mov ah, 0ch                	;Draw Pixel Command
 	drawFifthChar_drawIt:   
-	                        mov  bl, [SI]               	;use color from array color for testing
-	                        and  bl, bl
-	                        JZ   drawFifthChar_back
-	                        add  cx, fifthCharOffsetX
-	                        add  dx, charOffsetY
-	                        mov  al, [SI]               	;  use color from array color for testing
-	                        int  10h                    	;  draw the pixel
-	                        sub  cx, fifthCharOffsetX
-	                        sub  dx, charOffsetY
+	                        mov bl, [SI]               	;use color from array color for testing
+	                        and bl, bl
+	                        JZ  drawFifthChar_back
+	                        add cx, fifthCharOffsetX
+	                        add dx, charOffsetY
+	                        mov al, [SI]               	;  use color from array color for testing
+	                        int 10h                    	;  draw the pixel
+	                        sub cx, fifthCharOffsetX
+	                        sub dx, charOffsetY
 	drawFifthChar_back:     
-	                        inc  SI
-	                        DEC  Cx                     	;  loop iteration in x direction
-	                        JNZ  drawFifthChar_drawIt   	;  check if we can draw current x and y and excape the y iteration
-	                        mov  Cx, charSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                        DEC  DX                     	;  loop iteration in y direction
-	                        JZ   drawFifthChar_alldrawn 	;  both x and y reached 00 so finish drawing
-	                        jmp  drawFifthChar_drawIt
+	                        inc SI
+	                        DEC Cx                     	;  loop iteration in x direction
+	                        JNZ drawFifthChar_drawIt   	;  check if we can draw current x and y and excape the y iteration
+	                        mov Cx, charSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                        DEC DX                     	;  loop iteration in y direction
+	                        JZ  drawFifthChar_alldrawn 	;  both x and y reached 00 so finish drawing
+	                        jmp drawFifthChar_drawIt
 	drawFifthChar_alldrawn: ret
 drawFifthChar ENDP
 
-drawFirstShip PROC 
+drawFirstShip PROC
 	; initialize containers
-	                        mov  SI, offset Fenn_Plane
-	                        mov  cx, shipSizeX          	;Column X
-	                        mov  dx, shipSizeY          	;Row Y
-	                        mov  ah, 0ch                	;Draw Pixel Command
+	                        mov SI, offset Fenn_Plane
+	                        mov cx, shipSizeX          	;Column X
+	                        mov dx, shipSizeY          	;Row Y
+	                        mov ah, 0ch                	;Draw Pixel Command
 	drawFirstShip_drawIt:   
-	                        mov  bl, [SI]               	;use color from array color for testing
-	                        and  bl, bl
-	                        JZ   drawFirstShip_back
-	                        add  cx, firstShipOffsetX
-	                        add  dx, shipOffsetY
-	                        mov  al, [SI]               	;  use color from array color for testing
-	                        int  10h                    	;  draw the pixel
-	                        sub  cx, firstShipOffsetX
-	                        sub  dx, shipOffsetY
+	                        mov bl, [SI]               	;use color from array color for testing
+	                        and bl, bl
+	                        JZ  drawFirstShip_back
+	                        add cx, firstShipOffsetX
+	                        add dx, shipOffsetY
+	                        mov al, [SI]               	;  use color from array color for testing
+	                        int 10h                    	;  draw the pixel
+	                        sub cx, firstShipOffsetX
+	                        sub dx, shipOffsetY
 	drawFirstShip_back:     
-	                        inc  SI
-	                        DEC  Cx                     	;  loop iteration in x direction
-	                        JNZ  drawFirstShip_drawIt   	;  check if we can draw current x and y and excape the y iteration
-	                        mov  Cx, shipSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                        DEC  DX                     	;  loop iteration in y direction
-	                        JZ   drawFirstShip_alldrawn 	;  both x and y reached 00 so finish drawing
-	                        jmp  drawFirstShip_drawIt
+	                        inc SI
+	                        DEC Cx                     	;  loop iteration in x direction
+	                        JNZ drawFirstShip_drawIt   	;  check if we can draw current x and y and excape the y iteration
+	                        mov Cx, shipSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                        DEC DX                     	;  loop iteration in y direction
+	                        JZ  drawFirstShip_alldrawn 	;  both x and y reached 00 so finish drawing
+	                        jmp drawFirstShip_drawIt
 	drawFirstShip_alldrawn: ret
 drawFirstShip ENDP
-drawSecondShip PROC 
+drawSecondShip PROC
 	; initialize containers
-	                        mov  SI, offset Mikasa_Plane
-	                        mov  cx, shipSizeX          	;Column X
-	                        mov  dx, shipSizeY          	;Row Y
-	                        mov  ah, 0ch                	;Draw Pixel Command
+	                        mov SI, offset Mikasa_Plane
+	                        mov cx, shipSizeX          	;Column X
+	                        mov dx, shipSizeY          	;Row Y
+	                        mov ah, 0ch                	;Draw Pixel Command
 	drawSecondShip_drawIt:  
-	                        mov  bl, [SI]               	;use color from array color for testing
-	                        and  bl, bl
-	                        JZ   drawSecondShip_back
-	                        add  cx, secondShipOffsetX
-	                        add  dx, shipOffsetY
-	                        mov  al, [SI]               	;  use color from array color for testing
-	                        int  10h                    	;  draw the pixel
-	                        sub  cx, secondShipOffsetX
-	                        sub  dx, shipOffsetY
+	                        mov bl, [SI]               	;use color from array color for testing
+	                        and bl, bl
+	                        JZ  drawSecondShip_back
+	                        add cx, secondShipOffsetX
+	                        add dx, shipOffsetY
+	                        mov al, [SI]               	;  use color from array color for testing
+	                        int 10h                    	;  draw the pixel
+	                        sub cx, secondShipOffsetX
+	                        sub dx, shipOffsetY
 	drawSecondShip_back:    
-	                        inc  SI
-	                        DEC  Cx                     	;  loop iteration in x direction
-	                        JNZ  drawSecondShip_drawIt  	;  check if we can draw current x and y and excape the y iteration
-	                        mov  Cx, shipSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                        DEC  DX                     	;  loop iteration in y direction
-	                        JZ   drawSecondShip_alldrawn	;  both x and y reached 00 so finish drawing
-	                        jmp  drawSecondShip_drawIt
+	                        inc SI
+	                        DEC Cx                     	;  loop iteration in x direction
+	                        JNZ drawSecondShip_drawIt  	;  check if we can draw current x and y and excape the y iteration
+	                        mov Cx, shipSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                        DEC DX                     	;  loop iteration in y direction
+	                        JZ  drawSecondShip_alldrawn	;  both x and y reached 00 so finish drawing
+	                        jmp drawSecondShip_drawIt
 	drawSecondShip_alldrawn:ret
 drawSecondShip ENDP
-drawThirdShip PROC 
+drawThirdShip PROC
 	; initialize containers
-	                        mov  SI, offset Hisoka_Plane
-	                        mov  cx, shipSizeX          	;Column X
-	                        mov  dx, shipSizeY          	;Row Y
-	                        mov  ah, 0ch                	;Draw Pixel Command
+	                        mov SI, offset Hisoka_Plane
+	                        mov cx, shipSizeX          	;Column X
+	                        mov dx, shipSizeY          	;Row Y
+	                        mov ah, 0ch                	;Draw Pixel Command
 	drawThirdShip_drawIt:   
-	                        mov  bl, [SI]               	;use color from array color for testing
-	                        and  bl, bl
-	                        JZ   drawThirdShip_back
-	                        add  cx, thirdShipOffserX
-	                        add  dx, shipOffsetY
-	                        mov  al, [SI]               	;  use color from array color for testing
-	                        int  10h                    	;  draw the pixel
-	                        sub  cx, thirdShipOffserX
-	                        sub  dx, shipOffsetY
+	                        mov bl, [SI]               	;use color from array color for testing
+	                        and bl, bl
+	                        JZ  drawThirdShip_back
+	                        add cx, thirdShipOffserX
+	                        add dx, shipOffsetY
+	                        mov al, [SI]               	;  use color from array color for testing
+	                        int 10h                    	;  draw the pixel
+	                        sub cx, thirdShipOffserX
+	                        sub dx, shipOffsetY
 	drawThirdShip_back:     
-	                        inc  SI
-	                        DEC  Cx                     	;  loop iteration in x direction
-	                        JNZ  drawThirdShip_drawIt   	;  check if we can draw current x and y and excape the y iteration
-	                        mov  Cx, shipSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                        DEC  DX                     	;  loop iteration in y direction
-	                        JZ   drawThirdShip_alldrawn 	;  both x and y reached 00 so finish drawing
-	                        jmp  drawThirdShip_drawIt
+	                        inc SI
+	                        DEC Cx                     	;  loop iteration in x direction
+	                        JNZ drawThirdShip_drawIt   	;  check if we can draw current x and y and excape the y iteration
+	                        mov Cx, shipSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                        DEC DX                     	;  loop iteration in y direction
+	                        JZ  drawThirdShip_alldrawn 	;  both x and y reached 00 so finish drawing
+	                        jmp drawThirdShip_drawIt
 	drawThirdShip_alldrawn: ret
 drawThirdShip ENDP
 

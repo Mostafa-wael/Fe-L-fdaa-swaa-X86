@@ -44,6 +44,11 @@ setCursorPos macro rowCol
 	             mov dx, rowCol
 	             int 10h
 endm
+clearWholeScreen MACRO
+	                 mov ah, 0
+	                 mov al, 3
+	                 INT 10H  	;FOR VIDEO DISPLAY
+	ENDM
 .stack 64
 .data
 	place1 DW 0
@@ -53,9 +58,7 @@ MAIN PROC FAR
 	          mov              AX, @data
 	          mov              DS, AX
 
-	          mov              ah, 0
-	          mov              al, 3
-	          INT              10H           	;to clear the screen
+	          clearWholeScreen
 
 	          mov              ah,13h        	; enter the graphics mode
 	          int              21h
@@ -64,8 +67,8 @@ MAIN PROC FAR
 	startChat:
 	;//////////////////////////////
 	;Check that Transmitter Holding Register is Empty
-	          mov              dx , 3FDH     	; Line Status Register
-	sendData: In               al , dx       	; Read Line Status
+	sendData: mov              dx , 3FDH     	; Line Status Register
+	          In               al , dx       	; Read Line Status
 	          test             al , 00100000b
 	          JZ               getData       	; Not empty, can't send data then, go to get data
 	;If empty put the VALUE in Transmit data register
@@ -87,8 +90,8 @@ MAIN PROC FAR
 	          out              dx , al       	; value read from the keyboard is in al
 	;//////////////////////////////
 	;Check that Data is Ready
-	          mov              dx , 3FDH     	; Line Status Register
-	getData:  in               al , dx
+	getData:  mov              dx , 3FDH     	; Line Status Register
+	          in               al , dx
 	          test             al , 1
 	          JZ               sendData      	; Not Ready, can't get data then, go to send data
 	;If Ready read the VALUE in Receive data register
