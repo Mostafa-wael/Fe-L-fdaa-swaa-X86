@@ -2043,11 +2043,8 @@ BulletChecker PROC NEAR
 	                              mov              al, SHIP_DAMAGE_COLOR
 	                              call             Eraseship1
 	                              delay            SHIP_DAMAGE_EFFECT_DELAY
-
 	                              call             Drawship1
 	                              jmp              ContinueBullet
-
-
 	;INT 21h
 	BulletCollusion2:             
 	                              mov              dl, 0
