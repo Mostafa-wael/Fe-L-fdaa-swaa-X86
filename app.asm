@@ -1,5 +1,17 @@
 .model COMPACT
 ;///////////////////////////////Macros////////////////////////////////////
+editDrawPrams MACRO shape, sizeX, sizeY, offsetX, offsetY
+	              MOV AX, sizeX
+	              MOV shapeSizeX, AX
+	              MOV AX, sizeY
+	              MOV shapeSizeY, AX
+	              MOV AX, offsetY
+	              MOV shapeOffsetY, AX
+			
+	              LEA SI, shape
+	              MOV AX, offsetX
+	              MOV shapeOffsetX, AX
+ENDM
 delay MACRO duration
 	              local outerLoop
 	              local innerLoop
@@ -112,9 +124,18 @@ ENDM
 	exitbtnOffset            dw          226, 332
 	btnsize                  dw          188, 56
 	;
-	logoOffset               dw          190, 8
+	logoOffsetX              equ         190
+	logoOffsetY              equ         8
 	logoSizeX                equ         130
 	logoSizeY                equ         95
+	
+	shapeOffsetX             DW          0
+	shapeOffsetY             DW          0
+	shapeSizeX               DW          0
+	shapeSizeY               DW          0
+	REV                      DB          0
+	Ers                      DB          0
+
 	;
 
 	                         arrowOffset label word
@@ -1573,7 +1594,8 @@ MAIN PROC FAR
 	                              sub              arrowoffsetY, arrowStep
 	                              sub              arrowoffsetY, arrowStep
 	                              call             drawArrows
-	                              call             drawLogo
+	                              editDrawPrams    logo, logoSizeX, logoSizeY, logoOffsetX, logoOffsetY
+	                              call             drawShape2x2
 	CheckInMainMenu:              
 	                              mov              ah,0                                                                                 	;  ah:al = scan code: ASCII code
 	                              int              16h
@@ -1621,7 +1643,11 @@ MAIN PROC FAR
 	                              call             DrawHealthbar2
 	                              call             drawShip1
 	                              call             Drawship2
-	                              mov              bx, 3                                                                                	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
+	                              mov              bx, 0
+	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
+	                              call             DrawMsgWithBox
+	                              mov              bx, 3
+	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
 	                              call             DrawMsgWithBox
 	;this subroutine is responsible for drawing the ship using its cooardinates
 	;////////////////////////////Interacting with the user////////////////////////////
@@ -2436,24 +2462,22 @@ drawExitBtn PROC
 	                              jmp              drawExitBtn_drawIt
 	drawExitBtn_allDrawn:         ret
 drawExitBtn ENDP
-drawLogo PROC
-	; initialize container
+drawShape2x2 PROC
 
-	                              mov              SI, offset logo
-	                              mov              cx, logoSizeX                                                                        	;Column X
-	                              mov              dx, logoSizeY                                                                        	;Row Y
+	                              mov              cx, shapeSizeX                                                                       	;Column X
+	                              mov              dx, shapeSizeY                                                                       	;Row Y
 	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	drawlogo_drawIt:              
+	drawShape2x2_drawIt:          
 	                              mov              bl, [SI]                                                                             	;use color from array color for testing
 	                              and              bl, bl
-	                              JZ               drawlogo_back
+	                              JZ               drawShape2x2_back
 	                              mov              al, [SI]                                                                             	;  use color from array color for testing
 	                              push             cx
 	                              push             dx
 	                              add              cx,cx
 	                              add              dx,dx
-	                              add              cx,logoOffset
-	                              add              dx,logoOffset+2
+	                              add              cx,shapeOffsetX
+	                              add              dx,shapeOffsetY
 	                              int              10h
 	                              DEC              cx
 	                              int              10h
@@ -2465,16 +2489,16 @@ drawLogo PROC
 	                              pop              dx
 	                              pop              cx
 
-	drawlogo_back:                
+	drawShape2x2_back:            
 	                              inc              SI
 	                              DEC              Cx
-	                              JNZ              drawlogo_drawIt                                                                      	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, logoSizeX                                                                        	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              JNZ              drawShape2x2_drawIt                                                                  	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, shapeSizeX                                                                       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
 	                              DEC              DX
-	                              JZ               drawlogo_allDrawn                                                                    	;  both x and y reached 00 so finish drawing
-	                              jmp              drawlogo_drawIt
-	drawlogo_allDrawn:            ret
-drawLogo ENDP
+	                              JZ               drawShape2x2_allDrawn                                                                	;  both x and y reached 00 so finish drawing
+	                              jmp              drawShape2x2_drawIt
+	drawShape2x2_allDrawn:        ret
+drawShape2x2 ENDP
 
 background PROC near
 	                              MOV              CX, 640                                                                              	;set the width (X) up to ff, dont forget to change this number in the loop
@@ -2744,80 +2768,25 @@ DrawMsgWithBox Proc near
 	                              test             bx, 1
 	                              jnz              DRAWMSGTAILRIGHT
 
-								
-	                              mov              SI, offset MSGTAIL
-	                              mov              cx, MSGTAILXsize                                                                     	;Column X
-	                              mov              dx, MSGTAILYsize                                                                     	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	DRAW_MSGTAIL_L:               
-	                              push             cx
-	                              push             dx
-	                              add              cx, MSGTAILXoffset1
-	                              add              dx, MSGTAILYoffset1
+	                              mov              REV, 0
+	                              mov              Ers, 0
+	                              editDrawPrams    MSGTAIL, MSGTAILXsize, MSGTAILYsize, MSGTAILXoffset1, MSGTAILYoffset1
 	                              test             bx, 2
 	                              jnz              DRAW_MSGTAIL_L_DOWN
-	                              add              dx, MSGTAILYoffset2
-	                              sub              dx, MSGTAILYoffset1
-
-	DRAW_MSGTAIL_L_DOWN:          mov              ah, 0ch                                                                              	;Draw Pixel Command
-	                              mov              al, [SI]
-	                              and              al, al                                                                               	;use color from array color for testing
-	                              JZ               BACK_MSGTAIL_L
-	                              mov              al, [SI]
-	                              int              10h                                                                                  	;  draw the pixel
-
-	;  draw the pixel
-	BACK_MSGTAIL_L:               
-	                              pop              dx
-	                              pop              cx
-	                              inc              SI
-	                              DEC              Cx                                                                                   	;  loop iteration in x direction
-	                              JNZ              DRAW_MSGTAIL_L                                                                       	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, MSGTAILXsize                                                                     	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              JZ               ALL_DRAWN_MSGTAIL                                                                    	;  both x and y reached 00 so finish drawing
-	                              jmp              DRAW_MSGTAIL_L
-	
-	
-	
+	                              editDrawPrams    MSGTAIL, MSGTAILXsize, MSGTAILYsize, MSGTAILXoffset1, MSGTAILYoffset2
+	DRAW_MSGTAIL_L_DOWN:          call             drawShape
+	                              jmp              MSGtAILEND
 	DRAWMSGTAILRIGHT:             
-							
-	                              mov              SI, offset MSGTAIL
-	                              mov              cx, 0                                                                                	;Column X
-	                              mov              dx, MSGTAILYsize                                                                     	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	DRAW_MSGTAIL_R:               
-	                              push             cx
-	                              push             dx
-	                              add              cx, MSGTAILXoffset2
-	                              add              dx, MSGTAILYoffset1
+	                              mov              REV, 1
+	                              mov              Ers, 0
+	                              editDrawPrams    MSGTAIL, MSGTAILXsize, MSGTAILYsize, MSGTAILXoffset2, MSGTAILYoffset1
+
 	                              test             bx, 2
 	                              jnz              DRAW_MSGTAIL_R_DOWN
-	                              add              dx, MSGTAILYoffset2
-	                              sub              dx, MSGTAILYoffset1
+	                              editDrawPrams    MSGTAIL, MSGTAILXsize, MSGTAILYsize, MSGTAILXoffset2, MSGTAILYoffset2
+	DRAW_MSGTAIL_R_DOWN:          call             drawShape
 
-	DRAW_MSGTAIL_R_DOWN:          mov              ah, 0ch                                                                              	;Draw Pixel Command
-	                              mov              al, [SI]
-	                              and              al, al                                                                               	;use color from array color for testing
-	                              JZ               BACK_MSGTAIL_R
-	                              mov              al, [SI]
-	                              int              10h                                                                                  	;  draw the pixel
-
-	;  draw the pixel
-	BACK_MSGTAIL_R:               
-	                              pop              dx
-	                              pop              cx
-	                              inc              SI
-	                              inc              Cx
-	                              cmp              cx, MSGTAILXsize                                                                     	;  loop iteration in x direction
-	                              JNZ              DRAW_MSGTAIL_R                                                                       	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, 0                                                                                	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              JZ               ALL_DRAWN_MSGTAIL                                                                    	;  both x and y reached 00 so finish drawing
-	                              jmp              DRAW_MSGTAIL_R
-
-	ALL_DRAWN_MSGTAIL:            
-	                              ret
+	MSGtAILEND:                   ret
 DrawMsgWithBox endp
 
 DrawHealthbar PROC near
@@ -2978,7 +2947,7 @@ DrawLayout PROC near
 	                              mov              RECCOLOR, 095h
 	                              call             DrawRec
 
-	;//////////////Borders\\\\\\\\\\\\\    
+	;//////////////Borders\\\\\\\\\\\\\
 
 	                              mov              BorderXEND, 559
 	                              mov              BorderYEND, 100
@@ -2991,7 +2960,7 @@ DrawLayout PROC near
 	                              mov              BorderDARKColor, 35h
 	                              call             DrawVertBorder
 
-								  mov              BorderXEND, 86
+	                              mov              BorderXEND, 86
 	                              mov              BorderMIDDLE, 83
 	                              mov              BorderMIDDLED1, 84
 	                              mov              BorderMIDDLED2, 82
@@ -3047,104 +3016,26 @@ DrawLayout PROC near
 	;//////////////////////////////////DrawCharacter\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
+	                              mov              REV, 0
+	                              mov              Ers, 0
+	                              editDrawPrams    CharacterC, CharacterSizeX, CharacterSizeY, CharacteroffsetX, CharacteroffsetY
+	                              call             drawShape
 
-	                              mov              SI, offset CharacterC
-	                              mov              cx, CharacterSizeX                                                                   	;Column X
-	                              mov              dx, CharacterSizeY                                                                   	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	DRAW_CHR1:                    
-	                              mov              bl, [SI]                                                                             	;use color from array color for testing
-	                              and              bl, bl
-	                              JZ               BACK_CHR1
-	                              add              cx, CharacteroffsetX
-	                              add              dx, CharacteroffsetY
-	                              mov              al, [SI]                                                                             	;  use color from array color for testing
-	                              int              10h                                                                                  	;  draw the pixel
-	                              sub              cx, CharacteroffsetX
-	                              sub              dx, CharacteroffsetY                                                                 	;  draw the pixel
-	BACK_CHR1:                    
-	                              inc              SI
-	                              DEC              Cx                                                                                   	;  loop iteration in x direction
-	                              JNZ              DRAW_CHR1                                                                            	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, CharacterSizeX                                                                   	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              JZ               ALL_DRAWN_CHR1                                                                       	;  both x and y reached 00 so finish drawing
-	                              jmp              DRAW_CHR1
-	ALL_DRAWN_CHR1:               
+	                              mov              REV, 1
+	                              mov              Ers, 0
+	                              editDrawPrams    CharacterC, CharacterSizeX, CharacterSizeY, CharacteroffsetX2, CharacteroffsetY
+	                              call             drawShape
 
+	                              mov              REV, 0
+	                              mov              Ers, 0
+	                              editDrawPrams    NameBoxC, NameBoxSizeX, NameBoxSizeY, 2, 66
+	                              call             drawShape
 
-	                              mov              SI, offset CharacterC
-	                              mov              cx, 0                                                                                	;Column X
-	                              mov              dx, CharacterSizeY                                                                   	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	DRAW_CHR2:                    
-	                              mov              bl, [SI]                                                                             	;use color from array color for testing
-	                              and              bl, bl
-	                              JZ               BACK_CHR2
-	                              add              cx, CharacteroffsetX2
-	                              add              dx, CharacteroffsetY
-	                              mov              al, [SI]                                                                             	;  use color from array color for testing
-	                              int              10h                                                                                  	;  draw the pixel
-	                              sub              cx, CharacteroffsetX2
-	                              sub              dx, CharacteroffsetY                                                                 	;  draw the pixel
-	BACK_CHR2:                    
-	                              inc              SI
-	                              inc              Cx                                                                                   	;  loop iteration in x direction
-	                              cmp              Cx, CharacterSizeX
-	                              JNZ              DRAW_CHR2                                                                            	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, 0                                                                                	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              JZ               ALL_DRAWN_CHR2                                                                       	;  both x and y reached 00 so finish drawing
-	                              jmp              DRAW_CHR2
-	ALL_DRAWN_CHR2:               
-
-	                              mov              SI, offset NameBoxC
-	                              mov              cx, NameBoxSizeX                                                                     	;Column X
-	                              mov              dx, NameBoxSizeY                                                                     	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	DRAW_NameBox1:                
-	                              mov              bl, [SI]                                                                             	;use color from array color for testing
-	                              and              bl, bl
-	                              JZ               BACK_NameBox1
-	                              add              cx, 2
-	                              add              dx, 66
-	                              mov              al, [SI]                                                                             	;  use color from array color for testing
-	                              int              10h                                                                                  	;  draw the pixel
-	                              sub              cx, 2
-	                              sub              dx, 66                                                                               	;  draw the pixel
-	BACK_NameBox1:                
-	                              inc              SI
-	                              DEC              Cx                                                                                   	;  loop iteration in x direction
-	                              JNZ              DRAW_NameBox1                                                                        	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, NameBoxSizeX                                                                     	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              JZ               ALL_DRAWN_NameBox1                                                                   	;  both x and y reached 00 so finish drawing
-	                              jmp              DRAW_NameBox1
-	ALL_DRAWN_NameBox1:           
-     
-	                              mov              SI, offset NameBoxC
-	                              mov              cx, NameBoxSizeX                                                                     	;Column X
-	                              mov              dx, NameBoxSizeY                                                                     	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	DRAW_NameBox2:                
-	                              mov              bl, [SI]                                                                             	;use color from array color for testing
-	                              and              bl, bl
-	                              JZ               BACK_NameBox2
-	                              add              cx, 554
-	                              add              dx, 66
-	                              mov              al, [SI]                                                                             	;  use color from array color for testing
-	                              int              10h                                                                                  	;  draw the pixel
-	                              sub              cx, 554
-	                              sub              dx, 66                                                                               	;  draw the pixel
-	BACK_NameBox2:                
-	                              inc              SI
-	                              DEC              Cx                                                                                   	;  loop iteration in x direction
-	                              JNZ              DRAW_NameBox2                                                                        	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, NameBoxSizeX                                                                     	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              JZ               ALL_DRAWN_NameBox2                                                                   	;  both x and y reached 00 so finish drawing
-	                              jmp              DRAW_NameBox2
-	ALL_DRAWN_NameBox2:           
+	                              mov              REV, 0
+	                              mov              Ers, 0
+	                              editDrawPrams    NameBoxC, NameBoxSizeX, NameBoxSizeY, 554, 66
+	                              call             drawShape
+          
      
 
 	;///////////////////////////LowerPart\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -3266,6 +3157,46 @@ DrawVertBorder PROC NEAR
 	ALL_DRAWN_VertBorder:         
 	                              ret
 DrawVertBorder endp
+drawShape PROC
+	; initialize containers
+	;mov SI, offset Shape
+	                              mov              cx, shapeSizeX
+	                              cmp              REV, 0
+	                              jz               DontREVCXDraw
+	                              mov              cx, 0                                                                                	;Column X
+	DontREVCXDraw:                push             cx
+	                              mov              dx, shapeSizeY                                                                       	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	drawShape_drawIt:             
+	                              mov              bl, [SI]                                                                             	;use color from array color for testing
+	                              and              bl, bl
+	                              JZ               drawShape_back
+	                              add              cx, shapeOffsetX
+	                              add              dx, shapeOffsetY
+	                              mov              al, [SI]
+	                              cmp              Ers, 0
+	                              jz               DrawWithPxl
+	                              mov              al, RECCOLOR                                                                         	;  use color from array color for testing
+	DrawWithPxl:                  int              10h                                                                                  	;  draw the pixel
+	                              sub              cx, shapeOffsetX
+	                              sub              dx, shapeOffsetY
+	drawShape_back:               
+	                              inc              SI
+	                              cmp              REV, 1
+	                              JZ               RevDraw
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              jmp              ContinueDrawLoop
+	RevDraw:                      inc              cx
+	                              cmp              cx, shapeSizeX
+	ContinueDrawLoop:             JNZ              drawShape_drawIt                                                                     	;  check if we can draw current x and y and excape the y iteration
+	                              pop              cx
+	                              push             cx                                                                                   	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              JZ               drawShape_alldrawn                                                                   	;  both x and y reached 00 so finish drawing
+	                              jmp              drawShape_drawIt
+	drawShape_alldrawn:           pop              cx
+	                              ret
+drawShape ENDP
 	;//////////////////////////////Procedures//////////////////////////////////////////////
         END MAIN
 

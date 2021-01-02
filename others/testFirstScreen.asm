@@ -11,6 +11,18 @@ editDrawPrams MACRO shape, sizeX, sizeY, offsetX, offsetY
 	              MOV AX, offsetX
 	              MOV shapeOffsetX, AX
 ENDM
+editRECPrams MACRO RECXEND_IN, RECYEND_IN, RECXSTART_IN, RECYSTART_IN, RECCOLOR_IN
+	             MOV AX, RECXEND_IN
+	             MOV RECXEND, AX
+	             MOV AX, RECYEND_IN
+	             MOV RECYEND, AX
+	             MOV AX, RECXSTART_IN
+	             MOV RECXSTART, AX
+	             MOV AX, RECYSTART_IN
+	             MOV RECYSTART, AX
+	             MOV AL, RECCOLOR_IN
+	             MOV RECCOLOR, AL
+ENDM
 clearWholeScreen MACRO
 	                 mov ah, 0
 	                 mov al, 3
@@ -35,7 +47,7 @@ clearWholeScreen MACRO
 	RECYEND            DW  400
 	RECXSTART          DW  0
 	RECYSTART          DW  0
-	RECCOLOR           DB  0B3h
+	RECCOLOR           DB  06Bh
 
 	; pointer
 	pointerAt          DB  0
@@ -45,7 +57,7 @@ clearWholeScreen MACRO
 	pointerSizeX       equ 16
 	pointerSizeY       equ 16
 	pointerOffsetX     dw  60
-	pointerOffsetY     equ 250
+	pointerOffsetY     equ 230
 	pointer            DB  26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 18, 18, 18, 0, 0
 	                   DB  0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0
 	                   DB  26, 26, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 27, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 26, 26, 26, 27, 27, 27, 26, 26
@@ -55,8 +67,8 @@ clearWholeScreen MACRO
 	                   DB  18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0
 	
 	; Logo
-	logoOffsetX        equ 255
-	logoOffsetY        equ 45
+	logoOffsetX        equ 190
+	logoOffsetY        equ 15
 	logoSizeX          equ 130
 	logoSizeY          equ 95
 	logo               DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -381,7 +393,7 @@ clearWholeScreen MACRO
 	thirdCharOffsetX   equ 288
 	fourthCharOffsetX  equ 392
 	fifthCharOffsetX   equ 496
-	charOffsetY        equ 200
+	charOffsetY        equ 230
 
 	Mikasa2            DB  0, 0, 0, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 6, 114, 114, 114, 114, 114, 114, 114, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 26, 30, 30, 30
 	                   DB  30, 26, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114
@@ -485,7 +497,7 @@ clearWholeScreen MACRO
 	                   DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 19, 19
 	                   DB  19, 19, 19, 19, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                   DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                   DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18
+	                   DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	Hisoka             DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 35, 107, 107, 107, 107, 58, 58, 58, 58, 58, 107, 107, 107, 107, 107, 58, 35, 35, 107, 0, 0, 0, 0
 	                   DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                   DB  0, 107, 107, 58, 58, 82, 82, 82, 82, 82, 82, 82, 58, 58, 58, 58, 107, 107, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -1116,7 +1128,7 @@ clearWholeScreen MACRO
 	thirdShipOffsetX   equ 304
 	fourthShipOffsetX  equ 408
 	fifthShipOffsetX   equ 512
-	shipOffsetY        equ 274
+	shipOffsetY        equ 304
 	
 	Asta2              DB  0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
 	                   DB  18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
@@ -1354,131 +1366,129 @@ clearWholeScreen MACRO
 
 .code
 MAIN PROC FAR
-	                    mov              ax, @Data
-	                    mov              ds, ax
-	                    mov              ax, 4F02h                                                          	; enter graphicsMode 4F02h
-	                    mov              bx, 0100h                                                          	; BX = 81FFh
-	                    int              10h
+	                      mov              ax, @Data
+	                      mov              ds, ax
+	                      mov              ax, 4F02h                                                          	; enter graphicsMode 4F02h
+	                      mov              bx, 0100h                                                          	; BX = 81FFh
+	                      int              10h
 
 	;fill background
-	                    call             DrawRec
-
-
+	                      call             DrawRec
 	; Draw pointer
-	                    editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
-	                    call             drawShape
+	                      editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
+	                      call             drawShape
 
 	; Draw Logo
-	                    editDrawPrams    logo, logoSizeX, logoSizeY, logoOffsetX, logoOffsetY
-	                    call             drawShape
+	                      editDrawPrams    logo, logoSizeX, logoSizeY, logoOffsetX, logoOffsetY
+	                      call             drawShape2x2
 							
 	; Draw Characters
-	                    editDrawPrams    Fenn, charSizeX, charSizeY, firstCharOffsetX, charOffsetY
-	                    call             drawShape
+	                      editDrawPrams    Fenn, charSizeX, charSizeY, firstCharOffsetX, charOffsetY
+	                      call             drawShape
 
-	                    editDrawPrams    Mikasa2, charSizeX, charSizeY, secondCharOffsetX, charOffsetY
-	                    call             drawShape
+	                      editDrawPrams    Mikasa2, charSizeX, charSizeY, secondCharOffsetX, charOffsetY
+	                      call             drawShape
 
-	                    editDrawPrams    Hisoka2, charSizeX, charSizeY, thirdCharOffsetX, charOffsetY
-	                    call             drawShape
+	                      editDrawPrams    Hisoka2, charSizeX, charSizeY, thirdCharOffsetX, charOffsetY
+	                      call             drawShape
 
-	                    editDrawPrams    Asta2, charSizeX, charSizeY, fourthCharOffsetX, charOffsetY
-	                    call             drawShape
+	                      editDrawPrams    Asta2, charSizeX, charSizeY, fourthCharOffsetX, charOffsetY
+	                      call             drawShape
 
-	                    editDrawPrams    Mikasa2, charSizeX, charSizeY, fifthCharOffsetX, charOffsetY
-	                    call             drawShape
+	                      editDrawPrams    Mikasa2, charSizeX, charSizeY, fifthCharOffsetX, charOffsetY
+	                      call             drawShape
 
 	; Draw Planes
-	                    editDrawPrams    Fenn_Plane, shipSizeX, shipSizeY, firstShipOffsetX, shipOffsetY
-	                    call             drawShape
+	                      editDrawPrams    Fenn_Plane, shipSizeX, shipSizeY, firstShipOffsetX, shipOffsetY
+	                      call             drawShape
 
-	                    editDrawPrams    Mikasa_Plane, shipSizeX, shipSizeY, secondShipOffsetX, shipOffsetY
-	                    call             drawShape
+	                      editDrawPrams    Mikasa_Plane, shipSizeX, shipSizeY, secondShipOffsetX, shipOffsetY
+	                      call             drawShape
 
-	                    editDrawPrams    Hisoka_Plane, shipSizeX, shipSizeY, thirdShipOffsetX, shipOffsetY
-	                    call             drawShape
+	                      editDrawPrams    Hisoka_Plane, shipSizeX, shipSizeY, thirdShipOffsetX, shipOffsetY
+	                      call             drawShape
 
-	                    editDrawPrams    Asta_Plane, shipSizeX, shipSizeY, fourthShipOffsetX, shipOffsetY
-	                    call             drawShape
+	                      editDrawPrams    Asta_Plane, shipSizeX, shipSizeY, fourthShipOffsetX, shipOffsetY
+	                      call             drawShape
 
-	                    editDrawPrams    Meruem_Plane, shipSizeX, shipSizeY, fifthShipOffsetX, shipOffsetY
-	                    call             drawShape
+	                      editDrawPrams    Meruem_Plane, shipSizeX, shipSizeY, fifthShipOffsetX, shipOffsetY
+	                      call             drawShape
 
 	
-	checkFirstScreen:   mov              ah,0
-	                    int              16h
-	                    cmp              ah, key_rightpointer                                               	; up pointer
-	                    jne              leftpointer_label
-	                    cmp              pointerOffsetX, pointerAtFifthChar
-	                    JE               checkFirstScreen
-	                    editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
-	                    call             Eraseshape
-	                    MOV              BX, pointerStep
-	                    ADD              pointerOffsetX, BX
-	                    editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
-	                    call             drawShape
+	checkFirstScreen:     mov              ah,0
+	                      int              16h
+	                      cmp              ah, key_rightpointer                                               	; up pointer
+	                      jne              leftpointer_label
+	                      cmp              pointerOffsetX, pointerAtFifthChar
+	                      JE               checkFirstScreen
+	                      editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
+	                      call             Eraseshape
+	                      MOV              BX, pointerStep
+	                      ADD              pointerOffsetX, BX
+	                      editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
+	                      call             drawShape
 
-	                    mov              Al, 0
-	                    call             getCurrentChar
-	                    call             Eraseshape
-	                    mov              Al, 1
-	                    call             getCurrentChar
-	                    call             drawShape
+	                      mov              Al, 0
+	                      call             getCurrentChar
+	                      call             Eraseshape
+	                      mov              Al, 1
+	                      call             getCurrentChar
+	                      call             drawShape
 						
-	                    INC              pointerAt
+	                      INC              pointerAt
 
-	                    mov              Al, 1
-	                    call             getCurrentChar
-	                    call             Eraseshape
-	                    mov              Al, 0
-	                    call             getCurrentChar
-	                    call             drawShape
-	checkFirstScreen_1: 
-	                    JMP              checkFirstScreen
-	leftpointer_label:  
-	                    cmp              ah, key_leftpointer
-	                    JNE              enterpointer_label
-	                    CMP              pointerOffsetX, pointerAtFirstChar
-	                    JE               checkFirstScreen_1
-	                    editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
-	                    call             Eraseshape
-	                    MOV              BX, pointerStep
-	                    SUB              pointerOffsetX, BX
-	                    editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
-	                    call             drawShape
+	                      mov              Al, 1
+	                      call             getCurrentChar
+	                      call             Eraseshape
+	                      mov              Al, 0
+	                      call             getCurrentChar
+	                      call             drawShape
+	checkFirstScreen_1:   
+	                      JMP              checkFirstScreen
+	leftpointer_label:    
+	                      cmp              ah, key_leftpointer
+	                      JNE              enterpointer_label
+	                      CMP              pointerOffsetX, pointerAtFirstChar
+	                      JE               checkFirstScreen_1
+	                      editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
+	                      call             Eraseshape
+	                      MOV              BX, pointerStep
+	                      SUB              pointerOffsetX, BX
+	                      editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
+	                      call             drawShape
 
-	                    mov              Al, 0
-	                    call             getCurrentChar
-	                    call             Eraseshape
-	                    mov              Al, 1
-	                    call             getCurrentChar
-	                    call             drawShape
+	                      mov              Al, 0
+	                      call             getCurrentChar
+	                      call             Eraseshape
+	                      mov              Al, 1
+	                      call             getCurrentChar
+	                      call             drawShape
 
-	                    DEC              pointerAt
+	                      DEC              pointerAt
 
-	                    mov              Al, 1
-	                    call             getCurrentChar
-	                    call             Eraseshape
-	                    mov              Al, 0
-	                    call             getCurrentChar
-	                    call             drawShape
+	                      mov              Al, 1
+	                      call             getCurrentChar
+	                      call             Eraseshape
+	                      mov              Al, 0
+	                      call             getCurrentChar
+	                      call             drawShape
 						
-	checkFirstScreen_2: JMP              checkFirstScreen
+	checkFirstScreen_2:   JMP              checkFirstScreen
 
-	enterpointer_label: CMP              AH, key_enter
-	                    JNE              checkFirstScreen_2
-	                    MOV              BL, pointerAt
-	                    MOV              firstPlayerId, BL
-	                    clearWholeScreen
+	enterpointer_label:   CMP              AH, key_enter
+	                      JNE              checkFirstScreen_2
+	                      MOV              BL, pointerAt
+	                      MOV              firstPlayerId, BL
+	                      clearWholeScreen
 
-	                    MOV              AH, 2
-	                    MOV              DL, bl
-	                    ADD              DL, 30h
-	                    INT              21h
+	                      MOV              AH, 2
+	                      MOV              DL, bl
+	                      ADD              DL, 30h
+	                      INT              21h
 
-	                    JMP              LOOP1
+	                      JMP              LOOP1
 
-	LOOP1:              JMP              LOOP1
+	LOOP1:                JMP              LOOP1
                    
 MAIN ENDP
 
@@ -1486,130 +1496,168 @@ MAIN ENDP
 drawShape PROC
 	; initialize containers
 	;mov SI, offset Shape
-	                    mov              cx, shapeSizeX                                                     	;Column X
-	                    mov              dx, shapeSizeY                                                     	;Row Y
-	                    mov              ah, 0ch                                                            	;Draw Pixel Command
-	drawShape_drawIt:   
-	                    mov              bl, [SI]                                                           	;use color from array color for testing
-	                    and              bl, bl
-	                    JZ               drawShape_back
-	                    add              cx, shapeOffsetX
-	                    add              dx, shapeOffsetY
-	                    mov              al, [SI]                                                           	;  use color from array color for testing
-	                    int              10h                                                                	;  draw the pixel
-	                    sub              cx, shapeOffsetX
-	                    sub              dx, shapeOffsetY
-	drawShape_back:     
-	                    inc              SI
-	                    DEC              Cx                                                                 	;  loop iteration in x direction
-	                    JNZ              drawShape_drawIt                                                   	;  check if we can draw current x and y and excape the y iteration
-	                    mov              Cx, shapeSizeX                                                     	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                    DEC              DX                                                                 	;  loop iteration in y direction
-	                    JZ               drawShape_alldrawn                                                 	;  both x and y reached 00 so finish drawing
-	                    jmp              drawShape_drawIt
-	drawShape_alldrawn: ret
+	                      mov              cx, shapeSizeX                                                     	;Column X
+	                      mov              dx, shapeSizeY                                                     	;Row Y
+	                      mov              ah, 0ch                                                            	;Draw Pixel Command
+	drawShape_drawIt:     
+	                      mov              bl, [SI]                                                           	;use color from array color for testing
+	                      and              bl, bl
+	                      JZ               drawShape_back
+	                      add              cx, shapeOffsetX
+	                      add              dx, shapeOffsetY
+	                      mov              al, [SI]                                                           	;  use color from array color for testing
+	                      int              10h                                                                	;  draw the pixel
+	                      sub              cx, shapeOffsetX
+	                      sub              dx, shapeOffsetY
+	drawShape_back:       
+	                      inc              SI
+	                      DEC              Cx                                                                 	;  loop iteration in x direction
+	                      JNZ              drawShape_drawIt                                                   	;  check if we can draw current x and y and excape the y iteration
+	                      mov              Cx, shapeSizeX                                                     	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                      DEC              DX                                                                 	;  loop iteration in y direction
+	                      JZ               drawShape_alldrawn                                                 	;  both x and y reached 00 so finish drawing
+	                      jmp              drawShape_drawIt
+	drawShape_alldrawn:   ret
 drawShape ENDP
 Eraseshape PROC near
 	; initialize containers
-	                    mov              cx, shapeSizeX                                                     	;Column X
-	                    mov              dx, shapeSizeY                                                     	;Row Y
-	                    push             ax
-	                    mov              ah, 0ch                                                            	;Draw Pixel Command
-	                    mov              al, RECCOLOR                                                             	;to be replaced with background
+	                      mov              cx, shapeSizeX                                                     	;Column X
+	                      mov              dx, shapeSizeY                                                     	;Row Y
+	                      push             ax
+	                      mov              ah, 0ch                                                            	;Draw Pixel Command
+	                      mov              al, RECCOLOR                                                       	;to be replaced with background
 	
-	Eraseshape_Drawit:  
-	                    mov              bl, [SI]                                                           	;  use color from array color for testing
-	                    and              bl, bl
-	                    JZ               Eraseshape_back
-	                    add              cx, shapeOffsetX
-	                    add              dx, shapeOffsetY
-	                    int              10h                                                                	;  draw the pixel
-	                    sub              cx, shapeOffsetX
-	                    sub              dx, shapeOffsetY
+	Eraseshape_Drawit:    
+	                      mov              bl, [SI]                                                           	;  use color from array color for testing
+	                      and              bl, bl
+	                      JZ               Eraseshape_back
+	                      add              cx, shapeOffsetX
+	                      add              dx, shapeOffsetY
+	                      int              10h                                                                	;  draw the pixel
+	                      sub              cx, shapeOffsetX
+	                      sub              dx, shapeOffsetY
 
-	Eraseshape_back:    
-	                    inc              SI
-	                    DEC              Cx                                                                 	;  loop iteration in x direction
-	                    JNZ              Eraseshape_Drawit                                                  	;  check if we can draw c urrent x and y and excape the y iteration
-	                    mov              Cx, shapeSizeX                                                     	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                    DEC              DX                                                                 	;  loop iteration in y direction
-	                    JZ               Eraseshape_alldrawn                                                	;  both x and y reached 00 so finish drawing
-	                    jmp              Eraseshape_Drawit
-	Eraseshape_alldrawn:pop              ax
-	                    ret
+	Eraseshape_back:      
+	                      inc              SI
+	                      DEC              Cx                                                                 	;  loop iteration in x direction
+	                      JNZ              Eraseshape_Drawit                                                  	;  check if we can draw c urrent x and y and excape the y iteration
+	                      mov              Cx, shapeSizeX                                                     	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                      DEC              DX                                                                 	;  loop iteration in y direction
+	                      JZ               Eraseshape_alldrawn                                                	;  both x and y reached 00 so finish drawing
+	                      jmp              Eraseshape_Drawit
+	Eraseshape_alldrawn:  pop              ax
+	                      ret
 Eraseshape ENDP
 
 getCurrentChar PROC
-	                    MOV              BL, pointerAt
+	                      MOV              BL, pointerAt
 	
-	                    CMP              BL, 0
-	                    JNE              getCurrentChar_At1
-	                    CMP              AL, 0
-	                    JNE              getCurrentChar_At02
-	                    editDrawPrams    Fenn, charSizeX, charSizeY, firstCharOffsetX, charOffsetY
-	                    ret
-	getCurrentChar_At02:
-	                    editDrawPrams    Fenn2, charSizeX, charSizeY, firstCharOffsetX, charOffsetY
-	                    ret
+	                      CMP              BL, 0
+	                      JNE              getCurrentChar_At1
+	                      CMP              AL, 0
+	                      JNE              getCurrentChar_At02
+	                      editDrawPrams    Fenn, charSizeX, charSizeY, firstCharOffsetX, charOffsetY
+	                      ret
+	getCurrentChar_At02:  
+	                      editDrawPrams    Fenn2, charSizeX, charSizeY, firstCharOffsetX, charOffsetY
+	                      ret
 
-	getCurrentChar_At1: CMP              BL, 1
-	                    JNE              getCurrentChar_At2
-	                    CMP              AL, 0
-	                    JNE              getCurrentChar_At12
-	                    editDrawPrams    Mikasa, charSizeX, charSizeY, secondCharOffsetX, charOffsetY
-	                    ret
-	getCurrentChar_At12:
-	                    editDrawPrams    Mikasa2, charSizeX, charSizeY, secondCharOffsetX, charOffsetY
-	                    ret
+	getCurrentChar_At1:   CMP              BL, 1
+	                      JNE              getCurrentChar_At2
+	                      CMP              AL, 0
+	                      JNE              getCurrentChar_At12
+	                      editDrawPrams    Mikasa, charSizeX, charSizeY, secondCharOffsetX, charOffsetY
+	                      ret
+	getCurrentChar_At12:  
+	                      editDrawPrams    Mikasa2, charSizeX, charSizeY, secondCharOffsetX, charOffsetY
+	                      ret
 
-	getCurrentChar_At2: CMP              BL, 2
-	                    JNE              getCurrentChar_At3
-	                    CMP              AL, 0
-	                    JNE              getCurrentChar_At22
-	                    editDrawPrams    Hisoka, charSizeX, charSizeY, thirdCharOffsetX, charOffsetY
-	                    ret
-	getCurrentChar_At22:
-	                    editDrawPrams    Hisoka2, charSizeX, charSizeY, thirdCharOffsetX, charOffsetY
-	                    ret
+	getCurrentChar_At2:   CMP              BL, 2
+	                      JNE              getCurrentChar_At3
+	                      CMP              AL, 0
+	                      JNE              getCurrentChar_At22
+	                      editDrawPrams    Hisoka, charSizeX, charSizeY, thirdCharOffsetX, charOffsetY
+	                      ret
+	getCurrentChar_At22:  
+	                      editDrawPrams    Hisoka2, charSizeX, charSizeY, thirdCharOffsetX, charOffsetY
+	                      ret
 
-	getCurrentChar_At3: CMP              BL, 3
-	                    JNE              getCurrentChar_At4
-	                    CMP              AL, 0
-	                    JNE              getCurrentChar_At32
-	                    editDrawPrams    Asta, charSizeX, charSizeY, fourthCharOffsetX, charOffsetY
-	                    ret
-	getCurrentChar_At32:
-	                    editDrawPrams    Asta2, charSizeX, charSizeY, fourthCharOffsetX, charOffsetY
-	                    ret
+	getCurrentChar_At3:   CMP              BL, 3
+	                      JNE              getCurrentChar_At4
+	                      CMP              AL, 0
+	                      JNE              getCurrentChar_At32
+	                      editDrawPrams    Asta, charSizeX, charSizeY, fourthCharOffsetX, charOffsetY
+	                      ret
+	getCurrentChar_At32:  
+	                      editDrawPrams    Asta2, charSizeX, charSizeY, fourthCharOffsetX, charOffsetY
+	                      ret
 
-	getCurrentChar_At4: 
-	                    CMP              AL, 0
-	                    JNE              getCurrentChar_At42
-	                    editDrawPrams    Mikasa, charSizeX, charSizeY, fifthCharOffsetX, charOffsetY
-	                    ret
-	getCurrentChar_At42:
-	                    editDrawPrams    Mikasa2, charSizeX, charSizeY, fifthCharOffsetX, charOffsetY
-	                    ret
+	getCurrentChar_At4:   
+	                      CMP              AL, 0
+	                      JNE              getCurrentChar_At42
+	                      editDrawPrams    Mikasa, charSizeX, charSizeY, fifthCharOffsetX, charOffsetY
+	                      ret
+	getCurrentChar_At42:  
+	                      editDrawPrams    Mikasa2, charSizeX, charSizeY, fifthCharOffsetX, charOffsetY
+	                      ret
 getCurrentChar ENDP
 
 DrawRec Proc near
-	                    mov              cx, RECXEND                                                        	;Column X
-	                    mov              dx, RECYEND                                                        	;Row Y
-	                    mov              ah, 0ch                                                            	;Draw Pixel Command
-	DRAW_REC1:          
-	                    mov              al, RECCOLOR                                                       	;  use color from array color for testing
-	                    int              10h                                                                	;  draw the pixel
-	BACK_REC1:          
-	                    DEC              Cx
-	                    CMP              CX, RECXSTART                                                      	;  loop iteration in x direction
-	                    JNZ              DRAW_REC1                                                          	;  check if we can draw c urrent x and y and excape the y iteration
-	                    mov              Cx, RECXEND                                                        	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                    DEC              DX
-	                    CMP              DX,RECYSTART                                                       	;  loop iteration in x direction
-	                    JZ               ALL_DRAWN_REC1                                                     	;  both x and y reached 00 so finish drawing
-	                    jmp              DRAW_REC1
-	ALL_DRAWN_REC1:     
-	                    ret
-	DrawRec endp   
+	                      mov              cx, RECXEND                                                        	;Column X
+	                      mov              dx, RECYEND                                                        	;Row Y
+	                      mov              ah, 0ch                                                            	;Draw Pixel Command
+	DRAW_REC1:            
+	                      mov              al, RECCOLOR                                                       	;  use color from array color for testing
+	                      int              10h                                                                	;  draw the pixel
+	BACK_REC1:            
+	                      DEC              Cx
+	                      CMP              CX, RECXSTART                                                      	;  loop iteration in x direction
+	                      JNZ              DRAW_REC1                                                          	;  check if we can draw c urrent x and y and excape the y iteration
+	                      mov              Cx, RECXEND                                                        	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                      DEC              DX
+	                      CMP              DX,RECYSTART                                                       	;  loop iteration in x direction
+	                      JZ               ALL_DRAWN_REC1                                                     	;  both x and y reached 00 so finish drawing
+	                      jmp              DRAW_REC1
+	ALL_DRAWN_REC1:       
+	                      ret
+DrawRec endp
+drawShape2x2 PROC
+
+	                      mov              cx, shapeSizeX                                                     	;Column X
+	                      mov              dx, shapeSizeY                                                     	;Row Y
+	                      mov              ah, 0ch                                                            	;Draw Pixel Command
+	drawShape2x2_drawIt:  
+	                      mov              bl, [SI]                                                           	;use color from array color for testing
+	                      and              bl, bl
+	                      JZ               drawShape2x2_back
+	                      mov              al, [SI]                                                           	;  use color from array color for testing
+	                      push             cx
+	                      push             dx
+	                      add              cx,cx
+	                      add              dx,dx
+	                      add              cx,shapeOffsetX
+	                      add              dx,shapeOffsetY
+	                      int              10h
+	                      DEC              cx
+	                      int              10h
+	                      dec              dx
+	                      inc              cx
+	                      int              10h
+	                      dec              cx
+	                      int              10h                                                                	;  draw the pixel
+	                      pop              dx
+	                      pop              cx
+
+	drawShape2x2_back:    
+	                      inc              SI
+	                      DEC              Cx
+	                      JNZ              drawShape2x2_drawIt                                                	;  check if we can draw c urrent x and y and excape the y iteration
+	                      mov              Cx, shapeSizeX                                                     	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                      DEC              DX
+	                      JZ               drawShape2x2_allDrawn                                              	;  both x and y reached 00 so finish drawing
+	                      jmp              drawShape2x2_drawIt
+	drawShape2x2_allDrawn:ret
+	
+drawShape2x2 ENDP
 END MAIN
            
