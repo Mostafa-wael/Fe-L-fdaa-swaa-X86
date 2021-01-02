@@ -11,6 +11,7 @@
 	fourthCharOffsetX DW  392
 	fifthCharOffsetX  DW  496
 	charOffsetY       dw  250
+
 	Asta              DB  0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
 	                  DB  18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
 	                  DB  18, 18, 18, 18, 18, 18, 67, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
@@ -426,13 +427,69 @@
 
 
 
+	
 	; Planes
 	shipSizeX         equ 32
 	shipSizeY         equ 32
 	firstShipOffsetX  DW  96
 	secondShipOffsetX DW  200
-	thirdShipOffserX  DW  304
+	thirdShipOffsetX  DW  304
+	fourthShipOffsetX DW  408
+	fifthShipOffsetX  DW  512
 	shipOffsetY       DW  324
+	
+	Meruem_Plane      DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169
+	                  DB  73, 169, 73, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169, 73, 169, 169, 19, 19, 169, 169, 19
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 169, 73, 19, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95
+	                  DB  95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 42, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 73, 169, 169, 169, 169, 169
+	                  DB  169, 19, 42, 44, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95, 95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 19, 19, 19, 19, 169, 169, 169, 169, 169, 73, 73, 169, 169, 73, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 73, 73, 73, 73, 73, 73, 73
+	                  DB  73, 95, 169, 73, 73, 95, 169, 73, 169, 169, 169, 19, 0, 0, 0, 0, 0, 19, 73, 73, 95, 95, 95, 95, 95, 95, 95, 95, 73, 95, 73, 73, 73, 73, 95, 169, 73, 73, 95, 169
+	                  DB  73, 73, 73, 73, 42, 66, 66, 0, 19, 73, 73, 95, 95, 35, 35, 35, 95, 95, 95, 95, 95, 73, 95, 73, 73, 73, 95, 73, 73, 73, 95, 73, 73, 73, 73, 73, 43, 44, 44, 44
+	                  DB  19, 73, 95, 35, 58, 58, 58, 58, 35, 95, 95, 95, 73, 95, 73, 95, 95, 95, 95, 169, 73, 73, 95, 169, 73, 73, 169, 19, 0, 0, 0, 0, 19, 73, 95, 35, 58, 58, 58, 58
+	                  DB  35, 95, 95, 95, 73, 95, 73, 95, 95, 95, 95, 169, 73, 73, 95, 169, 73, 73, 169, 19, 0, 0, 0, 0, 19, 73, 73, 95, 95, 35, 35, 35, 95, 95, 95, 95, 95, 73, 95, 73
+	                  DB  73, 73, 95, 73, 73, 73, 95, 73, 73, 73, 73, 73, 43, 44, 44, 44, 0, 19, 73, 73, 95, 95, 95, 95, 95, 95, 95, 95, 73, 95, 73, 73, 73, 73, 95, 169, 73, 73, 95, 169
+	                  DB  73, 73, 73, 73, 42, 66, 66, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 73, 73, 73, 73, 73, 73, 73, 73, 95, 169, 73, 73, 95, 169, 73, 169, 169, 169, 19, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 169, 169, 169, 169, 169, 73, 73, 169, 169, 73, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95
+	                  DB  95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 73, 169, 169, 169, 169, 169
+	                  DB  169, 19, 42, 44, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95, 95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 42, 43, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 19, 19, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19
+	                  DB  19, 169, 73, 19, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169, 73, 169, 169, 19, 19, 169, 169, 19
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169, 73, 169, 73, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	Asta_Plane        DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 16, 42, 43, 16, 41, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 16, 16, 0, 16, 42, 16, 4, 41, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 41, 16, 0, 16, 16
+	                  DB  41, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 41, 4, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 41, 16, 0, 16, 4, 41, 16, 16, 16, 16, 16, 16
+	                  DB  16, 16, 16, 16, 16, 16, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 16, 4, 41, 4, 16, 41, 16, 41, 16, 41, 4, 16, 41, 16, 41, 16
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 16, 41, 16, 41, 4, 16, 0, 41, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 16, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  16, 41, 16, 16, 16, 4, 41, 4, 41, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 0, 55, 55, 55, 0, 0, 0, 0, 16, 4, 41, 16, 41, 41, 4, 41
+	                  DB  114, 114, 114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 55, 54, 54, 53, 55, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 114, 114, 114, 114, 114, 114, 114
+	                  DB  114, 114, 114, 114, 114, 114, 114, 16, 54, 54, 53, 53, 55, 0, 0, 0, 16, 0, 0, 16, 0, 0, 0, 0, 16, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16
+	                  DB  54, 54, 53, 53, 53, 55, 55, 0, 0, 0, 0, 16, 0, 0, 16, 16, 16, 54, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 16, 54, 53, 53, 52, 52, 52, 53, 55
+	                  DB  0, 0, 0, 0, 0, 16, 16, 16, 114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 54, 53, 53, 52, 76, 76, 76, 76, 0, 0, 0, 0, 0, 16, 16, 16
+	                  DB  114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 54, 53, 53, 52, 52, 52, 53, 55, 0, 0, 0, 16, 0, 0, 16, 16, 16, 54, 114, 114, 114, 114, 114, 114
+	                  DB  114, 114, 114, 114, 114, 114, 114, 16, 54, 53, 53, 52, 53, 54, 54, 55, 16, 0, 0, 16, 0, 0, 0, 0, 16, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16
+	                  DB  54, 54, 53, 53, 53, 55, 55, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 16, 54, 54, 53, 53, 55, 0, 0, 0
+	                  DB  16, 4, 41, 16, 41, 41, 4, 41, 114, 114, 114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 55, 54, 54, 54, 55, 0, 0, 0, 16, 41, 16, 16, 16, 4, 41, 4
+	                  DB  41, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 0, 55, 55, 55, 0, 0, 0, 0, 16, 4, 16, 41, 16, 41, 4, 16, 0, 41, 114, 114, 114, 114, 114, 114
+	                  DB  114, 114, 114, 114, 114, 114, 114, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 16, 4, 41, 4, 16, 41, 16, 41, 16, 41, 4, 16, 41, 16, 41, 16
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 41, 16, 0, 16, 4, 41, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 16, 41, 16, 0, 16, 16, 41, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 41, 4, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 0, 16, 42, 16
+	                  DB  4, 41, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 16, 42, 43, 16, 41, 4, 16, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                  DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	Hisoka_Plane      DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                  DB  0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134
 	                  DB  63, 134, 63, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 134, 19, 19, 134, 134, 19
@@ -519,25 +576,27 @@ MAIN PROC FAR
 	                        mov  ax, 4F02h              	; enter graphicsMode 4F02h
 	                        mov  bx, 0100h              	; BX = 81FFh
 	                        int  10h
-
-							;hlt
 							
 	; Draw Characters
-	                        ;call drawFirstChar
-	                        ;call drawSecondChar
-	                        ;call drawThirdChar
-	                        ;call drawFourthChar
-	                        ;call drawFifthChar
-
+	                        call drawFirstChar
+	                        call drawSecondChar
+	                        call drawThirdChar
+	                        call drawFourthChar
+	                        call drawFifthChar
 	; Draw Planes
-	                        ;call drawFirstShip
-	                        ;call drawSecondShip
-	                        ;call drawThirdShip
+	                        call drawFirstShip
+	                        call drawSecondShip
+	                        call drawThirdShip
+	                        call drawFourthShip
+							call drawFifthShip
+
+	loop1:                  
+	                        jmp  loop1
                    
 MAIN ENDP
 
 
-drawFirstChar PROC 
+drawFirstChar PROC
 	; initialize containers
 	                        mov  SI, offset Fenn
 	                        mov  cx, charSizeX          	;Column X
@@ -563,7 +622,7 @@ drawFirstChar PROC
 	                        jmp  drawFirstChar_drawIt
 	drawFirstChar_alldrawn: ret
 drawFirstChar ENDP
-drawSecondChar PROC 
+drawSecondChar PROC
 	; initialize containers
 	                        mov  SI, offset Mikasa
 	                        mov  cx, charSizeX          	;Column X
@@ -589,7 +648,7 @@ drawSecondChar PROC
 	                        jmp  drawSecondChar_drawIt
 	drawSecondChar_alldrawn:ret
 drawSecondChar ENDP
-drawThirdChar PROC 
+drawThirdChar PROC
 	; initialize containers
 	                        mov  SI, offset Hisoka
 	                        mov  cx, charSizeX          	;Column X
@@ -615,9 +674,9 @@ drawThirdChar PROC
 	                        jmp  drawThirdChar_drawIt
 	drawThirdChar_alldrawn: ret
 drawThirdChar ENDP
-drawFourthChar PROC 
+drawFourthChar PROC
 	; initialize containers
-	                        mov  SI, offset Fenn
+	                        mov  SI, offset Asta
 	                        mov  cx, charSizeX          	;Column X
 	                        mov  dx, charSizeY          	;Row Y
 	                        mov  ah, 0ch                	;Draw Pixel Command
@@ -641,7 +700,7 @@ drawFourthChar PROC
 	                        jmp  drawFourthChar_drawIt
 	drawFourthChar_alldrawn:ret
 drawFourthChar ENDP
-drawFifthChar PROC 
+drawFifthChar PROC
 	; initialize containers
 	                        mov  SI, offset Fenn
 	                        mov  cx, charSizeX          	;Column X
@@ -668,7 +727,7 @@ drawFifthChar PROC
 	drawFifthChar_alldrawn: ret
 drawFifthChar ENDP
 
-drawFirstShip PROC 
+drawFirstShip PROC
 	; initialize containers
 	                        mov  SI, offset Fenn_Plane
 	                        mov  cx, shipSizeX          	;Column X
@@ -694,7 +753,7 @@ drawFirstShip PROC
 	                        jmp  drawFirstShip_drawIt
 	drawFirstShip_alldrawn: ret
 drawFirstShip ENDP
-drawSecondShip PROC 
+drawSecondShip PROC
 	; initialize containers
 	                        mov  SI, offset Mikasa_Plane
 	                        mov  cx, shipSizeX          	;Column X
@@ -720,7 +779,7 @@ drawSecondShip PROC
 	                        jmp  drawSecondShip_drawIt
 	drawSecondShip_alldrawn:ret
 drawSecondShip ENDP
-drawThirdShip PROC 
+drawThirdShip PROC
 	; initialize containers
 	                        mov  SI, offset Hisoka_Plane
 	                        mov  cx, shipSizeX          	;Column X
@@ -730,11 +789,11 @@ drawThirdShip PROC
 	                        mov  bl, [SI]               	;use color from array color for testing
 	                        and  bl, bl
 	                        JZ   drawThirdShip_back
-	                        add  cx, thirdShipOffserX
+	                        add  cx, thirdShipOffsetX
 	                        add  dx, shipOffsetY
 	                        mov  al, [SI]               	;  use color from array color for testing
 	                        int  10h                    	;  draw the pixel
-	                        sub  cx, thirdShipOffserX
+	                        sub  cx, thirdShipOffsetX
 	                        sub  dx, shipOffsetY
 	drawThirdShip_back:     
 	                        inc  SI
@@ -746,6 +805,60 @@ drawThirdShip PROC
 	                        jmp  drawThirdShip_drawIt
 	drawThirdShip_alldrawn: ret
 drawThirdShip ENDP
+drawFourthShip PROC
+	; initialize containers
+	                        mov  SI, offset Asta_Plane
+	                        mov  cx, shipSizeX          	;Column X
+	                        mov  dx, shipSizeY          	;Row Y
+	                        mov  ah, 0ch                	;Draw Pixel Command
+	drawFourthShip_drawIt:  
+	                        mov  bl, [SI]               	;use color from array color for testing
+	                        and  bl, bl
+	                        JZ   drawFourthShip_back
+	                        add  cx, fourthShipOffsetX
+	                        add  dx, shipOffsetY
+	                        mov  al, [SI]               	;  use color from array color for testing
+	                        int  10h                    	;  draw the pixel
+	                        sub  cx, fourthShipOffsetX
+	                        sub  dx, shipOffsetY
+	drawFourthShip_back:    
+	                        inc  SI
+	                        DEC  Cx                     	;  loop iteration in x direction
+	                        JNZ  drawFourthShip_drawIt  	;  check if we can draw current x and y and excape the y iteration
+	                        mov  Cx, shipSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                        DEC  DX                     	;  loop iteration in y direction
+	                        JZ   drawFourthShip_alldrawn	;  both x and y reached 00 so finish drawing
+	                        jmp  drawFourthShip_drawIt
+	drawFourthShip_alldrawn:ret
+drawFourthShip ENDP
+drawFifthShip PROC
+	; initialize containers
+	                        mov  SI, offset Meruem_Plane
+	                        mov  cx, shipSizeX          	;Column X
+	                        mov  dx, shipSizeY          	;Row Y
+	                        mov  ah, 0ch                	;Draw Pixel Command
+	drawFifthShip_drawIt:  
+	                        mov  bl, [SI]               	;use color from array color for testing
+	                        and  bl, bl
+	                        JZ   drawFifthShip_back
+	                        add  cx, fifthShipOffsetX
+	                        add  dx, shipOffsetY
+	                        mov  al, [SI]               	;  use color from array color for testing
+	                        int  10h                    	;  draw the pixel
+	                        sub  cx, fifthShipOffsetX
+	                        sub  dx, shipOffsetY
+	drawFifthShip_back:    
+	                        inc  SI
+	                        DEC  Cx                     	;  loop iteration in x direction
+	                        JNZ  drawFifthShip_drawIt  	;  check if we can draw current x and y and excape the y iteration
+	                        mov  Cx, shipSizeX          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                        DEC  DX                     	;  loop iteration in y direction
+	                        JZ   drawFifthShip_alldrawn	;  both x and y reached 00 so finish drawing
+	                        jmp  drawFifthShip_drawIt
+	drawFifthShip_alldrawn:ret
+drawFifthShip ENDP
+
+
 
 
 END MAIN
