@@ -65,7 +65,7 @@ ENDM
 	; constrains depend on the graphics mode
 	graphicsModeAX           equ         4F02h
 	graphicsModeBX           equ         0100h
-	delayDuration            equ         1
+	delayDuration            equ         260
 	;
 	shipOffsetX1             dw          30                                                                                                                                                                                                    	;position of first from left pixel
 	shipOffsetY1             dw          219                                                                                                                                                                                                   	;position of first from top pixel
@@ -86,7 +86,7 @@ ENDM
 	screenMaxX2              equ         640
 
 	SHIP_DAMAGE_COLOR        db          04h
-	SHIP_DAMAGE_EFFECT_DELAY equ         7
+	SHIP_DAMAGE_EFFECT_DELAY equ         700
 	;
 	shipSpeed1               equ         4
 	shipSpeed2               equ         4
@@ -1005,6 +1005,8 @@ ENDM
 
 	HEALTH1                  DB          200
 	HEALTH2                  DB          200
+
+	ISNEWGAME				db			0
  
     Player1MSG              DB           " Player 1 is the Winner, Congrats", "$"
     Player2MSG              DB           " Player 2 is the Winner, Congrats", "$"
@@ -1612,16 +1614,20 @@ MAIN PROC FAR
 	                              call             DrawMsgWithBox
 	;this subroutine is responsible for drawing the ship using its cooardinates
 	;////////////////////////////Interacting with the user////////////////////////////
-	gameLoopRoutine:       
+	gameLoopRoutine: 
+	mov dl, 0
+	mov ISNEWGAME, dl      
     CALL GameWinner       
 	                              ;CMP              HEALTH1, 0
 	                              ;JE               exitProg
 
 	                              ;CMP              HEALTH2, 0
 	                              ;JE               exitProg
-	                              call             BulletChecker
+								  CMP ISNEWGAME, 1
+								  JE gameLoop
 
-	                              call             updateBullets
+
+	                  call             updateBullets
 
 	;////////////////////////////////////check for user input/////////////////////////////////////////////
 
@@ -2364,7 +2370,17 @@ GameWinner PROC
 	            lea              dx, Player1MSG                                                                           	; show the bye bye screen
 	            int              21h
 
-                mov ah, 2
+                jmp CONINUE_ENDMSG
+
+        Player2_Winner:
+                clearWholeScreen
+	            mov              ah,09h
+	            lea              dx, Player2MSG                                                                           	; show the bye bye screen
+	            int              21h
+                ;jmp EndGameWinner
+
+		
+CONINUE_ENDMSG:		mov ah, 2
                 mov dl, 13
                 int 21h
                 
@@ -2376,19 +2392,50 @@ GameWinner PROC
                 mov ah, 09h
                 lea dx, NewEndGame
                 int 21h
-                jmp EndGameWinner
 
-        Player2_Winner:
-                clearWholeScreen
-	            mov              ah,09h
-	            lea              dx, Player2MSG                                                                           	; show the bye bye screen
-	            int              21h
-                jmp EndGameWinner
+				ReadNewGame:	           mov              ah,1
+	                            int             16h
+								JZ ReadNewGame
+								CMP ah, 15H
+								JE NewGameCreator
+								CMP ah, 31H
+								JE EndGameCreator
+								JMP EndGameWinner
+		
+		EndGameCreator:
+			                              clearWholeScreen
+	                              mov              ah,09h
+	                              lea              dx, byebye                                                                           	; show the bye bye screen
+	                              int              21h
 
-               
-    EndGameWinner: HLT
+	                              mov              ah,4ch
+	                              int              21h
+								  JMP EndGameWinner
+
+        NewGameCreator:
+				call NewGameInitializer
+
+
+    EndGameWinner: 
     ret
     GameWinner ENDP
+
+NewGameInitializer PROC near
+				mov dl, 1
+				mov ISNEWGAME, dl
+				mov dl, 200
+				mov HEALTH1, dl
+				mov HEALTH2, dl
+				mov dx, 30
+				mov shipOffsetX1, dx
+				mov dx, 219
+				mov shipOffsetY1, dx
+				mov shipOffsetY2, dx
+				mov dx, 578
+				mov shipOffsetX2, dx
+				ret
+
+	NewGameInitializer ENDP
 
 drawGameBtn PROC
 	; initialize containers
