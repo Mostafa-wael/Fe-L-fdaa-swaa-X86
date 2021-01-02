@@ -66,22 +66,6 @@ ENDM
 	graphicsModeAX           equ         4F02h
 	graphicsModeBX           equ         0100h
 	delayDuration            equ         260
-	;DRAW FUNCS PARAMETERS
-	RECXEND                  DW          640
-	RECYEND                  DW          400
-	RECXSTART                DW          0
-	RECYSTART                DW          0
-	RECCOLOR                 DB          0B3h
-	;
-	BorderXEND               DW          00
-	BorderYEND               DW          00
-	BorderXSTART             DW          00
-	BorderYSTART             DW          00
-	BorderBRIGHTColor        DB          00
-	BorderDARKColor          DB          00
-	BorderMIDDLED1           DW          00
-	BorderMIDDLE             DW          00
-	BorderMIDDLED2           DW          00
 	;
 	shipOffsetX1             dw          30                                                                                                                                                                                                    	;position of first from left pixel
 	shipOffsetY1             dw          219                                                                                                                                                                                                   	;position of first from top pixel
@@ -1621,7 +1605,7 @@ MAIN PROC FAR
 	                              call             DrawHealthbar2
 	                              call             drawShip1
 	                              call             Drawship2
-	                              mov              bx, 3                                                                                	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
+	                              mov              bx, 0                                                                                	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
 	                              call             DrawMsgWithBox
 	;this subroutine is responsible for drawing the ship using its cooardinates
 	;////////////////////////////Interacting with the user////////////////////////////
@@ -2685,60 +2669,134 @@ DrawMsgWithBox Proc near
 	                              mov              cx, bx
 	                              and              cx, 2
 	                              JNZ              DRAWMSGUP
-	                              
-	                              mov              RECXEND, 532
-	                              mov              RECYEND, 85
-	                              mov              RECXSTART, 108
-	                              mov              RECYSTART, 55
-	                              mov              RECCOLOR, 12h
-	                              call             DrawRec
 
-	                              mov              RECXEND, 530
-	                              mov              RECYEND, 87
-	                              mov              RECXSTART, 110
-	                              mov              RECYSTART, 53
-	                              call             DrawRec
-
-	                              mov              RECYEND, 85
-	                              mov              RECYSTART, 55
-	                              mov              RECCOLOR, 1dh
-	                              call             DrawRec
+	                              mov              cx, 532                                                                              	;Column X
+	                              mov              dx, 85                                                                               	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_MSG1Bord1:               
+	                              mov              al, 12h                                                                              	;  use color from array color for testing
+	                              int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx
+	                              cmp              cx, 108                                                                              	;  loop iteration in x direction
+	                              JNZ              DRAW_MSG1Bord1                                                                       	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 532                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX
+	                              cmp              dx, 55                                                                               	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_MSG1Bord1                                                                  	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_MSG1Bord1
+	ALL_DRAWN_MSG1Bord1:          
 	
-	                              mov              RECXEND, 526
-	                              mov              RECYEND, 70
-	                              mov              RECXSTART, 114
-	                              mov              RECYSTART, 59
-	                              mov              RECCOLOR, 1eh
-	                              call             DrawRec
-	                              jmp              ALL_DRAWN_MSGBox
+	                              mov              cx, 530                                                                              	;Column X
+	                              mov              dx, 87                                                                               	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_MSG1Bord2:               
+	                              mov              al, 12h                                                                              	;  use color from array color for testing
+	                              int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx
+	                              cmp              cx, 110                                                                              	;  loop iteration in x direction
+	                              JNZ              DRAW_MSG1Bord2                                                                       	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 530                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX
+	                              cmp              dx, 53                                                                               	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_MSG1Bord2                                                                  	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_MSG1Bord2
+	ALL_DRAWN_MSG1Bord2:          
+
+	                              mov              cx, 530                                                                              	;Column X
+	                              mov              dx, 85                                                                               	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_MSG1B:                   
+	                              mov              al, 1dh                                                                              	;  use color from array color for testing
+	                              int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx
+	                              cmp              cx, 110                                                                              	;  loop iteration in x direction
+	                              JNZ              DRAW_MSG1B                                                                           	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 530                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX
+	                              cmp              dx, 55                                                                               	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_MSG1B                                                                      	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_MSG1B
+	ALL_DRAWN_MSG1B:              
+	                              mov              cx, 526                                                                              	;Column X
+	                              mov              dx, 70                                                                               	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_MSG1F:                   
+	                              mov              al, 1eh                                                                              	;  use color from array color for testing
+	                              int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx
+	                              cmp              cx, 114                                                                              	;  loop iteration in x direction
+	                              JNZ              DRAW_MSG1F                                                                           	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 526                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX
+	                              cmp              dx, 59                                                                               	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_MSGBox                                                                     	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_MSG1F
+	
 	
 	DRAWMSGUP:                    
 
-	                              mov              RECXEND, 532
-	                              mov              RECYEND, 45
-	                              mov              RECXSTART, 108
-	                              mov              RECYSTART, 15
-	                              mov              RECCOLOR, 12h
-	                              call             DrawRec
-
-	                              mov              RECXEND, 530
-	                              mov              RECYEND, 47
-	                              mov              RECXSTART, 110
-	                              mov              RECYSTART, 13
-	                              call             DrawRec
-
-	                              mov              RECYEND, 45
-	                              mov              RECYSTART, 15
-	                              mov              RECCOLOR, 1dh
-	                              call             DrawRec
+	                              mov              cx, 532                                                                              	;Column X
+	                              mov              dx, 45                                                                               	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_MSG2Bord1:               
+	                              mov              al, 12h                                                                              	;  use color from array color for testing
+	                              int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx
+	                              cmp              cx, 108                                                                              	;  loop iteration in x direction
+	                              JNZ              DRAW_MSG2Bord1                                                                       	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 532                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX
+	                              cmp              dx, 15                                                                               	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_MSG2Bord1                                                                  	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_MSG2Bord1
+	ALL_DRAWN_MSG2Bord1:          
 	
-	                              mov              RECXEND, 526
-	                              mov              RECYEND, 30
-	                              mov              RECXSTART, 114
-	                              mov              RECYSTART, 19
-	                              mov              RECCOLOR, 1eh
-	                              call             DrawRec
+	                              mov              cx, 530                                                                              	;Column X
+	                              mov              dx, 47                                                                               	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_MSG2Bord2:               
+	                              mov              al, 12h                                                                              	;  use color from array color for testing
+	                              int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx
+	                              cmp              cx, 110                                                                              	;  loop iteration in x direction
+	                              JNZ              DRAW_MSG2Bord2                                                                       	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 530                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX
+	                              cmp              dx, 13                                                                               	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_MSG2Bord2                                                                  	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_MSG2Bord2
+	ALL_DRAWN_MSG2Bord2:          
 
+	                              mov              cx, 530                                                                              	;Column X
+	                              mov              dx, 45                                                                               	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_MSG2B:                   
+	                              mov              al, 1dh                                                                              	;  use color from array color for testing
+	                              int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx
+	                              cmp              cx, 110                                                                              	;  loop iteration in x direction
+	                              JNZ              DRAW_MSG2B                                                                           	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 530                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX
+	                              cmp              dx, 15                                                                               	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_MSG2B                                                                      	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_MSG2B
+	ALL_DRAWN_MSG2B:              
+	                              mov              cx, 526                                                                              	;Column X
+	                              mov              dx, 30                                                                               	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_MSG2F:                   
+	                              mov              al, 1eh                                                                              	;  use color from array color for testing
+	                              int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx
+	                              cmp              cx, 114                                                                              	;  loop iteration in x direction
+	                              JNZ              DRAW_MSG2F                                                                           	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 526                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX
+	                              cmp              dx, 19                                                                               	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_MSGBox                                                                     	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_MSG2F
+	
 	ALL_DRAWN_MSGBox:             
 
 	                              test             bx, 1
@@ -2815,9 +2873,14 @@ DrawMsgWithBox Proc near
 	                              DEC              DX                                                                                   	;  loop iteration in y direction
 	                              JZ               ALL_DRAWN_MSGTAIL                                                                    	;  both x and y reached 00 so finish drawing
 	                              jmp              DRAW_MSGTAIL_R
-
+	
+	
+	
+	
 	ALL_DRAWN_MSGTAIL:            
+
 	                              ret
+
 DrawMsgWithBox endp
 
 DrawHealthbar PROC near
@@ -2963,85 +3026,272 @@ DrawHealthbar2 endp
 
 DrawLayout PROC near
 	;///////////////////////////////////UPPER_BAR\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	
-	                              mov              RECXEND, screenMaxX2
-	                              mov              RECYEND, screenMinY1
-	                              mov              RECXSTART, 0
-	                              mov              RECYSTART, 0
-	                              mov              RECCOLOR, 099h
-	                              call             DrawRec
+	                              mov              cx, screenMaxX2                                                                      	;Column X
+	                              mov              dx, screenMinY1                                                                      	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_REC1:                    
+	                              mov              al, 099h                                                                             	;  use color from array color for testing
+	                              int              10h                                                                                  	;  draw the pixel
+	BACK_REC1:                    
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              JNZ              DRAW_REC1                                                                            	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, screenMaxX2                                                                      	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_REC1                                                                       	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_REC1
+	ALL_DRAWN_REC1:               
+	                              mov              cx, 559                                                                              	;Column X
+	                              mov              dx, screenMinY1                                                                      	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_REC2:                    
+	                              mov              al, 095h                                                                             	;  use color from array color for testing
+	                              int              10h                                                                                  	;  draw the pixel
+	BACK_REC2:                    
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 79
+	                              JNZ              DRAW_REC2                                                                            	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 559                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_REC2                                                                       	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_REC2
+	ALL_DRAWN_REC2:               
 
-	                              mov              RECXEND, 559
-	                              mov              RECYEND, screenMinY1
-	                              mov              RECXSTART, 79
-	                              mov              RECYSTART, 0
-	                              mov              RECCOLOR, 095h
-	                              call             DrawRec
 
-	;//////////////Borders\\\\\\\\\\\\\    
+	                              mov              cx, 639                                                                              	;Column X
+	                              mov              dx, 100                                                                              	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_V1Border:                
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              cx, 633
+	                              jz               DRAWwithblack_V1Border
+	                              cmp              cx, 634
+	                              jz               DRAWwithblack_V1Border
+	                              cmp              cx, 639
+	                              jz               DRAWwithblack_V1Border
+	                              cmp              cx, 638
+	                              jz               DRAWwithblack_V1Border
+	                              mov              al, 39h
+	                              cmp              cx, 636
+	                              jz               DRAWwithblack_V1Border
+	                              mov              al, 22h                                                                              	;  use color from array color for testing
+	DRAWwithblack_V1Border:       int              10h                                                                                  	;  draw the pixel
+	BACK_V1Border:                
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 632
+	                              JNZ              DRAW_V1Border                                                                        	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 639                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              cmp              dx, 0
+	                              JZ               ALL_DRAWN_V1Border                                                                   	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_V1Border
+	ALL_DRAWN_V1Border:           
 
-	                              mov              BorderXEND, 559
-	                              mov              BorderYEND, 100
-	                              mov              BorderMIDDLE, 556
-	                              mov              BorderMIDDLED1, 557
-	                              mov              BorderMIDDLED2, 555
-	                              mov              BorderXSTART, 552
-	                              mov              BorderYSTART, 0
-	                              mov              BorderBRIGHTColor, 56h
-	                              mov              BorderDARKColor, 35h
-	                              call             DrawVertBorder
+	                              mov              cx, 559                                                                              	;Column X
+	                              mov              dx, 100                                                                              	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_V2Border:                
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              cx, 553
+	                              jz               DRAWwithblack_V2Border
+	                              cmp              cx, 554
+	                              jz               DRAWwithblack_V2Border
+	                              cmp              cx, 559
+	                              jz               DRAWwithblack_V2Border
+	                              cmp              cx, 558
+	                              jz               DRAWwithblack_V2Border
+	                              mov              al, 65h
+	                              cmp              cx, 556
+	                              jz               DRAWwithblack_V2Border
+	                              mov              al, 35h                                                                              	;  use color from array color for testing
+	DRAWwithblack_V2Border:       int              10h                                                                                  	;  draw the pixel
+	BACK_V2Border:                
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 552
+	                              JNZ              DRAW_V2Border                                                                        	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 559                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              cmp              dx, 0
+	                              JZ               ALL_DRAWN_V2Border                                                                   	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_V2Border
+	ALL_DRAWN_V2Border:           
 
-								  mov              BorderXEND, 86
-	                              mov              BorderMIDDLE, 83
-	                              mov              BorderMIDDLED1, 84
-	                              mov              BorderMIDDLED2, 82
-	                              mov              BorderXSTART, 79
-	                              call             DrawVertBorder
+	                              mov              cx, 86                                                                               	;Column X
+	                              mov              dx, 100                                                                              	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_V3Border:                
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              cx, 80
+	                              jz               DRAWwithblack_V3Border
+	                              cmp              cx, 81
+	                              jz               DRAWwithblack_V3Border
+	                              cmp              cx, 86
+	                              jz               DRAWwithblack_V3Border
+	                              cmp              cx, 85
+	                              jz               DRAWwithblack_V3Border
+	                              mov              al, 65h
+	                              cmp              cx, 83
+	                              jz               DRAWwithblack_V3Border
+	                              mov              al, 35h                                                                              	;  use color from array color for testing
+	DRAWwithblack_V3Border:       int              10h                                                                                  	;  draw the pixel
+	BACK_V3Border:                
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 79
+	                              JNZ              DRAW_V3Border                                                                        	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 86                                                                               	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              cmp              dx, 0
+	                              JZ               ALL_DRAWN_V3Border                                                                   	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_V3Border
+	ALL_DRAWN_V3Border:           
 
-	                              mov              BorderXEND, 639
-	                              mov              BorderMIDDLE, 636
-	                              mov              BorderMIDDLED1, 637
-	                              mov              BorderMIDDLED2, 635
-	                              mov              BorderXSTART, 632
-	                              mov              BorderBRIGHTColor, 39h
-	                              mov              BorderDARKColor, 22h
-	                              call             DrawVertBorder
+	                              mov              cx, 6                                                                                	;Column X
+	                              mov              dx, 100                                                                              	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_V4Border:                
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              cx, 0
+	                              jz               DRAWwithblack_V4Border
+	                              cmp              cx, 1
+	                              jz               DRAWwithblack_V4Border
+	                              cmp              cx, 5
+	                              jz               DRAWwithblack_V4Border
+	                              cmp              cx, 6
+	                              jz               DRAWwithblack_V4Border
+	                              mov              al, 39h
+	                              cmp              cx, 3
+	                              jz               DRAWwithblack_V4Border
+	                              mov              al, 22h                                                                              	;  use color from array color for testing
+	DRAWwithblack_V4Border:       int              10h                                                                                  	;  draw the pixel
+	BACK_V4Border:                
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 0FFFFH
+	                              JNZ              DRAW_V4Border                                                                        	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 6                                                                                	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              cmp              dx, 0
+	                              JZ               ALL_DRAWN_V4Border                                                                   	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_V4Border
+	ALL_DRAWN_V4Border:           
 
-	                              mov              BorderXEND, 6
-	                              mov              BorderMIDDLE, 3
-	                              mov              BorderMIDDLED1, 4
-	                              mov              BorderMIDDLED2, 2
-	                              mov              BorderXSTART, 0FFFFH
-	                              call             DrawVertBorder
 
-	                              mov              BorderXEND, 640
-	                              mov              BorderYEND, 7
-	                              mov              BorderMIDDLE, 4
-	                              mov              BorderMIDDLED1, 3
-	                              mov              BorderMIDDLED2, 5
-	                              mov              BorderXSTART, 0
-	                              mov              BorderYSTART, 0
-	                              call             DrawHorizBorder
 
-	                              mov              BorderYEND, 100
-	                              mov              BorderMIDDLE, 97
-	                              mov              BorderMIDDLED1, 98
-	                              mov              BorderMIDDLED2, 96
-	                              mov              BorderYSTART, 93
-	                              call             DrawHorizBorder
+	                              mov              cx, 640                                                                              	;Column X
+	                              mov              dx, 7                                                                                	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_UpBorder:                
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              dx, 1
+	                              jz               DRAWwithblack_UpBorder
+	                              cmp              dx, 2
+	                              jz               DRAWwithblack_UpBorder
+	                              cmp              dx, 6
+	                              jz               DRAWwithblack_UpBorder
+	                              cmp              dx, 7
+	                              jz               DRAWwithblack_UpBorder
+	                              mov              al, 39h
+	                              cmp              dx, 4
+	                              jz               DRAWwithblack_UpBorder
+	                              mov              al, 22h                                                                              	;  use color from array color for testing
+	DRAWwithblack_UpBorder:       int              10h                                                                                  	;  draw the pixel
+	BACK_UpBorder:                
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 0
+	                              JNZ              DRAW_UpBorder                                                                        	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 640                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_UpBorder                                                                   	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_UpBorder
+	ALL_DRAWN_UpBorder:           
 
-	                              mov              BorderXEND, 559
-	                              mov              BorderXSTART, 79
-	                              mov              BorderBRIGHTColor, 65h
-	                              mov              BorderDARKColor, 35h
-	                              call             DrawHorizBorder
 
-	                              mov              BorderYEND, 7
-	                              mov              BorderMIDDLE, 4
-	                              mov              BorderMIDDLED1, 3
-	                              mov              BorderMIDDLED2, 5
-	                              mov              BorderYSTART, 0
-	                              call             DrawHorizBorder
+	                              mov              cx, 640                                                                              	;Column X
+	                              mov              dx, 100                                                                              	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_LowerBorder:             
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              dx, 94
+	                              jz               DRAWwithblack_LowerBorder
+	                              cmp              dx, 95
+	                              jz               DRAWwithblack_LowerBorder
+	                              cmp              dx, 100
+	                              jz               DRAWwithblack_LowerBorder
+	                              cmp              dx, 99
+	                              jz               DRAWwithblack_LowerBorder
+	                              mov              al, 39h
+	                              cmp              dx, 97
+	                              jz               DRAWwithblack_LowerBorder
+	                              mov              al, 22h                                                                              	;  use color from array color for testing
+	DRAWwithblack_LowerBorder:    int              10h                                                                                  	;  draw the pixel
+	BACK_LowerBorder:             
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 0
+	                              JNZ              DRAW_LowerBorder                                                                     	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 640                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              cmp              dx, 93
+	                              JZ               ALL_DRAWN_LowerBorder                                                                	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_LowerBorder
+	ALL_DRAWN_LowerBorder:        
+
+
+	                              mov              cx, 559                                                                              	;Column X
+	                              mov              dx, 7                                                                                	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_UpBorderOVER:            
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              dx, 1
+	                              jz               DRAWwithblack_UpBorderOVER
+	                              cmp              dx, 2
+	                              jz               DRAWwithblack_UpBorderOVER
+	                              cmp              dx, 6
+	                              jz               DRAWwithblack_UpBorderOVER
+	                              cmp              dx, 7
+	                              jz               DRAWwithblack_UpBorderOVER
+	                              mov              al, 65h
+	                              cmp              dx, 4
+	                              jz               DRAWwithblack_UpBorderOVER
+	                              mov              al, 35h                                                                              	;  use color from array color for testing
+	DRAWwithblack_UpBorderOVER:   int              10h                                                                                  	;  draw the pixel
+	BACK_UpBorderOVER:            
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 79
+	                              JNZ              DRAW_UpBorderOVER                                                                    	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 559                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_UpBorderOVER                                                               	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_UpBorderOVER
+	ALL_DRAWN_UpBorderOVER:       
+
+
+	                              mov              cx, 559                                                                              	;Column X
+	                              mov              dx, 100                                                                              	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_LowerBorderOVER:         
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              dx, 94
+	                              jz               DRAWwithblack_LowerBorderOVER
+	                              cmp              dx, 95
+	                              jz               DRAWwithblack_LowerBorderOVER
+	                              cmp              dx, 100
+	                              jz               DRAWwithblack_LowerBorderOVER
+	                              cmp              dx, 99
+	                              jz               DRAWwithblack_LowerBorderOVER
+	                              mov              al, 65h
+	                              cmp              dx, 97
+	                              jz               DRAWwithblack_LowerBorderOVER
+	                              mov              al, 35h                                                                              	;  use color from array color for testing
+	DRAWwithblack_LowerBorderOVER:int              10h                                                                                  	;  draw the pixel
+	BACK_LowerBorderOVER:         
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 79
+	                              JNZ              DRAW_LowerBorderOVER                                                                 	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 559                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              cmp              dx, 93
+	                              JZ               ALL_DRAWN_LowerBorderOVER                                                            	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_LowerBorderOVER
+	ALL_DRAWN_LowerBorderOVER:    
+
 
 
 	;//////////////////////////////////DrawCharacter\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -3149,123 +3399,144 @@ DrawLayout PROC near
 
 	;///////////////////////////LowerPart\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-	                              mov              RECXEND, screenMaxX2
-	                              mov              RECYEND, screenMaxY2+30
-	                              mov              RECXSTART, 0
-	                              mov              RECYSTART, screenMaxY2
-	                              mov              RECCOLOR, 082h
-	                              call             DrawRec
 
-	                              mov              BorderXEND, 639
-	                              mov              BorderYEND, screenMaxY2+30
-	                              mov              BorderMIDDLE, 636
-	                              mov              BorderMIDDLED1, 637
-	                              mov              BorderMIDDLED2, 635
-	                              mov              BorderXSTART, 632
-	                              mov              BorderYSTART, screenMaxY1
-	                              mov              BorderBRIGHTColor, 39h
-	                              mov              BorderDARKColor, 22h
-	                              call             DrawVertBorder
+	                              mov              cx, screenMaxX2                                                                      	;Column X
+	                              mov              dx, screenMaxY2+30                                                                   	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_REC3:                    
+	                              mov              al, 082h                                                                             	;  use color from array color for testing
+	                              int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              JNZ              DRAW_REC3                                                                            	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, screenMaxX2                                                                      	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX
+	                              cmp              dx, screenMaxY2                                                                      	;  both x and y reached 00 so finish drawing
+	                              JZ               ALL_DRAWN_REC3
+	                              jmp              DRAW_REC3
+	ALL_DRAWN_REC3:               
 
-	                              mov              BorderXEND, 6
-	                              mov              BorderMIDDLE, 3
-	                              mov              BorderMIDDLED1, 4
-	                              mov              BorderMIDDLED2, 2
-	                              mov              BorderXSTART, 0FFFFH
-	                              call             DrawVertBorder
 
-	                              mov              BorderXEND, 640
-	                              mov              BorderYEND, screenMaxY1+7
-	                              mov              BorderMIDDLE, screenMaxY1+4
-	                              mov              BorderMIDDLED1, screenMaxY1+3
-	                              mov              BorderMIDDLED2, screenMaxY1+5
-	                              mov              BorderXSTART, 0
-	                              mov              BorderYSTART, screenMaxY1
-	                              call             DrawHorizBorder
+	                              mov              cx, 639                                                                              	;Column X
+	                              mov              dx, screenMaxY2+30                                                                   	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_V1BorderDOWN:            
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              cx, 633
+	                              jz               DRAWwithblack_V1BorderDOWN
+	                              cmp              cx, 634
+	                              jz               DRAWwithblack_V1BorderDOWN
+	                              cmp              cx, 639
+	                              jz               DRAWwithblack_V1BorderDOWN
+	                              cmp              cx, 638
+	                              jz               DRAWwithblack_V1BorderDOWN
+	                              mov              al, 39h
+	                              cmp              cx, 636
+	                              jz               DRAWwithblack_V1BorderDOWN
+	                              mov              al, 22h                                                                              	;  use color from array color for testing
+	DRAWwithblack_V1BorderDOWN:   int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 632
+	                              JNZ              DRAW_V1BorderDOWN                                                                    	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 639                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              cmp              dx, screenMaxY2
+	                              JZ               ALL_DRAWN_V1BorderDOWN                                                               	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_V1BorderDOWN
+	ALL_DRAWN_V1BorderDOWN:       
+	                              mov              cx, 6                                                                                	;Column X
+	                              mov              dx, screenMaxY2+30                                                                   	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_V4BorderDOWN:            
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              cx, 0
+	                              jz               DRAWwithblack_V4BorderDOWN
+	                              cmp              cx, 1
+	                              jz               DRAWwithblack_V4BorderDOWN
+	                              cmp              cx, 5
+	                              jz               DRAWwithblack_V4BorderDOWN
+	                              cmp              cx, 6
+	                              jz               DRAWwithblack_V4BorderDOWN
+	                              mov              al, 39h
+	                              cmp              cx, 3
+	                              jz               DRAWwithblack_V4BorderDOWN
+	                              mov              al, 22h                                                                              	;  use color from array color for testing
+	DRAWwithblack_V4BorderDOWN:   int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 0FFFFH
+	                              JNZ              DRAW_V4BorderDOWN                                                                    	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 6                                                                                	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              cmp              dx, screenMaxY2
+	                              JZ               ALL_DRAWN_V4BorderDOWN                                                               	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_V4BorderDOWN
+	ALL_DRAWN_V4BorderDOWN:       
 
-	                              mov              BorderYEND, screenMaxY1+30
-	                              mov              BorderMIDDLE, screenMaxY1+27
-	                              mov              BorderMIDDLED1, screenMaxY1+28
-	                              mov              BorderMIDDLED2, screenMaxY1+26
-	                              mov              BorderYSTART, screenMaxY1+23
-	                              call             DrawHorizBorder
+
+
+	                              mov              cx, 640                                                                              	;Column X
+	                              mov              dx, screenMaxY1+7                                                                    	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_UpBorderDOWN:            
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              dx, screenMaxY1+1
+	                              jz               DRAWwithblack_UpBorderDOWN
+	                              cmp              dx, screenMaxY1+2
+	                              jz               DRAWwithblack_UpBorderDOWN
+	                              cmp              dx, screenMaxY1+6
+	                              jz               DRAWwithblack_UpBorderDOWN
+	                              cmp              dx, screenMaxY1+7
+	                              jz               DRAWwithblack_UpBorderDOWN
+	                              mov              al, 39h
+	                              cmp              dx, screenMaxY1+4
+	                              jz               DRAWwithblack_UpBorderDOWN
+	                              mov              al, 22h                                                                              	;  use color from array color for testing
+	DRAWwithblack_UpBorderDOWN:   int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 0
+	                              JNZ              DRAW_UpBorderDOWN                                                                    	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 640                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX
+	                              cmp              dx, screenMaxY2                                                                      	;  loop iteration in y direction
+	                              JZ               ALL_DRAWN_UpBorderDOWN                                                               	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_UpBorderDOWN
+	ALL_DRAWN_UpBorderDOWN:       
+
+
+	                              mov              cx, 640                                                                              	;Column X
+	                              mov              dx, screenMaxY1+30                                                                   	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_LowerBorderDOWN:         
+	                              mov              al, 0h                                                                               	;  use color from array color for testing
+	                              cmp              dx, screenMaxY1+24
+	                              jz               DRAWwithblack_LowerBorderDOWN
+	                              cmp              dx, screenMaxY1+25
+	                              jz               DRAWwithblack_LowerBorderDOWN
+	                              cmp              dx, screenMaxY1+30
+	                              jz               DRAWwithblack_LowerBorderDOWN
+	                              cmp              dx, screenMaxY1+29
+	                              jz               DRAWwithblack_LowerBorderDOWN
+	                              mov              al, 39h
+	                              cmp              dx, screenMaxY1+27
+	                              jz               DRAWwithblack_LowerBorderDOWN
+	                              mov              al, 22h                                                                              	;  use color from array color for testing
+	DRAWwithblack_LowerBorderDOWN:int              10h                                                                                  	;  draw the pixel
+	                              DEC              Cx                                                                                   	;  loop iteration in x direction
+	                              cmp              CX, 0
+	                              JNZ              DRAW_LowerBorderDOWN                                                                 	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, 640                                                                              	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX                                                                                   	;  loop iteration in y direction
+	                              cmp              dx, screenMaxY1+23
+	                              JZ               ALL_DRAWN_LowerBorderDOWN                                                            	;  both x and y reached 00 so finish drawing
+	                              jmp              DRAW_LowerBorderDOWN
+	ALL_DRAWN_LowerBorderDOWN:    
+
+
+	
+
 
 	                              ret
 DrawLayout ENDP
-
-DrawRec Proc near
-	                              mov              cx, RECXEND                                                                          	;Column X
-	                              mov              dx, RECYEND                                                                          	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	DRAW_REC1:                    
-	                              mov              al, RECCOLOR                                                                         	;  use color from array color for testing
-	                              int              10h                                                                                  	;  draw the pixel
-	BACK_REC1:                    
-	                              DEC              Cx
-	                              CMP              CX, RECXSTART                                                                        	;  loop iteration in x direction
-	                              JNZ              DRAW_REC1                                                                            	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, RECXEND                                                                          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX
-	                              CMP              DX,RECYSTART                                                                         	;  loop iteration in x direction
-	                              JZ               ALL_DRAWN_REC1                                                                       	;  both x and y reached 00 so finish drawing
-	                              jmp              DRAW_REC1
-	ALL_DRAWN_REC1:               
-	                              ret
-DrawRec endp
-
-DrawHorizBorder Proc	near
-	                              mov              cx, BorderXEND                                                                       	;Column X
-	                              mov              dx, BorderYEND                                                                       	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	DRAW_HorizBorder:             
-	                              mov              al, BorderDARKColor
-	                              cmp              dx, BorderMIDDLED1
-	                              jz               DRAWwithblack_HorizBorder
-	                              cmp              dx, BorderMIDDLED2
-	                              jz               DRAWwithblack_HorizBorder
-	                              mov              al, BorderBRIGHTColor
-	                              cmp              dx, BorderMIDDLE
-	                              jz               DRAWwithblack_HorizBorder
-	                              mov              al, 0h                                                                               	;  use color from array color for testing
-	DRAWwithblack_HorizBorder:    int              10h                                                                                  	;  draw the pixel
-	                              DEC              Cx                                                                                   	;  loop iteration in x direction
-	                              cmp              CX, BorderXSTART
-	                              JNZ              DRAW_HorizBorder                                                                     	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, BorderXEND                                                                       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              cmp              dx, BorderYSTART
-	                              JZ               ALL_DRAWN_HorizBorder                                                                	;  both x and y reached 00 so finish drawing
-	                              jmp              DRAW_HorizBorder
-
-	ALL_DRAWN_HorizBorder:        
-	                              ret
-DrawHorizBorder ENDP
-DrawVertBorder PROC NEAR
-	                              mov              cx, BorderXEND                                                                       	;Column X
-	                              mov              dx, BorderYEND                                                                       	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	Draw_VertBorder:              
-	                              mov              al, BorderDARKColor
-	                              cmp              cx, BorderMIDDLED1
-	                              jz               DRAWwithblack_VertBorder
-	                              cmp              cx, BorderMIDDLED2
-	                              jz               DRAWwithblack_VertBorder
-	                              mov              al, BorderBRIGHTColor
-	                              cmp              cx, BorderMIDDLE
-	                              jz               DRAWwithblack_VertBorder
-	                              mov              al, 0h                                                                               	;  use color from array color for testing
-	DRAWwithblack_VertBorder:     int              10h                                                                                  	;  draw the pixel
-	                              DEC              Cx                                                                                   	;  loop iteration in x direction
-	                              cmp              CX, BorderXSTART
-	                              JNZ              Draw_VertBorder                                                                      	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, BorderXEND                                                                       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              cmp              dx, BorderYSTART
-	                              JZ               ALL_DRAWN_VertBorder                                                                 	;  both x and y reached 00 so finish drawing
-	                              jmp              Draw_VertBorder
-	ALL_DRAWN_VertBorder:         
-	                              ret
-DrawVertBorder endp
+	
 	;//////////////////////////////Procedures//////////////////////////////////////////////
         END MAIN
 
