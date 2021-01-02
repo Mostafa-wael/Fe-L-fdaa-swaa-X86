@@ -65,7 +65,7 @@ ENDM
 	; constrains depend on the graphics mode
 	graphicsModeAX           equ         4F02h
 	graphicsModeBX           equ         0100h
-	delayDuration            equ         260
+	delayDuration            equ         1
 	;
 	shipOffsetX1             dw          30                                                                                                                                                                                                    	;position of first from left pixel
 	shipOffsetY1             dw          219                                                                                                                                                                                                   	;position of first from top pixel
@@ -86,7 +86,7 @@ ENDM
 	screenMaxX2              equ         640
 
 	SHIP_DAMAGE_COLOR        db          04h
-	SHIP_DAMAGE_EFFECT_DELAY equ         700
+	SHIP_DAMAGE_EFFECT_DELAY equ         7
 	;
 	shipSpeed1               equ         4
 	shipSpeed2               equ         4
@@ -1005,7 +1005,10 @@ ENDM
 
 	HEALTH1                  DB          200
 	HEALTH2                  DB          200
-
+ 
+    Player1MSG              DB           " Player 1 is the Winner, Congrats", "$"
+    Player2MSG              DB           " Player 2 is the Winner, Congrats", "$"
+    NewEndGame              DB            " Press Y For New Game, N To End the Game ", "$"
 
 	MSGTAILXsize             equ         16
 	MSGTAILYsize             equ         16
@@ -1609,12 +1612,13 @@ MAIN PROC FAR
 	                              call             DrawMsgWithBox
 	;this subroutine is responsible for drawing the ship using its cooardinates
 	;////////////////////////////Interacting with the user////////////////////////////
-	gameLoopRoutine:              
-	                              CMP              HEALTH1, 0
-	                              JE               exitProg
+	gameLoopRoutine:       
+    CALL GameWinner       
+	                              ;CMP              HEALTH1, 0
+	                              ;JE               exitProg
 
-	                              CMP              HEALTH2, 0
-	                              JE               exitProg
+	                              ;CMP              HEALTH2, 0
+	                              ;JE               exitProg
 	                              call             BulletChecker
 
 	                              call             updateBullets
@@ -2342,6 +2346,49 @@ Bullet_Offset PROC near
 	                              pop              ax
 	                              ret
 Bullet_Offset ENDP
+
+GameWinner PROC
+
+            mov ah, HEALTH1
+            mov al, 0
+            CMP ah, al
+            JE Player2_Winner
+            mov ah, HEALTH2
+            CMP ah, al
+            JE Player1_Winner
+            JMP EndGameWinner
+
+    Player1_Winner:
+                clearWholeScreen
+	            mov              ah,09h
+	            lea              dx, Player1MSG                                                                           	; show the bye bye screen
+	            int              21h
+
+                mov ah, 2
+                mov dl, 13
+                int 21h
+                
+                mov ah, 2
+                mov dl, 10
+                int 21h
+
+                
+                mov ah, 09h
+                lea dx, NewEndGame
+                int 21h
+                jmp EndGameWinner
+
+        Player2_Winner:
+                clearWholeScreen
+	            mov              ah,09h
+	            lea              dx, Player2MSG                                                                           	; show the bye bye screen
+	            int              21h
+                jmp EndGameWinner
+
+               
+    EndGameWinner: HLT
+    ret
+    GameWinner ENDP
 
 drawGameBtn PROC
 	; initialize containers
