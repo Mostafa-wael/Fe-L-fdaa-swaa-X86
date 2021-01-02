@@ -31,6 +31,12 @@ clearWholeScreen MACRO
 	shapeSizeX         DW  0
 	shapeSizeY         DW  0
 
+	RECXEND            DW  640
+	RECYEND            DW  400
+	RECXSTART          DW  0
+	RECYSTART          DW  0
+	RECCOLOR           DB  0B3h
+
 	; pointer
 	pointerAt          DB  0
 	pointerAtFirstChar equ 60
@@ -39,7 +45,7 @@ clearWholeScreen MACRO
 	pointerSizeX       equ 16
 	pointerSizeY       equ 16
 	pointerOffsetX     dw  60
-	pointerOffsetY     equ 220
+	pointerOffsetY     equ 250
 	pointer            DB  26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 18, 18, 18, 0, 0
 	                   DB  0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0
 	                   DB  26, 26, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 27, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 26, 26, 26, 27, 27, 27, 26, 26
@@ -50,7 +56,7 @@ clearWholeScreen MACRO
 	
 	; Logo
 	logoOffsetX        equ 255
-	logoOffsetY        equ 25
+	logoOffsetY        equ 45
 	logoSizeX          equ 130
 	logoSizeY          equ 95
 	logo               DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -1348,12 +1354,15 @@ clearWholeScreen MACRO
 
 .code
 MAIN PROC FAR
-
 	                    mov              ax, @Data
 	                    mov              ds, ax
 	                    mov              ax, 4F02h                                                          	; enter graphicsMode 4F02h
 	                    mov              bx, 0100h                                                          	; BX = 81FFh
 	                    int              10h
+
+	;fill background
+	                    call             DrawRec
+
 
 	; Draw pointer
 	                    editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
@@ -1438,7 +1447,7 @@ MAIN PROC FAR
 	                    editDrawPrams    pointer, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
 	                    call             drawShape
 
-						mov              Al, 0
+	                    mov              Al, 0
 	                    call             getCurrentChar
 	                    call             Eraseshape
 	                    mov              Al, 1
@@ -1447,7 +1456,7 @@ MAIN PROC FAR
 
 	                    DEC              pointerAt
 
-						mov              Al, 1
+	                    mov              Al, 1
 	                    call             getCurrentChar
 	                    call             Eraseshape
 	                    mov              Al, 0
@@ -1506,7 +1515,7 @@ Eraseshape PROC near
 	                    mov              dx, shapeSizeY                                                     	;Row Y
 	                    push             ax
 	                    mov              ah, 0ch                                                            	;Draw Pixel Command
-	                    mov              al, 0h                                                             	;to be replaced with background
+	                    mov              al, RECCOLOR                                                             	;to be replaced with background
 	
 	Eraseshape_Drawit:  
 	                    mov              bl, [SI]                                                           	;  use color from array color for testing
@@ -1581,5 +1590,26 @@ getCurrentChar PROC
 	getCurrentChar_At42:
 	                    editDrawPrams    Mikasa2, charSizeX, charSizeY, fifthCharOffsetX, charOffsetY
 	                    ret
-ENDP
+getCurrentChar ENDP
+
+DrawRec Proc near
+	                    mov              cx, RECXEND                                                        	;Column X
+	                    mov              dx, RECYEND                                                        	;Row Y
+	                    mov              ah, 0ch                                                            	;Draw Pixel Command
+	DRAW_REC1:          
+	                    mov              al, RECCOLOR                                                       	;  use color from array color for testing
+	                    int              10h                                                                	;  draw the pixel
+	BACK_REC1:          
+	                    DEC              Cx
+	                    CMP              CX, RECXSTART                                                      	;  loop iteration in x direction
+	                    JNZ              DRAW_REC1                                                          	;  check if we can draw c urrent x and y and excape the y iteration
+	                    mov              Cx, RECXEND                                                        	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                    DEC              DX
+	                    CMP              DX,RECYSTART                                                       	;  loop iteration in x direction
+	                    JZ               ALL_DRAWN_REC1                                                     	;  both x and y reached 00 so finish drawing
+	                    jmp              DRAW_REC1
+	ALL_DRAWN_REC1:     
+	                    ret
+	DrawRec endp   
 END MAIN
+           
