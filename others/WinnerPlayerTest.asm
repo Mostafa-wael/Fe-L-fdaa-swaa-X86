@@ -65,7 +65,7 @@ ENDM
 	; constrains depend on the graphics mode
 	graphicsModeAX           equ         4F02h
 	graphicsModeBX           equ         0100h
-	delayDuration            equ         1
+	delayDuration            equ         260
 	;
 	shipOffsetX1             dw          30                                                                                                                                                                                                    	;position of first from left pixel
 	shipOffsetY1             dw          219                                                                                                                                                                                                   	;position of first from top pixel
@@ -86,7 +86,7 @@ ENDM
 	screenMaxX2              equ         640
 
 	SHIP_DAMAGE_COLOR        db          04h
-	SHIP_DAMAGE_EFFECT_DELAY equ         7
+	SHIP_DAMAGE_EFFECT_DELAY equ         700
 	;
 	shipSpeed1               equ         4
 	shipSpeed2               equ         4
@@ -2386,7 +2386,7 @@ GameWinner PROC
                 jmp EndGameWinner
 
                
-    EndGameWinner: HLT
+    EndGameWinner: 
     ret
     GameWinner ENDP
 
