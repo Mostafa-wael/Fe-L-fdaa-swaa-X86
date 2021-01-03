@@ -2599,6 +2599,114 @@ MAIN PROC FAR
 	                              JNE              checkFirstScreen_2
 	                              MOV              BL, pointerAt
 	                              MOV              firstPlayerId, BL
+	;///////////////////////////////////////////////////////
+	                              clearWholeScreen
+	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
+	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
+	                              int              10h
+
+	;fill background
+	                              call             DrawRec
+	; Draw pointer
+	                              editDrawPrams    MSGTAIL, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
+	                              call             drawShape
+							
+	; Draw Characters
+	                              editDrawPrams    Fenn, charSizeX, charSizeY, firstCharOffsetX, charOffsetY
+	                              call             drawShape
+
+	                              editDrawPrams    Mikasa2, charSizeX, charSizeY, secondCharOffsetX, charOffsetY
+	                              call             drawShape
+
+	                              editDrawPrams    Hisoka2, charSizeX, charSizeY, thirdCharOffsetX, charOffsetY
+	                              call             drawShape
+
+	                              editDrawPrams    Asta2, charSizeX, charSizeY, fourthCharOffsetX, charOffsetY
+	                              call             drawShape
+
+	                              editDrawPrams    Mikasa2, charSizeX, charSizeY, fifthCharOffsetX, charOffsetY
+	                              call             drawShape
+
+	; Draw Planes
+	                              editDrawPrams    Fenn_Plane, shipSizeX, shipSizeY, firstShipOffsetX, shipOffsetY
+	                              call             drawShape
+
+	                              editDrawPrams    Mikasa_Plane, shipSizeX, shipSizeY, secondShipOffsetX, shipOffsetY
+	                              call             drawShape
+
+	                              editDrawPrams    Hisoka_Plane, shipSizeX, shipSizeY, thirdShipOffsetX, shipOffsetY
+	                              call             drawShape
+
+	                              editDrawPrams    Asta_Plane, shipSizeX, shipSizeY, fourthShipOffsetX, shipOffsetY
+	                              call             drawShape
+
+	                              editDrawPrams    Meruem_Plane, shipSizeX, shipSizeY, fifthShipOffsetX, shipOffsetY
+	                              call             drawShape
+
+	checkFirstScreen2:            mov              ah,0
+	                              int              16h
+	                              cmp              ah, key_rightArrow                                                                   	; up pointer
+	                              jne              leftpointer_label2
+	                              cmp              pointerOffsetX, pointerAtFifthChar
+	                              JE               checkFirstScreen2
+	                              editDrawPrams    MSGTAIL, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
+	                              call             Eraseshape
+	                              MOV              BX, pointerStep
+	                              ADD              pointerOffsetX, BX
+	                              editDrawPrams    MSGTAIL, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
+	                              call             drawShape
+
+	                              mov              Al, 0
+	                              call             getCurrentChar
+	                              call             Eraseshape
+	                              mov              Al, 1
+	                              call             getCurrentChar
+	                              call             drawShape
+						
+	                              INC              pointerAt
+
+	                              mov              Al, 1
+	                              call             getCurrentChar
+	                              call             Eraseshape
+	                              mov              Al, 0
+	                              call             getCurrentChar
+	                              call             drawShape
+	checkFirstScreen_12:          
+	                              JMP              checkFirstScreen2
+	leftpointer_label2:           
+	                              cmp              ah, key_leftArrow
+	                              JNE              enterpointer_label2
+	                              CMP              pointerOffsetX, pointerAtFirstChar
+	                              JE               checkFirstScreen_12
+	                              editDrawPrams    MSGTAIL, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
+	                              call             Eraseshape
+	                              MOV              BX, pointerStep
+	                              SUB              pointerOffsetX, BX
+	                              editDrawPrams    MSGTAIL, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
+	                              call             drawShape
+
+	                              mov              Al, 0
+	                              call             getCurrentChar
+	                              call             Eraseshape
+	                              mov              Al, 1
+	                              call             getCurrentChar
+	                              call             drawShape
+
+	                              DEC              pointerAt
+
+	                              mov              Al, 1
+	                              call             getCurrentChar
+	                              call             Eraseshape
+	                              mov              Al, 0
+	                              call             getCurrentChar
+	                              call             drawShape
+						
+	checkFirstScreen_22:          JMP              checkFirstScreen2
+
+	enterpointer_label2:          CMP              AH, key_enter
+	                              JNE              checkFirstScreen_22
+	                              MOV              BL, pointerAt
+	                              MOV              secondPlayerId, BL
 
 	; TODO check of the name is valid
 	; mov bp, offset playerName1 + 1
@@ -3410,8 +3518,32 @@ eraseShip1 ENDP
 
 Drawship2 PROC	near
 	; initialize containers
-	                              mov              SI, offset ship2
-	                              mov              cx, 0                                                                                	;Column X
+	                              mov              ah, secondPlayerId
+
+	                              cmp              ah, 0
+	                              JNE              drawShip2_secondChar
+	                              mov              SI, offset Fenn_Plane
+	                              jmp              drawShip2_start
+
+	drawShip2_secondChar:         cmp              ah, 1
+	                              jne              drawShip2_thirdChar
+	                              mov              SI, offset Mikasa_Plane
+	                              jmp              drawShip2_start
+
+	drawShip2_thirdChar:          cmp              ah, 2
+	                              jne              drawShip2_fourthChar
+	                              mov              SI, offset Hisoka_Plane
+	                              jmp              drawShip2_start
+
+	drawShip2_fourthChar:         cmp              ah, 3
+	                              jne              drawShip2_fifthChar
+	                              mov              SI, offset Asta_Plane
+	                              jmp              drawShip2_start
+
+	drawShip2_fifthChar:          
+	                              mov              SI, offset Meruem_Plane
+
+	drawShip2_start:              mov              cx, 0                                                                                	;Column X
 	                              mov              dx, shipSizeY1                                                                       	;Row Y
 	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
 	Drawship2_drawIt:             
@@ -3438,10 +3570,34 @@ Drawship2 PROC	near
 Drawship2 ENDP
 eraseShip2 PROC near
 	; initialize containers
-	                              mov              SI, offset ship2                                                                     	;shipY is (shipX index + size * 2) so we can use Si for both
-	                              mov              cx, 0                                                                                	;Column X
-	                              mov              dx, shipSizeY1                                                                       	;Row Y
 	                              push             ax
+	                              mov              ah, secondPlayerId
+
+	                              cmp              ah, 0
+	                              JNE              eraseShip2_secondChar
+	                              mov              SI, offset Fenn_Plane
+	                              jmp              eraseShip2_start
+
+	eraseShip2_secondChar:        cmp              ah, 1
+	                              jne              eraseShip2_thirdChar
+	                              mov              SI, offset Mikasa_Plane
+	                              jmp              eraseShip2_start
+
+	eraseShip2_thirdChar:         cmp              ah, 2
+	                              jne              eraseShip2_fourthChar
+	                              mov              SI, offset Hisoka_Plane
+	                              jmp              eraseShip2_start
+
+	eraseShip2_fourthChar:        cmp              ah, 3
+	                              jne              eraseShip2_fifthChar
+	                              mov              SI, offset Asta_Plane
+	                              jmp              eraseShip2_start
+
+	eraseShip2_fifthChar:         
+	                              mov              SI, offset Meruem_Plane
+								                                                                   	
+	eraseShip2_start:             mov              cx, 0                                                                                	;Column X
+	                              mov              dx, shipSizeY1                                                                       	;Row Y
 	                              mov              ah, 0ch
 	                              cmp              al, SHIP_DAMAGE_COLOR
 	                              jz               eraseShip2_drawIt                                                                    	;Draw Pixel Command
@@ -4152,9 +4308,33 @@ DrawLayout PROC near
 
 	                              mov              REV, 1
 	                              mov              Ers, 0
-	                              editDrawPrams    CharacterC, CharacterSizeX, CharacterSizeY, CharacteroffsetX2, CharacteroffsetY
-	                              call             drawShape
+	                            
+	                              mov              al, secondPlayerId
+								  
+	                              cmp              al, 0
+	                              JNE              DrawLayout2_secondchar
+	                              editDrawPrams    Fenn, CharacterSizeX, CharacterSizeY, CharacteroffsetX2, CharacteroffsetY
+	                              JMP              DrawLayout2_start
 
+	DrawLayout2_secondchar:       cmp              al, 1
+	                              JNE              DrawLayout2_thirdchar
+	                              editDrawPrams    Mikasa, CharacterSizeX, CharacterSizeY, CharacteroffsetX2, CharacteroffsetY
+	                              JMP              DrawLayout2_start
+	
+	DrawLayout2_thirdchar:        cmp              al, 2
+	                              JNE              DrawLayout2_fourthchar
+	                              editDrawPrams    Hisoka, CharacterSizeX, CharacterSizeY, CharacteroffsetX2, CharacteroffsetY
+	                              JMP              DrawLayout2_start
+
+	DrawLayout2_fourthchar:       cmp              al, 3
+	                              JNE              DrawLayout2_fifthchar
+	                              editDrawPrams    Asta, CharacterSizeX, CharacterSizeY, CharacteroffsetX2, CharacteroffsetY
+	                              JMP              DrawLayout2_start
+
+	DrawLayout2_fifthchar:        
+	                              editDrawPrams    Asta, CharacterSizeX, CharacterSizeY, CharacteroffsetX2, CharacteroffsetY
+
+	DrawLayout2_start:            call             drawShape
 	                              mov              REV, 0
 	                              mov              Ers, 0
 	                              editDrawPrams    NameBoxC, NameBoxSizeX, NameBoxSizeY, 2, 66
