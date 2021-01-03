@@ -152,6 +152,7 @@ ENDM
 	getName                  DB          " Your name: $"
 	enterValidName           DB          " Please, enter a valid name: $"
 	playerName1              DB          21,?,21 dup("$")
+	playerName2              DB          21,?,21 dup("$")
 	                         firstScreen label byte
 	                         DB          '  ',0ah,0dh                                                                                                                                                                                          	; new line
 	                         DB          '                                                          ||',0ah,0dh
@@ -222,8 +223,8 @@ ENDM
 	DAMAGE                   equ         5
 	ISNEWGAME                db          0
  
-	Player1MSG               DB          " Player 1 is the Winner, Congrats", "$"
-	Player2MSG               DB          " Player 2 is the Winner, Congrats", "$"
+	Player1MSG               DB          " is the Winner, Congrats", "$"
+	Player2MSG               DB          " is the Winner, Congrats", "$"
 	NewEndGame               DB          " Press Y For New Game, N To End the Game ", "$"
 
 
@@ -1330,6 +1331,25 @@ MAIN PROC FAR
 	                              mov              dx, si
 	                              int              21h
 
+	
+	SecondScreenLoop:             
+	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
+	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
+	                              int              10h
+
+	                              mov              ah,09h
+	                              lea              dx, firstScreen                                                                      	; show the first screen
+	                              int              21h
+
+	                              mov              ah,09h
+	                              lea              dx, getName                                                                          	; ask for player's name
+	                              int              21h
+
+	getNameLoop2:                 lea              si, playerName2                                                                      	; get player's name
+	                              mov              ah, 0Ah
+	                              mov              dx, si
+	                              int              21h
+
 	                              clearWholeScreen
 	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
 	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
@@ -2024,6 +2044,16 @@ GameWinner PROC
 
 	Player1_Winner:               
 	                              clearWholeScreen
+
+	                              mov              ah,09h
+	                              lea              dx, playerName1 + 2
+	                              int              21h
+
+	                              mov              ah, 2H
+	                              mov              dx, 0
+	                              mov              dl, playerName1+1
+	                              INT              10H
+
 	                              mov              ah,09h
 	                              lea              dx, Player1MSG                                                                       	; show the bye bye screen
 	                              int              21h
@@ -2032,6 +2062,16 @@ GameWinner PROC
 
 	Player2_Winner:               
 	                              clearWholeScreen
+
+								                                mov              ah,09h
+	                              lea              dx, playerName2 + 2
+	                              int              21h
+
+	                              mov              ah, 2H
+	                              mov              dx, 0
+	                              mov              dl, playerName2+1
+	                              INT              10H
+
 	                              mov              ah,09h
 	                              lea              dx, Player2MSG                                                                       	; show the bye bye screen
 	                              int              21h
