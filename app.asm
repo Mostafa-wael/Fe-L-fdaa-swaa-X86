@@ -4,7 +4,7 @@ printStringAtLoc MACRO string, row, col		; pass the whole string not (string +2)
 	                 mov dh, row       	;Cursor position line
 	                 mov dl, col       	;Cursor position column
 	                 mov ah, 02h       	;Set cursor position function
-	                 mov bl, 0Ah       	; BF color, not working in this mode
+	                 mov bl, 0ffh      	; BF color, not working in this mode
 	                 mov bh, 0         	;Page number
 	                 int 10h           	;Interrupt call
 
@@ -1263,7 +1263,9 @@ extra SEGMENT
 	exitbtnOffset            dw          226, 332
 	btnsize                  dw          188, 56
 	;
-	logoOffset               dw          190, 8
+	                         logoOffset  label word
+	logoOffsetX              dW          190
+	logoOffsetY              DW          8
 	logoSizeX                equ         130
 	logoSizeY                equ         95
 	
@@ -1287,60 +1289,52 @@ extra SEGMENT
 	arrowAtChat              equ         280
 	arrowAtExit              equ         344
 	;////////////////////////////////     	                                                                                                                                                                                      	;don't make this 0
-	getName                  DB          " Your name: $"
+	getName1                 DB          "  Player1 Name: $"
+	getName2                 DB          "  Player2 Name: $"
+
 	enterValidName           DB          " Please, enter a valid name: $"
 	playerName1              DB          21,?,21 dup("$")
 	playerName2              DB          21,?,21 dup("$")
 	                         firstScreen label byte
-	                         DB          '  ',0ah,0dh                                                                                                                                                                                          	; new line
-	                         DB          '                                                          ||',0ah,0dh
-	                         DB          '   =======================================================||',0ah,0dh
-	                         DB          '      ||                                                  ||',0ah,0dh
-	                         DB          '      ||            #### FE L FDA SWAAA ####              ||',0ah,0dh
-	                         DB          '      ||                                                  ||',0ah,0dh
-	                         DB          '      ||--------------------------------------------------||',0ah,0dh
-	                         DB          '      ||                                                  ||',0ah,0dh
-	                         DB          '      ||            Please, Enter your name               ||',0ah,0dh
-	                         DB          '      ||       Then, press Enter to start the game        ||',0ah,0dh
-	                         DB          '      ||                                                  ||',0ah,0dh
-	                         DB          '      ||              ** MAX 7 CHARCHTERS **              ||',0ah,0dh
-	                         DB          '      ||                                                  ||',0ah,0dh
-	                         DB          '      || =======================================================',0ah,0dh
-	                         DB          '      ||                                                    ',0ah,0dh
-	                         DB          '$',0ah,0dh
-	                         mainMenu    label byte
-	                         DB          '  ',0ah,0dh                                                                                                                                                                                          	; new line
-	                         DB          '                                                           ||',0ah,0dh
-	                         DB          '                                                           ||',0ah,0dh
-	                         DB          '                                                           ||',0ah,0dh
-	                         DB          '   ========================================================||',0ah,0dh
-	                         DB          '       ||                                                  ||',0ah,0dh
-	                         DB          '       ||            Press, F1 to beign chatting           ||',0ah,0dh
-	                         DB          '       ||            Press, F2 to start the game           ||',0ah,0dh
-	                         DB          '       ||            Press, ESC to exit the prgram         ||',0ah,0dh
-	                         DB          '       ||                                                  ||',0ah,0dh
-	                         DB          '       ||--------------------------------------------------||',0ah,0dh
-	                         DB          '       ||                     chat...                      ||',0ah,0dh
-	                         DB          '       || ========================================================',0ah,0dh
-	                         DB          '       ||                                                    ',0ah,0dh
-	                         DB          '       ||                                                    ',0ah,0dh
-	                         DB          '       ||                                                    ',0ah,0dh
+	                         DB          '  ',0ah,0dh
+	                         DB          '  ',0ah,0dh
+	                         DB          '  ',0ah,0dh
+	                         DB          '  ',0ah,0dh
+	                         DB          '  ',0ah,0dh
+	                         DB          09,'                                                         ||',0ah,0dh
+	                         DB          09,'                                                         ||',0ah,0dh
+	                         DB          09,'  =======================================================||',0ah,0dh
+	                         DB          09,'     ||                                                  ||',0ah,0dh
+	                         DB          09,'     ||            #### FE L FDA SWAAA ####              ||',0ah,0dh
+	                         DB          09,'     ||                                                  ||',0ah,0dh
+	                         DB          09,'     ||--------------------------------------------------||',0ah,0dh
+	                         DB          09,'     ||                                                  ||',0ah,0dh
+	                         DB          09,'     ||       Please, Enter your name(max 7 chars)       ||',0ah,0dh
+	                         DB          09,'     ||       Then, choose your favourite character      ||',0ah,0dh
+	                         DB          09,'     ||                                                  ||',0ah,0dh
+	                         DB          09,'     ||           **press any key to continue**          ||',0ah,0dh
+	                         DB          09,'     ||                                                  ||',0ah,0dh
+	                         DB          09,'     || =======================================================',0ah,0dh
+	                         DB          09,'     ||                                                    ',0ah,0dh
+							 	                         DB          09,'     ||                                                    ',0ah,0dh
 	                         DB          '$',0ah,0dh
 	                         byebye      label byte
 	                         DB          '  ',0ah,0dh
-	                         DB          '                                   ||',0ah,0dh
-	                         DB          '                                   ||',0ah,0dh
-	                         DB          '                                   ||',0ah,0dh
-	                         DB          '                                   ||',0ah,0dh
-	                         DB          '                                   ||',0ah,0dh
-	                         DB          '   ================================||',0ah,0dh
-	                         DB          '       ||           Bye Bye        ||',0ah,0dh
-	                         DB          '       || ================================',0ah,0dh
-	                         DB          '       ||                           ',0ah,0dh
-	                         DB          '       ||                           ',0ah,0dh
-	                         DB          '       ||                           ',0ah,0dh
-	                         DB          '       ||                           ',0ah,0dh
-	                         DB          '       ||                           ',0ah,0dh
+	                         DB          '  ',0ah,0dh
+	                         DB          '  ',0ah,0dh
+	                         DB          09,'                                   ||',0ah,0dh
+	                         DB          09,'                                   ||',0ah,0dh
+	                         DB          09,'                                   ||',0ah,0dh
+	                         DB          09,'                                   ||',0ah,0dh
+	                         DB          09,'                                   ||',0ah,0dh
+	                         DB          09,'   ================================||',0ah,0dh
+	                         DB          09,'       ||           Bye Bye        ||',0ah,0dh
+	                         DB          09,'       || ================================',0ah,0dh
+	                         DB          09,'       ||                           ',0ah,0dh
+	                         DB          09,'       ||                           ',0ah,0dh
+	                         DB          09,'       ||                           ',0ah,0dh
+	                         DB          09,'       ||                           ',0ah,0dh
+	                         DB          09,'       ||                           ',0ah,0dh
 	                         DB          '$',0ah,0dh
 				   
 	;///////////////////////////////Data Initializations////////////////////////////////////
@@ -1361,8 +1355,7 @@ extra SEGMENT
 	DAMAGE                   equ         5
 	ISNEWGAME                db          0
  
-	Player1MSG               DB          " is the Winner, Congrats", "$"
-	Player2MSG               DB          " is the Winner, Congrats", "$"
+	congrats                 DB          " is the Winner, Congrats", "$"
 	NewEndGame               DB          " Press Y For New Game, N To End the Game ", "$"
 
 
@@ -1385,7 +1378,7 @@ extra SEGMENT
 	;game layout
 	CharacteroffsetX         dw          12
 	CharacteroffsetX2        dw          563                                                                                                                                                                                                   	;position of first from left pixel                                                                                                                                                                                              	;position of first from left pixel
-	CharacteroffsetY         dw          8                                                                                                                                                                                                     	;position of first from top pixel
+	CharacteroffsetY         dw          13                                                                                                                                                                                                    	;position of first from top pixel
 	CharacterSizeX           equ         64                                                                                                                                                                                                    	;img Width
 	CharacterSizeY           equ         64
 
@@ -2453,56 +2446,29 @@ MAIN PROC FAR
 	                              ASSUME           ES:extra
 	                              mov              ax, extra
 	                              mov              es, ax
+
+	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
+	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
+	                              int              10h
 	;///////////////////////////////First Screen////////////////////////////////////
-
-	firstScreenLoop:              
-	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
-	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
-	                              int              10h
-
 	                              mov              ah,09h
-	                              lea              dx, firstScreen                                                                      	; show the first screen
+	                              lea              dx, firstScreen                                                                      	; ask for player's name
 	                              int              21h
-
-	                              mov              ah,09h
-	                              lea              dx, getName                                                                          	; ask for player's name
-	                              int              21h
-
-	getNameLoop:                  lea              si, playerName1                                                                      	; get player's name
-	                              mov              ah, 0Ah
-	                              mov              dx, si
-	                              int              21h
-
-	
-	SecondScreenLoop:             
-	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
-	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
-	                              int              10h
-
-	                              mov              ah,09h
-	                              lea              dx, firstScreen                                                                      	; show the first screen
-	                              int              21h
-
-	                              mov              ah,09h
-	                              lea              dx, getName                                                                          	; ask for player's name
-	                              int              21h
-
-	getNameLoop2:                 lea              si, playerName2                                                                      	; get player's name
-	                              mov              ah, 0Ah
-	                              mov              dx, si
-	                              int              21h
-
-	                              clearWholeScreen
-	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
-	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
-	                              int              10h
-
+	                              mov              ah, 0
+	                              int              16h
 	;fill background
 	                              call             DrawRec
+	;////////////////////////////// get player's name'
+	                              printStringAtLoc getname1, 2, 28
+
+	                              lea              si, playerName1                                                                      	; get player's name
+	                              mov              ah, 0Ah
+	                              mov              dx, si
+	                              int              21h
+	;////////////////////////////////
 	; Draw pointer
 	                              editDrawPrams    MSGTAIL, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
 	                              call             drawShape
-							
 	; Draw Characters
 	                              editDrawPrams    Fenn, charSizeX, charSizeY, firstCharOffsetX, charOffsetY
 	                              call             drawShape
@@ -2607,6 +2573,14 @@ MAIN PROC FAR
 
 	;fill background
 	                              call             DrawRec
+	;////////////////////////////// get player's name'
+	                              printStringAtLoc getname2, 2, 28
+
+	                              lea              si, playerName2                                                                      	; get player's name
+	                              mov              ah, 0Ah
+	                              mov              dx, si
+	                              int              21h
+	;////////////////////////////////
 	; Draw pointer
 	                              editDrawPrams    MSGTAIL, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
 	                              call             drawShape
@@ -3309,7 +3283,7 @@ GameWinner PROC
 	                              INT              10H
 
 	                              mov              ah,09h
-	                              lea              dx, Player1MSG                                                                       	; show the bye bye screen
+	                              lea              dx, congrats                                                                         	; show the bye bye screen
 	                              int              21h
 
 	                              jmp              CONINUE_ENDMSG
@@ -3327,7 +3301,7 @@ GameWinner PROC
 	                              INT              10H
 
 	                              mov              ah,09h
-	                              lea              dx, Player2MSG                                                                       	; show the bye bye screen
+	                              lea              dx, congrats                                                                         	; show the bye bye screen
 	                              int              21h
 	;jmp EndGameWinner
 
@@ -4337,12 +4311,12 @@ DrawLayout PROC near
 	DrawLayout2_start:            call             drawShape
 	                              mov              REV, 0
 	                              mov              Ers, 0
-	                              editDrawPrams    NameBoxC, NameBoxSizeX, NameBoxSizeY, 2, 66
+	                              editDrawPrams    NameBoxC, NameBoxSizeX, NameBoxSizeY, 2, 72
 	                              call             drawShape
 
 	                              mov              REV, 0
 	                              mov              Ers, 0
-	                              editDrawPrams    NameBoxC, NameBoxSizeX, NameBoxSizeY, 554, 66
+	                              editDrawPrams    NameBoxC, NameBoxSizeX, NameBoxSizeY, 554, 72
 	                              call             drawShape
           
      
