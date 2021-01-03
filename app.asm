@@ -1,5 +1,29 @@
 .model COMPACT
 ;///////////////////////////////Macros////////////////////////////////////
+printStringAtLoc MACRO string, row, col		; pass the whole string not (string +2)
+	                 mov dh, row       	;Cursor position line
+	                 mov dl, col       	;Cursor position column
+	                 mov ah, 02h       	;Set cursor position function
+	                 mov bl, 0Ah       	; BF color, not working in this mode
+	                 mov bh, 0         	;Page number
+	                 int 10h           	;Interrupt call
+
+	                 mov ah,09h        	; print player's name
+	                 lea dx, string + 2
+	                 int 21h
+
+	;                               mov              bx, OFFSET playerName1                                                               	;1.
+	; Again:
+	;                               mov              dl, [bx]                                                                             	;2.
+	;                               cmp              dl, "$"
+	;                               je               noName
+	;                               mov              ah, 02h                                                                              	;3.
+	;                               int              21h
+	;                               inc              bx                                                                                   	;4.
+	;                               cmp              dl, 0Ah                                                                              	;5.
+	;                               jne              Again
+	; noName:
+ENDM
 editDrawPrams MACRO shape, sizeX, sizeY, offsetX, offsetY
 	              MOV AX, sizeX
 	              MOV shapeSizeX, AX
@@ -1279,7 +1303,7 @@ extra SEGMENT
 	                         DB          '      ||            Please, Enter your name               ||',0ah,0dh
 	                         DB          '      ||       Then, press Enter to start the game        ||',0ah,0dh
 	                         DB          '      ||                                                  ||',0ah,0dh
-	                         DB          '      ||             ** MAX 20 CHARCHTERS **              ||',0ah,0dh
+	                         DB          '      ||              ** MAX 7 CHARCHTERS **              ||',0ah,0dh
 	                         DB          '      ||                                                  ||',0ah,0dh
 	                         DB          '      || =======================================================',0ah,0dh
 	                         DB          '      ||                                                    ',0ah,0dh
@@ -4119,9 +4143,9 @@ DrawLayout PROC near
 	DrawLayout_fourthchar:        cmp              al, 3
 	                              JNE              DrawLayout_fifthchar
 	                              editDrawPrams    Asta, CharacterSizeX, CharacterSizeY, CharacteroffsetX, CharacteroffsetY
-								  JMP              DrawLayout_start
+	                              JMP              DrawLayout_start
 
-	DrawLayout_fifthchar:   
+	DrawLayout_fifthchar:         
 	                              editDrawPrams    Asta, CharacterSizeX, CharacterSizeY, CharacteroffsetX, CharacteroffsetY
 	                              
 	DrawLayout_start:             call             drawShape
@@ -4185,7 +4209,9 @@ DrawLayout PROC near
 	                              mov              BorderMIDDLED2, screenMaxY1+26
 	                              mov              BorderYSTART, screenMaxY1+23
 	                              call             DrawHorizBorder
-
+	; print player's name
+	                              printStringAtLoc playerName1, 5, 2
+	                              printStringAtLoc playerName2, 5, 71
 	                              ret
 DrawLayout ENDP
 
