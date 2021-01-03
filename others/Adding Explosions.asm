@@ -1257,7 +1257,8 @@ extra SEGMENT
 	SHIP_DAMAGE_COLOR        db          04h
 	SHIP_DAMAGE_EFFECT_DELAY equ         650
 	HEALTH_ANGRY             EQU         100
-	;
+    ExplosionOffsetX         dw          0
+    ExplosionOffsetY         dw          0
 	shipSpeed1               equ         4
 	shipSpeed2               equ         4
 	;////////////////////////////////
