@@ -1583,9 +1583,14 @@ MAIN PROC FAR
 	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
 	                              int              10h
 	                              call             background
-	                              call             drawgamebtn
-	                              call             drawchatbtn
-	                              call             drawexitbtn
+	                              mov              Ers, 0
+	                              mov              REV, 0
+	                              editDrawPrams    gamebtn, btnsize, btnsize+2, gamebtnOffset, gamebtnOffset+2
+	                              call             drawShape
+	                              editDrawPrams    chatbtn, btnsize, btnsize+2, chatbtnOffset, chatbtnOffset+2
+	                              call             drawShape
+	                              editDrawPrams    exitbtn, btnsize, btnsize+2, exitbtnOffset, exitbtnOffset+2
+	                              call             drawShape
 	                              call             eraseArrows
 	                              add              arrowoffsetY, arrowStep
 	                              call             eraseArrows
@@ -1593,9 +1598,18 @@ MAIN PROC FAR
 	                              call             eraseArrows
 	                              sub              arrowoffsetY, arrowStep
 	                              sub              arrowoffsetY, arrowStep
-	                              call             drawArrows
 	                              editDrawPrams    logo, logoSizeX, logoSizeY, logoOffsetX, logoOffsetY
 	                              call             drawShape2x2
+
+	                              mov              Rev, 1
+	                              editDrawPrams    ship1, shipSizeX1, shipSizeY1, arrowOffsetXRev, arrowoffsetY
+	                              call             drawShape
+	                              mov              Rev, 0
+	                              mov              AX, arrowOffsetX
+	                              mov              shapeOffsetX, AX
+	                              Lea              SI, Ship1
+	                              call             drawShape
+
 	CheckInMainMenu:              
 	                              mov              ah,0                                                                                 	;  ah:al = scan code: ASCII code
 	                              int              16h
@@ -1605,10 +1619,22 @@ MAIN PROC FAR
 	                              cmp              arrowoffsetY, arrowAtgame
 	                              je               CheckInMainMenu
 	                              call             eraseArrows
-	                              mov              bx, arrowStep
-	                              SUB              arrowoffsetY, bx
-	                              call             drawArrows
-	                              jmp              CheckInMainMenu
+	                              mov              AX, arrowStep
+	                              SUB              arrowoffsetY, AX
+	                              mov              Rev, 1
+	                              Lea              SI, Ship1
+	                              mov              AX, arrowOffsetXRev
+	                              mov              shapeOffsetX, AX
+	                              mov              AX, arrowoffsetY
+	                              mov              shapeOffsetY, AX
+	                              call             drawShape
+	                              Lea              SI, Ship1
+
+	                              mov              Rev, 0
+	                              mov              AX, arrowOffsetX
+	                              mov              shapeOffsetX, AX
+	                              call             drawShape
+	Make_THE_JMP_CLOSER:          jmp              CheckInMainMenu
 
 	downArrow_label:              cmp              ah, key_downArrow                                                                    	; down arrow
 	                              jne              enterKey_label
@@ -1616,14 +1642,25 @@ MAIN PROC FAR
 	                              je               CheckInMainMenu
 	                              call             eraseArrows
 
-	                              mov              bx, arrowStep
-	                              ADD              arrowoffsetY, bx
-	                              call             drawArrows
+	                              mov              AX, arrowStep
+	                              ADD              arrowoffsetY, AX
+	                              mov              Rev, 1
+	                              Lea              SI, Ship1
+	                              mov              AX, arrowOffsetXRev
+	                              mov              shapeOffsetX, AX
+	                              mov              AX, arrowoffsetY
+	                              mov              shapeOffsetY, AX
+	                              call             drawShape
+	                              Lea              SI, Ship1
+	                              mov              Rev, 0
+	                              mov              AX, arrowOffsetX
+	                              mov              shapeOffsetX, AX
+	                              call             drawShape
 
-	                              jmp              CheckInMainMenu
+	                              jmp              Make_THE_JMP_CLOSER
 
 	enterKey_label:               cmp              ah, key_enter                                                                        	; enter
-	                              jne              CheckInMainMenu                                                                      	; added to prevent other buttons from doing enter's action
+	                              jne              Make_THE_JMP_CLOSER                                                                  	; added to prevent other buttons from doing enter's action
 
 	                              cmp              arrowoffsetY, arrowAtChat
 	;je gameLoop
@@ -1631,7 +1668,7 @@ MAIN PROC FAR
 	                              je               gameLoop
 	                              cmp              arrowoffsetY, arrowAtExit
 	                              je               exitProg
-	                              jmp              CheckInMainMenu
+	                              jmp              Make_THE_JMP_CLOSER
 	;///////////////////////////////Game Loop////////////////////////////////////
 	gameLoop:                                                                                                                           	;NOTE:since we are using words, we will use the value '2' to traverse pixels
 	;//////////////////////////////initializations////////////////////////////////////
@@ -2012,7 +2049,6 @@ BulletChecker PROC NEAR
 	                              JE               ContinueBullet
 	                              CALL             EraseBullet
 
-
 	                              MOV              dx, MAXBULLETRIGHT
 	                              CMP              [DI], dx
 	                              JLE              StopBullet
@@ -2381,87 +2417,6 @@ Bullet_Offset PROC near
 	                              pop              ax
 	                              ret
 Bullet_Offset ENDP
-
-drawGameBtn PROC
-	; initialize containers
-	                              mov              SI, offset gamebtn
-	                              mov              cx, btnsize                                                                          	;Column X
-	                              mov              dx, btnsize + 2                                                                      	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	drawGameBtn_drawIt:           
-	                              mov              bl, [SI]                                                                             	;use color from array color for testing
-	                              and              bl, bl
-	                              JZ               drawGameBtn_back
-	                              add              cx, gamebtnOffset
-	                              add              dx, gamebtnOffset + 2
-	                              mov              al, [SI]                                                                             	;  use color from array color for testing
-	                              int              10h                                                                                  	;  draw the pixel
-	                              sub              cx, gamebtnOffset
-	                              sub              dx, gamebtnOffset + 2
-	drawGameBtn_back:             
-	                              inc              SI
-	                              DEC              Cx                                                                                   	;  loop iteration in x direction
-	                              JNZ              drawGameBtn_drawIt                                                                   	;  check if we can draw current x and y and excape the y iteration
-	                              mov              Cx, btnsize                                                                          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              JZ               drawGameBtn_alldrawn                                                                 	;  both x and y reached 00 so finish drawing
-	                              jmp              drawGameBtn_drawIt
-	drawGameBtn_alldrawn:         ret
-drawGameBtn ENDP
-drawChatBtn PROC
-	; initialize containers
-	                              mov              SI, offset chatbtn
-	                              mov              cx, btnsize                                                                          	;Column X
-	                              mov              dx, btnsize + 2                                                                      	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	drawChatBtn_drawIt:           
-	                              mov              bl, [SI]                                                                             	;use color from array color for testing
-	                              and              bl, bl
-	                              JZ               drawChatBtn_back
-	                              add              cx, chatbtnOffset
-	                              add              dx, chatbtnOffset + 2
-	                              mov              al, [SI]                                                                             	;  use color from array color for testing
-	                              int              10h                                                                                  	;  draw the pixel
-	                              sub              cx, chatbtnOffset
-	                              sub              dx, chatbtnOffset + 2
-
-	drawChatBtn_back:             
-	                              inc              SI
-	                              DEC              Cx                                                                                   	;  loop iteration in x direction
-	                              JNZ              drawChatBtn_drawIt                                                                   	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, btnsize                                                                          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              JZ               drawChatBtn_allDrawn                                                                 	;  both x and y reached 00 so finish drawing
-	                              jmp              drawChatBtn_drawIt
-	drawChatBtn_allDrawn:         ret
-drawChatBtn ENDP
-drawExitBtn PROC
-	; initialize containers
-	                              mov              SI, offset exitbtn
-	                              mov              cx, btnsize                                                                          	;Column X
-	                              mov              dx, btnsize + 2                                                                      	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	drawExitBtn_drawIt:           
-	                              mov              bl, [SI]                                                                             	;use color from array color for testing
-	                              and              bl, bl
-	                              JZ               drawExitBtn_back
-	                              add              cx, exitbtnOffset
-	                              add              dx, exitbtnOffset + 2
-	                              mov              al, [SI]                                                                             	;  use color from array color for testing
-	                              int              10h                                                                                  	;  draw the pixel
-	                              sub              cx, exitbtnOffset
-	                              sub              dx, exitbtnOffset + 2
-
-	drawExitBtn_back:             
-	                              inc              SI
-	                              DEC              Cx                                                                                   	;  loop iteration in x direction
-	                              JNZ              drawExitBtn_drawIt                                                                   	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, btnsize                                                                          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              JZ               drawExitBtn_allDrawn                                                                 	;  both x and y reached 00 so finish drawing
-	                              jmp              drawExitBtn_drawIt
-	drawExitBtn_allDrawn:         ret
-drawExitBtn ENDP
 drawShape2x2 PROC
 
 	                              mov              cx, shapeSizeX                                                                       	;Column X
@@ -2540,63 +2495,7 @@ background PROC near
 	TRY:                          jmp              background_drawIt                                                                    	; loop
 	ENDING:                       
 	                              RET
-
-
 background ENDP
-
-drawArrows PROC near
-	; initialize containers
-	                              mov              SI, offset arrow
-	                              mov              cx, arrowSizeX                                                                       	;Column X
-	                              mov              dx, arrowSizeY                                                                       	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	drawArrows_drawIt:            
-	                              mov              bl, [SI]                                                                             	;use color from array color for testing
-	                              and              bl, bl
-	                              JZ               drawArrows_back
-	                              add              cx, arrowOffset
-	                              add              dx, arrowOffset + 2
-	                              mov              al, [SI]                                                                             	;  use color from array color for testing
-	                              int              10h                                                                                  	;  draw the pixel
-	                              sub              cx, arrowOffset
-	                              sub              dx, arrowOffset + 2
-	drawArrows_back:              
-	                              inc              SI
-	                              DEC              Cx                                                                                   	;  loop iteration in x direction
-	                              JNZ              drawArrows_drawIt                                                                    	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, arrowSizeX                                                                       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              JZ               drawArrows_allDrawn                                                                  	;  both x and y reached 00 so finish drawing
-	                              jmp              drawArrows_drawIt
-	drawArrows_allDrawn:          
-	;///////////////////////////////
-	; initialize containers
-	                              mov              SI, offset arrow
-	                              mov              cx, 0                                                                                	;Column X
-	                              mov              dx, arrowSizeY                                                                       	;Row Y
-	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
-	drawArrows_drawItR:           
-	                              mov              bl, [SI]                                                                             	;use color from array color for testing
-	                              and              bl, bl
-	                              JZ               drawArrows_backR
-	                              add              cx, arrowOffsetXRev
-	                              add              dx, arrowOffsetY
-	                              mov              al, [SI]                                                                             	;  use color from array color for testing
-	                              int              10h                                                                                  	;  draw the pixel
-	                              sub              cx, arrowOffsetXRev
-	                              sub              dx, arrowOffsetY
-
-	drawArrows_backR:             
-	                              inc              SI
-	                              INC              Cx                                                                                   	;  loop iteration in x direction
-	                              CMP              CX, arrowSizeX
-	                              JNZ              drawArrows_drawItR                                                                   	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov              Cx, 0                                                                                	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC              DX                                                                                   	;  loop iteration in y direction
-	                              JZ               drawArrows_allDrawnR                                                                 	;  both x and y reached 00 so finish drawing
-	                              jmp              drawArrows_drawItR
-	drawArrows_allDrawnR:         ret
-drawArrows ENDP
 eraseArrows PROC near
 	; initialize containers
 	                              mov              SI, offset arrow                                                                     	;shipY is (shipX index + size * 2) so we can use Si for both
