@@ -4,7 +4,7 @@ printStringAtLoc MACRO string, row, col		; pass the whole string not (string +2)
 	                 mov dh, row       	;Cursor position line
 	                 mov dl, col       	;Cursor position column
 	                 mov ah, 02h       	;Set cursor position function
-	                 mov bl, 0Ah       	; BF color, not working in this mode
+	                 mov bl, 0ffh      	; BF color, not working in this mode
 	                 mov bh, 0         	;Page number
 	                 int 10h           	;Interrupt call
 
@@ -1200,1250 +1200,1235 @@ extra SEGMENT
 .data
 
 	; keys
-	key_upArrow              equ         048h
-	key_downArrow            equ         050h
-	key_leftArrow            equ         04Bh
-	key_rightArrow           equ         04Dh
+	key_upArrow              equ           048h
+	key_downArrow            equ           050h
+	key_leftArrow            equ           04Bh
+	key_rightArrow           equ           04Dh
 
-	key_enter                equ         01ch
-	key_esc                  equ         1Bh
+	key_enter                equ           01ch
+	key_esc                  equ           1Bh
 
-	key_w                    equ         11h
-	key_s                    equ         1FH
-	key_a                    equ         1EH
-	key_d                    equ         20h
-	key_f                    equ         21h
+	key_w                    equ           11h
+	key_s                    equ           1FH
+	key_a                    equ           1EH
+	key_d                    equ           20h
+	key_f                    equ           21h
 	; constrains depend on the graphics mode
-	graphicsModeAX           equ         4F02h
-	graphicsModeBX           equ         0100h
-	delayDuration            equ         260
+	graphicsModeAX           equ           4F02h
+	graphicsModeBX           equ           0100h
+	delayDuration            equ           260
 	;DRAW FUNCS PARAMETERS
-	RECXEND                  DW          640
-	RECYEND                  DW          400
-	RECXSTART                DW          0
-	RECYSTART                DW          0
-	RECCOLOR                 DB          0B3h
+	RECXEND                  DW            640
+	RECYEND                  DW            400
+	RECXSTART                DW            0
+	RECYSTART                DW            0
+	RECCOLOR                 DB            0B3h
 	;
-	BorderXEND               DW          00
-	BorderYEND               DW          00
-	BorderXSTART             DW          00
-	BorderYSTART             DW          00
-	BorderBRIGHTColor        DB          00
-	BorderDARKColor          DB          00
-	BorderMIDDLED1           DW          00
-	BorderMIDDLE             DW          00
-	BorderMIDDLED2           DW          00
+	BorderXEND               DW            00
+	BorderYEND               DW            00
+	BorderXSTART             DW            00
+	BorderYSTART             DW            00
+	BorderBRIGHTColor        DB            00
+	BorderDARKColor          DB            00
+	BorderMIDDLED1           DW            00
+	BorderMIDDLE             DW            00
+	BorderMIDDLED2           DW            00
 	;
-	shipOffsetX1             dw          30                                                                                                                                                                                                    	;position of first from left pixel
-	shipOffsetY1             dw          219                                                                                                                                                                                                   	;position of first from top pixel
-	shipSizeX1               equ         32                                                                                                                                                                                                    	;img Width
-	shipSizeY1               equ         32                                                                                                                                                                                                    	;img Height
-	screenMaxY1              equ         370
-	screenMaxX1              equ         320
-	screenMinY1              equ         100
-	screenMinX1              equ         4
+	shipOffsetX1             dw            30                                                                                                                                                                                                    	;position of first from left pixel
+	shipOffsetY1             dw            219                                                                                                                                                                                                   	;position of first from top pixel
+	shipSizeX1               equ           32                                                                                                                                                                                                    	;img Width
+	shipSizeY1               equ           32                                                                                                                                                                                                    	;img Height
+	screenMaxY1              equ           370
+	screenMaxX1              equ           320
+	screenMinY1              equ           100
+	screenMinX1              equ           4
 	;
-	shipOffsetX2             dw          578                                                                                                                                                                                                   	;position of first from left pixel
-	shipOffsetY2             dw          219
-	shipSizeX2               equ         32                                                                                                                                                                                                    	; ship's Width
-	shipSizeY2               equ         32
-	screenMinY2              equ         100
-	screenMinX2              equ         320
-	screenMaxY2              equ         370
-	screenMaxX2              equ         640
+	shipOffsetX2             dw            578                                                                                                                                                                                                   	;position of first from left pixel
+	shipOffsetY2             dw            219
+	shipSizeX2               equ           32                                                                                                                                                                                                    	; ship's Width
+	shipSizeY2               equ           32
+	screenMinY2              equ           100
+	screenMinX2              equ           320
+	screenMaxY2              equ           370
+	screenMaxX2              equ           640
 
-	SHIP_DAMAGE_COLOR        db          04h
-	SHIP_DAMAGE_EFFECT_DELAY equ         700
+	SHIP_DAMAGE_COLOR        db            04h
+	SHIP_DAMAGE_EFFECT_DELAY equ           700
 	;
-	shipSpeed1               equ         4
-	shipSpeed2               equ         4
+	shipSpeed1               equ           4
+	shipSpeed2               equ           4
 	;////////////////////////////////
-	gamebtnOffset            dw          226, 204
-	chatbtnOffset            dw          226, 268
-	exitbtnOffset            dw          226, 332
-	btnsize                  dw          188, 56
+	gamebtnOffset            dw            226, 204
+	chatbtnOffset            dw            226, 268
+	exitbtnOffset            dw            226, 332
+	btnsize                  dw            188, 56
 	;
-	logoOffset               dw          190, 8
-	logoSizeX                equ         130
-	logoSizeY                equ         95
+	                         logoOffset    label word
+	logoOffsetX              dW            190
+	logoOffsetY              DW            8
+	logoSizeX                equ           130
+	logoSizeY                equ           95
 	
-	shapeOffsetX             DW          0
-	shapeOffsetY             DW          0
-	shapeSizeX               DW          0
-	shapeSizeY               DW          0
-	REV                      DB          0
-	Ers                      DB          0
+	shapeOffsetX             DW            0
+	shapeOffsetY             DW            0
+	shapeSizeX               DW            0
+	shapeSizeY               DW            0
+	REV                      DB            0
+	Ers                      DB            0
 
 	;
 
-	                         arrowOffset label word
-	arrowOffsetX             dw          184
-	arrowOffsetY             dw          216
-	arrowOffsetXRev          dw          424
-	arrowSizeX               equ         32
-	arrowSizeY               equ         32
-	arrowStep                equ         64
-	arrowAtgame              equ         216
-	arrowAtChat              equ         280
-	arrowAtExit              equ         344
+	                         arrowOffset   label word
+	arrowOffsetX             dw            184
+	arrowOffsetY             dw            216
+	arrowOffsetXRev          dw            424
+	arrowSizeX               equ           32
+	arrowSizeY               equ           32
+	arrowStep                equ           64
+	arrowAtgame              equ           216
+	arrowAtChat              equ           280
+	arrowAtExit              equ           344
 	;////////////////////////////////     	                                                                                                                                                                                      	;don't make this 0
-	getName                  DB          " Your name: $"
-	enterValidName           DB          " Please, enter a valid name: $"
-	playerName1              DB          21,?,21 dup("$")
-	playerName2              DB          21,?,21 dup("$")
-	                         firstScreen label byte
-	                         DB          '  ',0ah,0dh                                                                                                                                                                                          	; new line
-	                         DB          '                                                          ||',0ah,0dh
-	                         DB          '   =======================================================||',0ah,0dh
-	                         DB          '      ||                                                  ||',0ah,0dh
-	                         DB          '      ||            #### FE L FDA SWAAA ####              ||',0ah,0dh
-	                         DB          '      ||                                                  ||',0ah,0dh
-	                         DB          '      ||--------------------------------------------------||',0ah,0dh
-	                         DB          '      ||                                                  ||',0ah,0dh
-	                         DB          '      ||            Please, Enter your name               ||',0ah,0dh
-	                         DB          '      ||       Then, press Enter to start the game        ||',0ah,0dh
-	                         DB          '      ||                                                  ||',0ah,0dh
-	                         DB          '      ||              ** MAX 7 CHARCHTERS **              ||',0ah,0dh
-	                         DB          '      ||                                                  ||',0ah,0dh
-	                         DB          '      || =======================================================',0ah,0dh
-	                         DB          '      ||                                                    ',0ah,0dh
-	                         DB          '$',0ah,0dh
-	                         mainMenu    label byte
-	                         DB          '  ',0ah,0dh                                                                                                                                                                                          	; new line
-	                         DB          '                                                           ||',0ah,0dh
-	                         DB          '                                                           ||',0ah,0dh
-	                         DB          '                                                           ||',0ah,0dh
-	                         DB          '   ========================================================||',0ah,0dh
-	                         DB          '       ||                                                  ||',0ah,0dh
-	                         DB          '       ||            Press, F1 to beign chatting           ||',0ah,0dh
-	                         DB          '       ||            Press, F2 to start the game           ||',0ah,0dh
-	                         DB          '       ||            Press, ESC to exit the prgram         ||',0ah,0dh
-	                         DB          '       ||                                                  ||',0ah,0dh
-	                         DB          '       ||--------------------------------------------------||',0ah,0dh
-	                         DB          '       ||                     chat...                      ||',0ah,0dh
-	                         DB          '       || ========================================================',0ah,0dh
-	                         DB          '       ||                                                    ',0ah,0dh
-	                         DB          '       ||                                                    ',0ah,0dh
-	                         DB          '       ||                                                    ',0ah,0dh
-	                         DB          '$',0ah,0dh
-	                         byebye      label byte
-	                         DB          '  ',0ah,0dh
-	                         DB          '                                   ||',0ah,0dh
-	                         DB          '                                   ||',0ah,0dh
-	                         DB          '                                   ||',0ah,0dh
-	                         DB          '                                   ||',0ah,0dh
-	                         DB          '                                   ||',0ah,0dh
-	                         DB          '   ================================||',0ah,0dh
-	                         DB          '       ||           Bye Bye        ||',0ah,0dh
-	                         DB          '       || ================================',0ah,0dh
-	                         DB          '       ||                           ',0ah,0dh
-	                         DB          '       ||                           ',0ah,0dh
-	                         DB          '       ||                           ',0ah,0dh
-	                         DB          '       ||                           ',0ah,0dh
-	                         DB          '       ||                           ',0ah,0dh
-	                         DB          '$',0ah,0dh
+	getName1                 DB            "  Player1 Name: $"
+	getName2                 DB            "  Player2 Name: $"
+
+	enterValidName           DB            " Please, enter a valid name: $"
+	playerName1              DB            21,?,21 dup("$")
+	playerName2              DB            21,?,21 dup("$")
+	                         getNameScreen label byte
+	                         DB            '  ',0ah,0dh                                                                                                                                                                                          	; new line
+	                         DB            '                                                          ||',0ah,0dh
+	                         DB            '   =======================================================||',0ah,0dh
+	                         DB            '      ||                                                  ||',0ah,0dh
+	                         DB            '      ||            #### FE L FDA SWAAA ####              ||',0ah,0dh
+	                         DB            '      ||                                                  ||',0ah,0dh
+	                         DB            '      ||--------------------------------------------------||',0ah,0dh
+	                         DB            '      ||                                                  ||',0ah,0dh
+	                         DB            '      ||            Please, Enter your name               ||',0ah,0dh
+	                         DB            '      ||       Then, press Enter to start the game        ||',0ah,0dh
+	                         DB            '      ||                                                  ||',0ah,0dh
+	                         DB            '      ||              ** MAX 7 CHARCHTERS **              ||',0ah,0dh
+	                         DB            '      ||                                                  ||',0ah,0dh
+	                         DB            '      || =======================================================',0ah,0dh
+	                         DB            '      ||                                                    ',0ah,0dh
+	                         DB            '$',0ah,0dh
+	                         byebye        label byte
+	                         DB            '  ',0ah,0dh
+	                         DB            '                                   ||',0ah,0dh
+	                         DB            '                                   ||',0ah,0dh
+	                         DB            '                                   ||',0ah,0dh
+	                         DB            '                                   ||',0ah,0dh
+	                         DB            '                                   ||',0ah,0dh
+	                         DB            '   ================================||',0ah,0dh
+	                         DB            '       ||           Bye Bye        ||',0ah,0dh
+	                         DB            '       || ================================',0ah,0dh
+	                         DB            '       ||                           ',0ah,0dh
+	                         DB            '       ||                           ',0ah,0dh
+	                         DB            '       ||                           ',0ah,0dh
+	                         DB            '       ||                           ',0ah,0dh
+	                         DB            '       ||                           ',0ah,0dh
+	                         DB            '$',0ah,0dh
 				   
 	;///////////////////////////////Data Initializations////////////////////////////////////
 	;//////////////////////////////////////Art/////////////////////////////////////////////
 	; For Bullets
-	Bullet                   DB          0, 0, 43, 43, 43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 0, 0, 68, 68, 68, 68, 68, 68
-	BulletXSize              equ         8
-	BulletYSize              equ         4
-	BulletSpeed              DB          1
-	MAXBULLET                equ         100
-	BulletOffset             DW          200 DUP(0)
-	BulletDirection          DB          100 DUP(0)
-	MAXBULLETLEFT            equ         631
-	MAXBULLETRIGHT           equ         8
+	Bullet                   DB            0, 0, 43, 43, 43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 0, 0, 68, 68, 68, 68, 68, 68
+	BulletXSize              equ           8
+	BulletYSize              equ           4
+	BulletSpeed              DB            1
+	MAXBULLET                equ           100
+	BulletOffset             DW            200 DUP(0)
+	BulletDirection          DB            100 DUP(0)
+	MAXBULLETLEFT            equ           631
+	MAXBULLETRIGHT           equ           8
 
-	HEALTH1                  DB          200
-	HEALTH2                  DB          200
-	DAMAGE                   equ         5
-	ISNEWGAME                db          0
+	HEALTH1                  DB            200
+	HEALTH2                  DB            200
+	DAMAGE                   equ           5
+	ISNEWGAME                db            0
  
-	Player1MSG               DB          " is the Winner, Congrats", "$"
-	Player2MSG               DB          " is the Winner, Congrats", "$"
-	NewEndGame               DB          " Press Y For New Game, N To End the Game ", "$"
+	congrats                 DB            " is the Winner, Congrats", "$"
+	NewEndGame               DB            " Press Y For New Game, N To End the Game ", "$"
 
 
-	MSGTAILXsize             equ         16
-	MSGTAILYsize             equ         16
-	MSGTAILXoffset1          dw          110 - MSGTAILXsize
-	MSGTAILXoffset2          dw          530
-	MSGTAILYoffset1          dw          15
-	MSGTAILYoffset2          dw          55
+	MSGTAILXsize             equ           16
+	MSGTAILYsize             equ           16
+	MSGTAILXoffset1          dw            110 - MSGTAILXsize
+	MSGTAILXoffset2          dw            530
+	MSGTAILYoffset1          dw            15
+	MSGTAILYoffset2          dw            55
 
-	MSGTAIL                  DB          26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 18, 18, 18, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          26, 26, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 27, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 26, 26, 26, 27, 27, 27, 26, 26
-	                         DB          18, 18, 18, 0, 0, 0, 0, 0, 26, 26, 26, 27, 27, 27, 27, 26, 26, 18, 18, 18, 0, 0, 0, 0, 26, 26, 26, 27, 27, 27, 27, 27, 26, 26, 18, 18, 18, 0, 0, 0
-	                         DB          26, 26, 26, 27, 27, 27, 27, 27, 27, 26, 26, 18, 18, 18, 0, 0, 26, 26, 26, 27, 27, 27, 27, 27, 27, 27, 26, 26, 18, 18, 18, 0, 26, 26, 26, 26, 27, 27, 27, 27
-	                         DB          27, 27, 27, 26, 26, 18, 18, 0, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 18, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0
+	MSGTAIL                  DB            26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 18, 18, 18, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            26, 26, 26, 26, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 27, 26, 26, 18, 18, 18, 0, 0, 0, 0, 0, 0, 26, 26, 26, 27, 27, 27, 26, 26
+	                         DB            18, 18, 18, 0, 0, 0, 0, 0, 26, 26, 26, 27, 27, 27, 27, 26, 26, 18, 18, 18, 0, 0, 0, 0, 26, 26, 26, 27, 27, 27, 27, 27, 26, 26, 18, 18, 18, 0, 0, 0
+	                         DB            26, 26, 26, 27, 27, 27, 27, 27, 27, 26, 26, 18, 18, 18, 0, 0, 26, 26, 26, 27, 27, 27, 27, 27, 27, 27, 26, 26, 18, 18, 18, 0, 26, 26, 26, 26, 27, 27, 27, 27
+	                         DB            27, 27, 27, 26, 26, 18, 18, 0, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 18, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0
 	;//////////////////////////////////////Art/////////////////////////////////////////////
 
 	;game layout
-	CharacteroffsetX         dw          12
-	CharacteroffsetX2        dw          563                                                                                                                                                                                                   	;position of first from left pixel                                                                                                                                                                                              	;position of first from left pixel
-	CharacteroffsetY         dw          8                                                                                                                                                                                                     	;position of first from top pixel
-	CharacterSizeX           equ         64                                                                                                                                                                                                    	;img Width
-	CharacterSizeY           equ         64
+	CharacteroffsetX         dw            12
+	CharacteroffsetX2        dw            563                                                                                                                                                                                                   	;position of first from left pixel                                                                                                                                                                                              	;position of first from left pixel
+	CharacteroffsetY         dw            13                                                                                                                                                                                                     	;position of first from top pixel
+	CharacterSizeX           equ           64                                                                                                                                                                                                    	;img Width
+	CharacterSizeY           equ           64
 
-	NameBoxSizeX             equ         82
-	NameBoxSizeY             equ         26
+	NameBoxSizeX             equ           82
+	NameBoxSizeY             equ           26
 
 	; Characters
-	charSizeX                equ         64
-	charSizeY                equ         64
-	firstCharOffsetX         equ         80
-	secondCharOffsetX        equ         184
-	thirdCharOffsetX         equ         288
-	fourthCharOffsetX        equ         392
-	fifthCharOffsetX         equ         496
-	charOffsetY              equ         230
+	charSizeX                equ           64
+	charSizeY                equ           64
+	firstCharOffsetX         equ           80
+	secondCharOffsetX        equ           184
+	thirdCharOffsetX         equ           288
+	fourthCharOffsetX        equ           392
+	fifthCharOffsetX         equ           496
+	charOffsetY              equ           230
 
 	; Player ID
-	firstPlayerId            db          0
-	secondPlayerId           db          0
+	firstPlayerId            db            0
+	secondPlayerId           db            0
 
 	; pointer
-	pointerAt                DB          0
-	pointerAtFirstChar       equ         60
-	pointerAtFifthChar       equ         476
-	pointerStep              equ         104
-	pointerSizeX             equ         16
-	pointerSizeY             equ         16
-	pointerOffsetX           dw          60
-	pointerOffsetY           equ         230
+	pointerAt                DB            0
+	pointerAtFirstChar       equ           60
+	pointerAtFifthChar       equ           476
+	pointerStep              equ           104
+	pointerSizeX             equ           16
+	pointerSizeY             equ           16
+	pointerOffsetX           dw            60
+	pointerOffsetY           equ           230
 
-	                         characterC  label byte
-	Mikasa2                  DB          0, 0, 0, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 6, 114, 114, 114, 114, 114, 114, 114, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 26, 30, 30, 30
-	                         DB          30, 26, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114
-	                         DB          6, 114, 114, 114, 114, 114, 114, 114, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 26, 30, 30, 30, 30, 26, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
-	                         DB          6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 114, 114, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 113, 113, 113, 113, 4, 4, 4
-	                         DB          4, 113, 113, 113, 26, 30, 30, 30, 30, 26, 114, 114, 6, 6, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 114, 114
-	                         DB          6, 6, 6, 6, 6, 6, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 26, 26, 26, 30, 30, 26, 114, 114, 114, 114, 114, 114
-	                         DB          6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 6, 6, 6, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113
-	                         DB          113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 26, 26, 26, 26, 114, 114, 114, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 114, 114, 114, 114
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113
-	                         DB          26, 26, 114, 114, 114, 114, 6, 6, 114, 114, 6, 6, 6, 114, 114, 114, 114, 114, 6, 6, 6, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 6
-	                         DB          114, 114, 114, 114, 114, 114, 114, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 114, 114, 114, 114, 6, 6, 6, 6, 114, 114, 114, 114, 6, 114
-	                         DB          114, 114, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 6, 114, 114, 114, 114, 114, 114, 114, 4, 4, 4, 4, 4, 4, 4, 4, 4
-	                         DB          4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 114, 114, 114, 114, 6, 6, 6, 6, 114, 6, 6, 6, 6, 6, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 114, 6, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 4, 4, 4, 4, 114, 114, 114, 6, 6, 6
-	                         DB          6, 6, 114, 114, 6, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 114, 114, 114, 114, 114, 114, 113, 4, 4
-	                         DB          4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 4, 4, 4, 114, 114, 114, 6, 6, 6, 6, 6, 6, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 113, 4, 113, 113
-	                         DB          113, 4, 114, 114, 6, 6, 6, 6, 6, 6, 6, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114
-	                         DB          114, 114, 114, 114, 113, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 4, 4, 114, 114, 6, 6, 6, 6, 6, 6, 6, 114, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 113, 4, 4, 4, 113, 113, 4, 4, 4, 4, 4, 4
-	                         DB          113, 113, 113, 4, 113, 113, 4, 113, 113, 113, 114, 114, 114, 114, 114, 6, 6, 6, 6, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 113, 4, 4, 113, 113, 4, 4, 4, 4, 4, 113, 113, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113, 113, 114, 6
-	                         DB          6, 6, 6, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113, 113, 113, 113
-	                         DB          4, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 114, 114, 18, 6, 114, 18, 18, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113, 113, 4, 4, 4, 4, 4, 4, 113, 113, 90, 90, 90, 113, 113, 113, 113, 113, 4
-	                         DB          4, 4, 4, 4, 4, 4, 0, 0, 18, 114, 0, 18, 18, 0, 0, 18, 18, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 113, 4, 4, 4, 4, 4, 113, 90, 90, 90, 90, 90, 90, 90, 113, 113, 113, 113, 113, 4, 4, 4, 4, 113, 0, 0, 18, 18, 0, 18, 18, 18, 0, 18
-	                         DB          18, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 18, 0, 0, 0, 0, 0, 113, 4, 4, 113, 4, 113, 90, 90, 90, 90
-	                         DB          90, 90, 90, 90, 90, 90, 65, 113, 113, 113, 113, 113, 4, 113, 18, 0, 18, 18, 0, 18, 18, 18, 0, 0, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 18, 18, 0, 18, 0, 18, 18, 0, 0, 113, 113, 4, 113, 113, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 160, 113, 113, 113, 0, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 0, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 0, 18, 0, 18, 18, 0, 0, 0, 113
-	                         DB          113, 113, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 160, 65, 65, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 18, 18, 18, 18, 18, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 113, 90, 90, 90, 90, 160, 160, 160, 160, 90, 90, 90, 90, 90, 90, 90
-	                         DB          90, 65, 65, 160, 65, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 0, 0, 0, 0, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 160, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 65, 90, 90, 90, 90, 90, 90, 90, 90
-	                         DB          90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 65, 90, 90, 90, 90, 65, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 18, 0, 18
-	                         DB          18, 18, 18, 19, 18, 18, 18, 18, 18, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 65, 90
-	                         DB          90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 19, 18, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
-	                         DB          90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 19, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18
-	                         DB          18, 19, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 65, 160, 90
-	                         DB          90, 90, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 19, 18, 19, 18, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 19
-	                         DB          19, 18, 19, 19, 19, 18, 19, 19, 18, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 65, 65, 65
-	                         DB          65, 90, 90, 90, 90, 90, 18, 19, 19, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 18, 19, 18, 19, 19, 19, 18, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 29, 236, 236, 236, 65, 90, 90, 65, 18, 19, 19, 18, 65, 65, 65, 65, 65, 65, 65
-	                         DB          90, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 16, 29, 29, 236, 16, 236, 29, 16, 65, 18, 18, 19, 18, 65, 65, 29, 236, 236, 236, 236, 29, 65, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19
-	                         DB          19, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 16, 26, 16, 16, 16, 16, 65, 18, 18, 19, 19, 18
-	                         DB          65, 29, 29, 236, 16, 16, 236, 29, 29, 16, 65, 65, 160, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 16, 16, 16, 16, 16, 16, 16, 18, 18, 19, 19, 18, 65, 16, 26, 16, 16, 16, 16, 16, 16, 65, 65, 18, 160, 18, 18, 19
-	                         DB          19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 65, 65, 19
-	                         DB          19, 18, 18, 18, 18, 19, 18, 65, 19, 19, 16, 16, 16, 16, 16, 16, 16, 65, 18, 18, 18, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 19, 18, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 18, 18, 18, 19, 19, 19, 18, 160, 90, 19, 19, 19, 65, 65, 65, 65
-	                         DB          65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 19, 19, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 160, 160, 160, 18, 18, 19, 19, 19, 19, 18, 160, 65, 90, 90, 19, 19, 19, 19, 19, 19, 18, 18, 18, 19, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 19
-	                         DB          19, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 160, 18, 18, 18, 19, 19, 19, 18, 18, 160
-	                         DB          160, 65, 65, 65, 18, 18, 65, 65, 160, 18, 18, 18, 19, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 160, 18, 18, 19, 19, 19, 19, 18, 18, 160, 160, 160, 160, 18, 18, 65, 65, 160, 18, 18, 19, 18, 19, 18, 19, 19
-	                         DB          20, 19, 19, 20, 19, 18, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18
-	                         DB          18, 19, 19, 19, 19, 18, 18, 18, 160, 160, 18, 18, 18, 160, 160, 18, 18, 19, 19, 18, 19, 19, 18, 19, 20, 19, 19, 20, 19, 19, 20, 19, 19, 19, 20, 19, 18, 18, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18, 18, 19, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 160, 160, 18, 18
-	                         DB          18, 19, 19, 20, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 20, 19, 19, 19, 20, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18, 18, 19, 19, 18, 20, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 20, 19
-	                         DB          19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 19
-	                         DB          18, 19, 19, 18, 160, 18, 18, 19, 19, 19, 20, 19, 19, 19, 18, 19, 20, 19, 20, 20, 19, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 19, 18, 19, 19, 18, 160, 18, 18, 19, 19, 19, 20, 19, 19, 19, 19, 19
-	                         DB          20, 20, 20, 20, 20, 19, 20, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 19, 19, 18, 18, 19, 19, 19, 20, 20, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21, 19, 19, 18, 18, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 20, 19, 18, 18, 19, 19
-	                         DB          19, 20, 20, 19, 19, 19, 19, 20, 21, 20, 20, 20, 21, 20, 20, 20, 21, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18
-	                         DB          18, 18, 18, 18, 19, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 20, 19, 19, 19, 19, 19, 19, 20, 20, 19, 19, 19, 20, 20, 21, 20, 20, 20, 21, 20, 20, 21
-	                         DB          20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19
-	                         DB          18, 19, 20, 19, 19, 20, 19, 19, 19, 20, 20, 19, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 20, 21, 20, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 18, 18, 18, 19, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 19, 18, 19, 18, 19, 20, 20, 19, 20, 20, 19, 19, 20, 19, 19, 19, 20, 20, 21
-	                         DB          20, 21, 20, 20, 21, 20, 21, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 19, 18, 18, 18, 19, 18, 18, 18
-	                         DB          19, 20, 19, 19, 19, 19, 19, 19, 19, 20, 21, 20, 20, 20, 20, 19, 20, 20, 19, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 21, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 18, 19, 18, 19, 18, 18, 18, 19, 19, 20, 20, 19, 19, 20, 19, 19, 20, 21, 20, 20, 20, 20, 19
-	                         DB          20, 21, 19, 19, 19, 20, 21, 20, 21, 21, 21, 21, 21, 21, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19
-	                         DB          18, 19, 18, 18, 19, 18, 18, 19, 19, 19, 20, 20, 20, 19, 21, 21, 20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 21, 19, 19, 18
-	                         DB          18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 18, 18, 19, 18, 18, 19, 19, 19, 20, 21, 20, 20, 20, 21
-	                         DB          20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 21, 20, 21, 20, 21, 20, 21, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 19, 19, 18, 18, 19, 19, 19, 19, 21, 21, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 20, 20, 20
-	                         DB          20, 20, 20, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 18, 18, 18
-	                         DB          19, 19, 19, 20, 21, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 19, 19, 20, 19, 20, 20, 20, 20, 20, 19, 20, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 20, 20, 19
-	                         DB          19, 20, 19, 19, 19, 20, 20, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          18, 19, 19, 19, 19, 19, 18, 18, 19, 19, 19, 19, 20, 21, 20, 20, 21, 20, 20, 20, 20, 20, 20, 20, 19, 20, 19, 19, 19, 19, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 21, 20
-	                         DB          21, 20, 19, 20, 19, 19, 19, 20, 19, 20, 19, 19, 19, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 19, 20, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19
-	                         DB          18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 20, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 19, 19, 19, 19, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	Hisoka                   DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 35, 107, 107, 107, 107, 58, 58, 58, 58, 58, 107, 107, 107, 107, 107, 58, 35, 35, 107, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 107, 107, 58, 58, 82, 82, 82, 82, 82, 82, 82, 58, 58, 58, 58, 107, 107, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 35, 58, 107, 107, 107, 107, 107, 107, 107, 107, 82, 82, 58, 58
-	                         DB          35, 35, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 107, 107, 88, 88, 88, 88, 88, 88, 88, 88, 107, 107, 107, 107, 58, 35, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 64, 64, 64, 64, 64, 64
-	                         DB          64, 64, 64, 88, 64, 88, 88, 88, 107, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 64, 112, 112, 112, 112, 112, 112, 112, 112, 64, 88, 64, 88, 88, 88, 64, 184, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 184, 112, 31, 31, 31, 31, 31, 31, 31, 112, 112, 64, 88, 64, 88, 64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 88, 112, 64, 88, 64
-	                         DB          64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 88, 88, 88, 31, 31, 31, 31, 88, 88, 112, 64, 88, 64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 88, 88, 112, 64, 64, 184, 0, 0, 0, 0, 0, 0, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 88, 88, 88, 88, 31, 31, 31, 31, 31, 31, 88, 88, 112, 64, 184, 0, 0, 0, 0, 0, 185
-	                         DB          43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          112, 31, 88, 112, 112, 112, 112, 112, 112, 31, 31, 31, 31, 31, 88, 112, 112, 184, 0, 0, 0, 0, 185, 68, 43, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 112, 31, 31, 31, 31, 31, 31, 112, 112, 31, 31, 31, 31, 88
-	                         DB          112, 184, 0, 0, 0, 185, 68, 43, 43, 43, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 0, 0, 185, 68, 6, 43, 185, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 0, 0, 185, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 185, 68
-	                         DB          68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31
-	                         DB          31, 31, 88, 88, 112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 31, 31, 88, 88, 112, 0, 0, 185, 68, 68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 5, 31, 38, 31, 88, 88, 112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 51, 51
-	                         DB          31, 31, 88, 88, 112, 0, 0, 185, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 112, 5, 38, 38, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 51, 51, 31, 31, 88, 88, 88, 112, 185, 68, 68, 43, 185, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 5, 38, 38, 38, 31, 31, 88, 112, 112, 31, 31
-	                         DB          31, 31, 31, 31, 31, 3, 51, 51, 31, 31, 31, 88, 88, 88, 112, 68, 68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 5, 38, 38, 38, 38, 38, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 51, 31, 31, 31, 88, 31, 88, 88, 112, 185
-	                         DB          6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 38, 31
-	                         DB          31, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 51, 31, 31, 31, 31, 88, 31, 88, 88, 31, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 38, 31, 31, 31, 31, 31, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 88, 31, 31, 43, 6, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 31, 43, 43, 88, 112, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 31, 31, 31, 31, 112, 31, 31, 31, 88, 31, 112, 31, 88, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 112, 31, 31, 31, 31, 112, 31, 31, 31, 31, 31, 31, 112, 31, 31, 31, 31, 31, 112, 31, 31, 31, 88, 31, 31, 88, 112
-	                         DB          112, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 112, 112
-	                         DB          112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 112, 112, 112, 112, 112, 31, 31, 31, 31, 31, 88, 31, 88, 64, 88, 112, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          88, 112, 31, 88, 31, 31, 88, 88, 64, 64, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 112, 88, 31, 112, 88, 31, 31, 31, 31, 88, 31, 31, 31, 31, 31, 31, 88, 88, 31, 31, 31, 31, 88, 112, 31, 31, 31, 88, 112, 112, 112, 112, 64, 112, 88, 112, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 112, 88, 88, 88, 88, 112, 31, 31, 31, 31, 31
-	                         DB          31, 112, 88, 88, 88, 88, 88, 112, 31, 31, 31, 88, 31, 31, 112, 64, 64, 64, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 112, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 112, 112, 88, 88, 112, 31, 31, 31, 31, 31, 88, 31, 88, 112
-	                         DB          64, 112, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 112
-	                         DB          112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 112, 112, 31, 31, 31, 31, 31, 88, 112, 31, 88, 88, 112, 88, 88, 112, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 112, 112, 31, 88, 88, 88, 112, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          107, 5, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 112, 112, 112, 112, 5, 5, 5, 5, 107, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5
-	                         DB          5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 38, 112, 88, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 5, 112, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5
-	                         DB          5, 38, 112, 31, 31, 31, 5, 5, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
-	                         DB          107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 38, 5, 5, 5, 5, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5
-	                         DB          38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 107, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5
-	                         DB          5, 5, 5, 5, 5, 5, 38, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 38, 38, 5, 38, 5, 38, 5, 38, 5
-	                         DB          38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 38, 5, 107, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38, 38, 38, 5, 5, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38
-	                         DB          5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 38, 5, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38
-	                         DB          38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 38
-	                         DB          38, 38, 38, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38
-	                         DB          38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 110, 62, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 110, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38, 38, 38, 5
-	                         DB          38, 5, 38, 5, 38, 5, 5, 5, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 38, 38, 38, 38, 5, 38, 38, 38
-	                         DB          38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 38, 62, 38, 38, 38, 38, 5, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 5
-	                         DB          38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110
-	                         DB          38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 5, 5, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38
-	                         DB          110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 38, 38, 38, 38, 38, 62, 5, 5, 38, 62, 38, 38
-	                         DB          5, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 5, 38, 38, 38, 62, 38, 38, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 62, 38, 38, 38, 62, 38, 62, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 62, 38, 38, 5, 5, 38, 38, 38, 38, 38
-	                         DB          5, 38, 38, 38, 62, 38, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 62, 38, 38, 62, 38
-	                         DB          38, 62, 38, 38, 38, 62, 38, 62, 38, 5, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 62, 38, 62, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 5, 38, 38, 38, 62, 38
-	                         DB          38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 110, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 110, 62, 38, 38, 38, 62, 38, 38, 62, 38, 62, 38, 38, 38, 62, 38, 38, 5, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 62
-	                         DB          110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 38, 62, 38, 38, 62, 38, 38, 38, 38, 38
-	                         DB          62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 62, 38, 38, 62, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38
-	                         DB          38, 62, 38, 62, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38
-	                         DB          62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 110, 110, 62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 38
-	                         DB          38, 38, 38, 62, 62, 38, 38, 38, 38, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 107, 62, 62, 110, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 62, 62, 62, 62, 62, 62, 62, 38, 38, 38, 110, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 110, 0, 110, 38, 110, 110
-	                         DB          62, 38, 38, 38, 62, 62, 38, 38, 38, 38, 38, 38, 38, 110, 110, 110, 110, 110, 110, 110, 62, 62, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 110, 62, 38, 110, 62, 62, 62, 38, 38, 38, 38, 38, 110, 0, 0, 0
-	                         DB          0, 0, 0, 0, 110, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 110, 110, 110, 62, 62, 62, 62, 110, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 110, 110
-	                         DB          110, 110, 0, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	Fenn2                    DB          0, 125, 53, 53, 53, 54, 54, 125, 125, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53
-	                         DB          53, 53, 53, 53, 53, 53, 54, 191, 2, 2, 120, 191, 54, 53, 53, 53, 54, 191, 120, 2, 120, 2, 2, 2, 0, 125, 53, 53, 53, 54, 191, 191, 191, 191, 54, 54, 53, 53, 53, 53
-	                         DB          53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 53
-	                         DB          54, 191, 120, 120, 2, 120, 2, 2, 0, 0, 125, 53, 54, 191, 120, 120, 120, 120, 191, 54, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53
-	                         DB          53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 54, 191, 2, 2, 120, 191, 54, 53, 53, 53, 54, 54, 191, 120, 2, 120, 2, 2, 2, 0, 0, 125, 53, 54, 191, 120, 2
-	                         DB          2, 120, 191, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 191, 2
-	                         DB          2, 120, 191, 54, 53, 53, 53, 54, 191, 120, 120, 120, 2, 2, 2, 2, 0, 0, 125, 53, 54, 191, 2, 2, 2, 2, 191, 54, 54, 53, 53, 53, 53, 53, 54, 53, 54, 53, 54, 53
-	                         DB          54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 53, 53, 54, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 54, 191, 120, 120, 2, 120, 2, 2, 2
-	                         DB          0, 0, 125, 53, 54, 191, 2, 2, 2, 2, 191, 54, 53, 53, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54
-	                         DB          53, 54, 53, 54, 53, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 54, 191, 120, 2, 120, 2, 2, 2, 2, 0, 0, 0, 125, 54, 191, 2, 2, 2, 2, 191, 54, 54, 53, 54, 53
-	                         DB          54, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 53, 54, 53, 54, 53, 54, 53, 54, 191, 2, 2, 120, 191, 54, 53, 53, 54
-	                         DB          120, 120, 120, 120, 2, 2, 2, 2, 0, 0, 0, 125, 54, 191, 2, 2, 2, 2, 191, 54, 53, 54, 53, 54, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54
-	                         DB          54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 53, 54, 54, 191, 2, 2, 2, 120, 191, 54, 54, 54, 120, 2, 2, 120, 120, 120, 2, 2, 0, 0, 0, 125, 54, 120, 120, 120
-	                         DB          120, 120, 120, 54, 54, 53, 54, 54, 54, 54, 54, 54, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54
-	                         DB          191, 2, 2, 120, 120, 120, 120, 120, 2, 2, 46, 46, 46, 71, 120, 2, 0, 0, 0, 0, 125, 120, 2, 46, 2, 46, 120, 54, 54, 54, 54, 125, 125, 125, 125, 125, 27, 27, 27, 27
-	                         DB          27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 125, 125, 125, 125, 125, 125, 125, 125, 54, 54, 54, 191, 2, 120, 71, 46, 46, 46, 120, 120, 2, 46, 46, 46, 71, 71, 120
-	                         DB          0, 0, 0, 0, 125, 120, 46, 71, 71, 46, 120, 54, 54, 54, 125, 27, 27, 27, 27, 27, 27, 27, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 27, 27, 27, 27
-	                         DB          27, 27, 27, 27, 27, 125, 125, 125, 125, 120, 46, 46, 71, 71, 71, 46, 46, 120, 120, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71, 71, 46, 120, 125, 125, 125, 27, 27
-	                         DB          27, 27, 27, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 29, 29, 27, 27, 27, 27, 27, 27, 27, 27, 27, 46, 46, 71, 71, 71
-	                         DB          71, 46, 46, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71, 71, 46, 120, 27, 27, 27, 27, 29, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30
-	                         DB          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 27, 27, 27, 27, 27, 120, 120, 46, 46, 71, 71, 71, 71, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71
-	                         DB          71, 46, 120, 27, 27, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 160, 160, 160, 160, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29
-	                         DB          27, 27, 27, 27, 27, 120, 120, 46, 46, 46, 46, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 0, 120, 71, 71, 46, 27, 27, 29, 29, 30, 30, 30, 30, 30, 30, 30, 160, 160, 160
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 27, 27, 27, 27, 22, 120, 120, 120, 120, 71, 71, 71, 71, 71
-	                         DB          0, 0, 0, 0, 0, 0, 0, 120, 120, 120, 29, 29, 29, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 30
-	                         DB          30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 27, 27, 22, 46, 46, 46, 46, 71, 71, 71, 71, 46, 0, 0, 0, 0, 0, 0, 0, 0, 22, 27, 29, 29, 30, 30, 30, 30
-	                         DB          30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 27, 22, 71
-	                         DB          71, 71, 71, 71, 71, 71, 46, 2, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 160, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 71, 71, 71, 71, 71, 71, 46, 2, 191, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 29, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 65, 160, 30, 30, 30
-	                         DB          30, 30, 30, 29, 27, 27, 22, 46, 46, 46, 46, 46, 46, 2, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          183, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 30, 30, 30, 30, 30, 29, 27, 27, 22, 46, 46, 46, 46, 2, 2, 191, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 65, 65, 160, 30, 30, 30, 30, 30, 30, 27, 27, 22, 2, 2, 2, 191, 191, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 29, 160, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 30, 30, 27, 27, 22, 191
-	                         DB          191, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 183
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160
-	                         DB          30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          183, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 27, 27, 22, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 183, 183, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65
-	                         DB          65, 160, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 16, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 89, 89, 89, 89, 89, 89, 89, 65, 160
-	                         DB          30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 30, 29, 160, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 30, 27, 27, 22, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 30, 30, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 30, 30, 30, 30
-	                         DB          30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 160, 160, 160, 30
-	                         DB          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30
-	                         DB          30, 30, 30, 30, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 27, 27, 22, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30
-	                         DB          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 29, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29
-	                         DB          29, 29, 29, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 30, 30, 29, 29, 22, 30, 30, 30, 30, 30, 30, 30, 30
-	                         DB          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 22, 22, 22, 22, 29, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 29, 29, 22, 22, 22, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 22, 22
-	                         DB          22, 22, 22, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 29
-	                         DB          27, 22, 0, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 27, 22, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22
-	                         DB          29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 22
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 29, 22, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	Asta                     DB          0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 67, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 67, 18, 18, 18, 67, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 18, 18, 18, 18, 18, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 18, 18, 20
-	                         DB          20, 20, 18, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 67, 18, 18, 20, 20, 20, 20, 18, 18, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 67, 67, 67, 67, 67, 67, 67
-	                         DB          67, 67, 18, 18, 18, 20, 20, 20, 20, 18, 18, 18, 18, 18, 18, 67, 67, 67, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 20, 20, 20, 20, 20, 18, 136, 65, 65, 65, 65, 18, 18
-	                         DB          18, 18, 18, 18, 18, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 20, 20, 20, 18, 136, 65, 65, 65, 65, 65, 65, 65, 65, 136, 65, 18, 18, 18, 18, 67, 67, 67, 67, 67, 67, 67, 67
-	                         DB          67, 67, 67, 67, 67, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 20, 20, 20, 136
-	                         DB          136, 136, 65, 65, 65, 65, 65, 65, 65, 136, 136, 136, 18, 20, 20, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 18, 18, 136, 90, 90, 136, 136, 136, 136, 65, 65, 65, 65, 136, 65, 136, 18, 20, 20, 20
-	                         DB          20, 20, 20, 20, 20, 20, 20, 20, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 18, 18, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 136, 136, 136, 65, 136, 136, 136, 18, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 18, 18, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
-	                         DB          136, 136, 136, 18, 20, 20, 20, 20, 20, 20, 20, 20, 20, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 20, 20, 20, 20, 20, 20, 18, 18, 18, 22, 22, 22
-	                         DB          26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90
-	                         DB          90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 20, 18, 18, 18, 18, 18, 136, 22, 22, 22, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 18, 18, 90, 136, 65
-	                         DB          65, 65, 136, 22, 22, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 136, 90, 90, 136, 136, 136, 136, 136, 136, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 136, 65, 65, 136, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 136, 136, 90, 90
-	                         DB          90, 90, 90, 90, 90, 90, 90, 90, 136, 65, 136, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 136, 65, 136, 22, 22, 22, 22, 22
-	                         DB          22, 22, 22, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 65, 65, 90, 90
-	                         DB          90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 136, 136, 22, 26, 26, 26, 26, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 65, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
-	                         DB          90, 136, 136, 22, 26, 26, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          136, 90, 65, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 136, 22, 26, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
-	                         DB          90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 136, 22, 22, 22, 22, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 136, 136, 136, 22, 22
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 90, 90, 90, 90, 136, 90
-	                         DB          90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 136, 90, 90, 136, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 65, 29, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 29, 29, 29, 29, 29, 29, 65, 136, 90, 90, 90, 90
-	                         DB          90, 90, 65, 136, 90, 90, 90, 136, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136
-	                         DB          117, 117, 117, 29, 90, 65, 90, 90, 90, 65, 65, 29, 29, 117, 117, 117, 29, 29, 29, 65, 136, 90, 90, 90, 90, 90, 65, 136, 90, 65, 90, 90, 136, 22, 22, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 117, 190, 117, 29, 29, 65, 65, 90, 90, 65, 65, 28, 29, 117, 190, 117
-	                         DB          29, 29, 28, 28, 65, 65, 65, 65, 65, 65, 65, 136, 90, 90, 90, 90, 136, 26, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 26, 19, 190, 190, 117, 28, 19, 21, 65, 90, 90, 90, 65, 19, 28, 190, 190, 117, 28, 28, 28, 28, 19, 65, 65, 65, 65, 22, 65, 136, 90, 65, 65, 90
-	                         DB          136, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 22, 19, 190, 190, 19, 65, 21, 65, 65
-	                         DB          90, 90, 90, 65, 19, 19, 19, 190, 28, 28, 28, 19, 65, 65, 65, 65, 136, 26, 22, 136, 90, 65, 65, 90, 136, 16, 16, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 136, 19, 19, 19, 65, 22, 22, 21, 65, 65, 19, 90, 90, 65, 65, 19, 190, 28, 19, 19, 65, 65, 65, 65, 65
-	                         DB          136, 26, 26, 22, 22, 90, 90, 22, 16, 16, 16, 16, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 136
-	                         DB          65, 65, 65, 19, 22, 26, 21, 21, 65, 65, 19, 19, 65, 65, 65, 19, 19, 65, 136, 65, 136, 136, 136, 136, 22, 22, 26, 26, 22, 22, 22, 19, 16, 16, 16, 16, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 136, 65, 136, 19, 22, 22, 26, 26, 21, 21, 136, 65, 65, 19, 19, 65, 65
-	                         DB          65, 65, 22, 136, 22, 22, 22, 22, 21, 22, 26, 26, 26, 22, 19, 19, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 22, 22, 22, 136, 65, 65, 136, 22, 22, 26, 22, 26, 21, 21, 136, 65, 65, 65, 19, 65, 65, 22, 26, 136, 22, 26, 22, 26, 22, 21, 26, 22, 22, 19, 19, 19
-	                         DB          16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 26, 136, 136, 136, 22, 22, 26, 22, 26, 26
-	                         DB          26, 21, 136, 136, 65, 65, 65, 136, 136, 26, 136, 22, 26, 26, 22, 22, 26, 22, 21, 19, 19, 19, 19, 19, 19, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 22, 136, 136, 22, 22, 26, 26, 22, 26, 26, 26, 26, 21, 136, 136, 136, 136, 136, 26, 26, 21, 21, 26, 26, 22, 22
-	                         DB          26, 26, 22, 19, 19, 19, 19, 19, 19, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 22, 136
-	                         DB          136, 22, 26, 26, 22, 22, 26, 26, 26, 26, 26, 21, 136, 136, 136, 22, 26, 22, 22, 21, 21, 21, 22, 19, 19, 26, 22, 19, 19, 19, 19, 19, 19, 16, 16, 21, 21, 21, 21, 26
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 22, 22, 26, 26, 22, 22, 26, 26, 26, 26, 26, 26, 21, 136, 22, 26
-	                         DB          22, 22, 22, 26, 26, 21, 19, 19, 19, 19, 26, 22, 19, 19, 19, 19, 19, 16, 16, 21, 21, 21, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 22, 22, 21, 21, 21, 22, 22, 22, 26, 26, 26, 26, 26, 26, 21, 21, 21, 21, 21, 19, 19, 19, 19, 26, 22, 19, 19, 19, 19, 26, 19, 19, 19, 19
-	                         DB          19, 16, 16, 21, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 19, 19, 19, 19, 21, 21, 21, 21, 21
-	                         DB          21, 21, 21, 21, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 26, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 16, 21, 21, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 19, 19, 16, 16, 21, 21, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19
-	                         DB          19, 19, 43, 43, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 16, 22, 22, 26, 21, 21, 21, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19, 19, 19, 68, 43, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 16, 16, 16, 16, 26, 26, 26, 21, 21, 26, 21, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 16, 19, 19, 43, 68, 68, 19, 19, 19, 19, 19, 19, 19, 19, 21, 21, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 16, 16, 21, 21, 26, 26
-	                         DB          26, 21, 21, 26, 26, 26, 26, 22, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19, 19, 43, 68, 68, 43, 19, 19, 19
-	                         DB          19, 19, 19, 19, 26, 21, 21, 19, 19, 19, 19, 26, 19, 19, 19, 19, 19, 16, 21, 21, 21, 21, 26, 26, 21, 21, 21, 26, 26, 26, 26, 26, 26, 26, 22, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19, 6, 43, 43, 43, 6, 19, 19, 26, 19, 19, 19, 19, 26, 26, 21, 21, 19, 19, 19, 21, 26, 19, 16, 16
-	                         DB          16, 21, 21, 26, 26, 21, 21, 21, 21, 21, 21, 21, 21, 26, 26, 26, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16
-	                         DB          6, 6, 43, 6, 6, 6, 19, 26, 21, 19, 19, 19, 26, 26, 21, 21, 21, 19, 19, 21, 26, 16, 16, 21, 21, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 21, 21, 21, 21, 21
-	                         DB          21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 6, 6, 6, 22, 6, 19, 19, 26, 21, 21, 19, 19, 26, 26, 26, 21
-	                         DB          21, 21, 16, 21, 26, 26, 21, 21, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 21, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 22, 22, 22, 22, 22, 22, 16, 19, 22, 26, 26, 19, 19, 26, 26, 21, 21, 16, 26, 26, 26, 26, 26, 21, 21, 21, 21, 26, 21, 21, 26, 26, 26, 26, 26, 26, 26, 22
-	                         DB          22, 21, 21, 21, 21, 21, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 22, 16, 26, 16, 26, 26, 16, 26
-	                         DB          26, 26, 21, 21, 26, 26, 26, 26, 26, 26, 21, 21, 22, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 26, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 22, 26, 26, 22, 26, 22, 26, 26, 26, 26, 22, 22, 22, 26, 26, 26, 26, 26, 22, 26, 22, 22, 22
-	                         DB          22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 26, 26, 0, 0, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26
-	                         DB          26, 22, 22, 26, 22, 22, 22, 22, 26, 26, 26, 22, 26, 22, 22, 26, 26, 26, 26, 22, 26, 26, 26, 26, 26, 26, 26, 22, 22, 26, 26, 26, 26, 26, 26, 22, 0, 0, 0, 26
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 26, 22
-	                         DB          26, 26, 26, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 26, 26, 26, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 22, 22, 26, 26, 22, 22, 26, 26, 22, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 22, 22
-	                         DB          22, 22, 22, 22, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 26, 26, 26, 26
-	                         DB          26, 26, 22, 26, 22, 22, 26, 26, 22, 26, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 22, 26, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 22, 22, 26, 22, 22, 22, 26, 26, 26, 22, 22
-	                         DB          22, 22, 26, 26, 26, 26, 26, 26, 26, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 22
-	                         DB          22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 22, 22, 22, 22, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 26, 26, 22
-	                         DB          26, 26, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 26, 26, 26, 26, 26, 22, 22, 22, 22
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 26, 26, 26, 26, 22, 22, 22, 26, 26, 26, 26
-	                         DB          26, 22, 26, 22, 22, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 26, 26, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 22, 22, 22, 22, 22, 22, 22, 26, 26, 22, 22, 26, 26, 26, 22, 22, 0
-	                         DB          0, 0, 0, 0, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22
-	                         DB          22, 26, 26, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 26, 22, 22, 22, 26, 26, 26, 26, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 26, 26, 26, 26, 0, 0
-	                         DB          0, 0, 0, 0, 0, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	Hisoka2                  DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 35, 107, 107, 107, 107, 58, 58, 58, 58, 58, 107, 107, 107, 107, 107, 58, 35, 35, 107, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 107, 107, 58, 58, 82, 82, 82, 82, 82, 82, 82, 58, 58, 58, 58, 107, 107, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 35, 58, 107, 107, 107, 107, 107, 107, 107, 107, 82, 82, 58, 58
-	                         DB          35, 35, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 107, 107, 88, 88, 88, 88, 88, 88, 88, 88, 107, 107, 107, 107, 58, 35, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 64, 64, 64, 64, 64, 64
-	                         DB          64, 64, 64, 88, 64, 88, 88, 88, 107, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 64, 112, 112, 112, 112, 112, 112, 112, 112, 64, 88, 64, 88, 88, 88, 64, 184, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 184, 112, 31, 31, 31, 31, 31, 31, 31, 112, 112, 64, 88, 64, 88, 64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 88, 112, 64, 88, 64
-	                         DB          64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 88, 88, 88, 31, 31, 31, 31, 88, 88, 112, 64, 88, 64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 88, 88, 112, 64, 64, 184, 0, 0, 0, 0, 0, 0, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 64, 184, 0, 0, 0, 0, 0, 185
-	                         DB          43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          112, 31, 112, 88, 88, 88, 88, 88, 88, 112, 112, 31, 31, 31, 88, 112, 112, 184, 0, 0, 0, 0, 185, 68, 43, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 112, 112, 112, 112, 112, 112, 31, 31, 31, 31, 31, 31, 88
-	                         DB          112, 184, 0, 0, 0, 185, 68, 43, 43, 43, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 0, 0, 185, 68, 6, 43, 185, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 0, 0, 185, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 185, 68
-	                         DB          68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31
-	                         DB          31, 31, 88, 88, 112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 31, 31, 88, 88, 112, 0, 0, 185, 68, 68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 5, 31, 38, 31, 88, 88, 112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 51, 51
-	                         DB          31, 31, 88, 88, 112, 0, 0, 185, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 112, 5, 38, 38, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 51, 51, 31, 31, 88, 88, 88, 112, 185, 68, 68, 43, 185, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 5, 38, 38, 38, 31, 31, 88, 112, 112, 31, 31
-	                         DB          31, 31, 31, 31, 31, 3, 51, 51, 31, 31, 31, 88, 88, 88, 112, 68, 68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 5, 38, 38, 38, 38, 38, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 51, 31, 31, 31, 88, 31, 88, 88, 112, 185
-	                         DB          6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 38, 31
-	                         DB          31, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 51, 31, 31, 31, 31, 88, 31, 88, 88, 31, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 38, 31, 31, 31, 31, 31, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 88, 31, 31, 43, 6, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 31, 43, 43, 88, 112, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 112, 31, 42, 42, 42, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 42, 42, 42, 31, 31, 112, 31, 31, 31, 88, 31, 112, 31, 88, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 112, 42, 68, 42, 31, 112, 31, 31, 31, 31, 31, 31, 112, 31, 42, 68, 42, 31, 112, 31, 31, 31, 88, 31, 31, 88, 112
-	                         DB          112, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 112, 112
-	                         DB          112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 112, 112, 112, 112, 112, 31, 31, 31, 31, 31, 88, 31, 88, 64, 88, 112, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          88, 112, 31, 88, 31, 31, 88, 88, 64, 64, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 112, 88, 31, 112, 88, 31, 31, 31, 31, 88, 31, 31, 31, 31, 31, 31, 88, 88, 31, 31, 31, 31, 88, 112, 31, 31, 31, 88, 112, 112, 112, 112, 64, 112, 88, 112, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 112, 88, 88, 88, 88, 112, 31, 31, 31, 31, 31
-	                         DB          31, 112, 88, 88, 88, 88, 88, 112, 31, 31, 31, 88, 31, 31, 112, 64, 64, 64, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 112, 112, 112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 112, 112, 112, 112, 112, 31, 31, 31, 31, 31, 88, 31, 88, 112
-	                         DB          64, 112, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 112, 31, 88, 88, 112, 88, 88, 112, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 112, 112, 31, 88, 88, 88, 112, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          107, 5, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 112, 112, 112, 112, 5, 5, 5, 5, 107, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5
-	                         DB          5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 38, 112, 88, 31, 31, 31, 31
-	                         DB          31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 5, 112, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 31, 31, 31, 31, 31, 31, 31, 31
-	                         DB          31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5
-	                         DB          5, 38, 112, 31, 31, 31, 5, 5, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
-	                         DB          107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 38, 5, 5, 5, 5, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5
-	                         DB          38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 107, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5
-	                         DB          5, 5, 5, 5, 5, 5, 38, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 38, 38, 5, 38, 5, 38, 5, 38, 5
-	                         DB          38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 38, 5, 107, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38, 38, 38, 5, 5, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38
-	                         DB          5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 38, 5, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38
-	                         DB          38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 38
-	                         DB          38, 38, 38, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38
-	                         DB          38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 110, 62, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 110, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38, 38, 38, 5
-	                         DB          38, 5, 38, 5, 38, 5, 5, 5, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 38, 38, 38, 38, 5, 38, 38, 38
-	                         DB          38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 38, 62, 38, 38, 38, 38, 5, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 5
-	                         DB          38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110
-	                         DB          38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 5, 5, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38
-	                         DB          110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 38, 38, 38, 38, 38, 62, 5, 5, 38, 62, 38, 38
-	                         DB          5, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 5, 38, 38, 38, 62, 38, 38, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 62, 38, 38, 38, 62, 38, 62, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 62, 38, 38, 5, 5, 38, 38, 38, 38, 38
-	                         DB          5, 38, 38, 38, 62, 38, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 62, 38, 38, 62, 38
-	                         DB          38, 62, 38, 38, 38, 62, 38, 62, 38, 5, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 62, 38, 62, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 5, 38, 38, 38, 62, 38
-	                         DB          38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 110, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 110, 62, 38, 38, 38, 62, 38, 38, 62, 38, 62, 38, 38, 38, 62, 38, 38, 5, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 62
-	                         DB          110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 38, 62, 38, 38, 62, 38, 38, 38, 38, 38
-	                         DB          62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 62, 38, 38, 62, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38
-	                         DB          38, 62, 38, 62, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38
-	                         DB          62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 110, 110, 62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 38
-	                         DB          38, 38, 38, 62, 62, 38, 38, 38, 38, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 62, 110, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 62, 62, 62, 62, 62, 62, 62, 38, 38, 38, 110, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 110, 0, 110, 38, 110, 110
-	                         DB          62, 38, 38, 38, 62, 62, 38, 38, 38, 38, 38, 38, 38, 110, 110, 110, 110, 110, 110, 110, 62, 62, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 110, 62, 38, 110, 62, 62, 62, 38, 38, 38, 38, 38, 110, 0, 0, 0
-	                         DB          0, 0, 0, 0, 110, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 110, 110, 110, 62, 62, 62, 62, 110, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 110, 110
-	                         DB          110, 110, 0, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	Mikasa                   DB          0, 0, 0, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 6, 114, 114, 114, 114, 114, 114, 114, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 26, 30, 30, 30
-	                         DB          30, 26, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114
-	                         DB          6, 114, 114, 114, 114, 114, 114, 114, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 26, 30, 30, 30, 30, 26, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
-	                         DB          6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 114, 114, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 113, 113, 113, 113, 4, 4, 4
-	                         DB          4, 113, 113, 113, 26, 30, 30, 30, 30, 26, 114, 114, 6, 6, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 114, 114
-	                         DB          6, 6, 6, 6, 6, 6, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 26, 26, 26, 30, 30, 26, 114, 114, 114, 114, 114, 114
-	                         DB          6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 6, 6, 6, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113
-	                         DB          113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 26, 26, 26, 26, 114, 114, 114, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 114, 114, 114, 114
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113
-	                         DB          26, 26, 114, 114, 114, 114, 6, 6, 114, 114, 6, 6, 6, 114, 114, 114, 114, 114, 6, 6, 6, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 6
-	                         DB          114, 114, 114, 114, 114, 114, 114, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 114, 114, 114, 114, 6, 6, 6, 6, 114, 114, 114, 114, 6, 114
-	                         DB          114, 114, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 6, 114, 114, 114, 114, 114, 114, 114, 4, 4, 4, 4, 4, 4, 4, 4, 4
-	                         DB          4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 114, 114, 114, 114, 6, 6, 6, 6, 114, 6, 6, 6, 6, 6, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 114, 6, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 4, 4, 4, 4, 114, 114, 114, 6, 6, 6
-	                         DB          6, 6, 114, 114, 6, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 114, 114, 114, 114, 114, 114, 113, 4, 4
-	                         DB          4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 4, 4, 4, 114, 114, 114, 6, 6, 6, 6, 6, 6, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 113, 4, 113, 113
-	                         DB          113, 4, 114, 114, 6, 6, 6, 6, 6, 6, 6, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114
-	                         DB          114, 114, 114, 114, 113, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 4, 4, 114, 114, 6, 6, 6, 6, 6, 6, 6, 114, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 113, 4, 4, 4, 113, 113, 4, 4, 4, 4, 4, 4
-	                         DB          113, 113, 113, 4, 113, 113, 4, 113, 113, 113, 114, 114, 114, 114, 114, 6, 6, 6, 6, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 113, 4, 4, 113, 113, 4, 4, 4, 4, 4, 113, 113, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113, 113, 114, 6
-	                         DB          6, 6, 6, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113, 113, 113, 113
-	                         DB          4, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 114, 114, 18, 6, 114, 18, 18, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113, 113, 4, 4, 4, 4, 4, 4, 113, 113, 90, 90, 90, 113, 113, 113, 113, 113, 4
-	                         DB          4, 4, 4, 4, 4, 4, 0, 0, 18, 114, 0, 18, 18, 0, 0, 18, 18, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 113, 4, 4, 4, 4, 4, 113, 90, 90, 90, 90, 90, 90, 90, 113, 113, 113, 113, 113, 4, 4, 4, 4, 113, 0, 0, 18, 18, 0, 18, 18, 18, 0, 18
-	                         DB          18, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 18, 0, 0, 0, 0, 0, 113, 4, 4, 113, 4, 113, 90, 90, 90, 90
-	                         DB          90, 90, 90, 90, 90, 90, 65, 113, 113, 113, 113, 113, 4, 113, 18, 0, 18, 18, 0, 18, 18, 18, 0, 0, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 18, 18, 0, 18, 0, 18, 18, 0, 0, 113, 113, 4, 113, 113, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 160, 113, 113, 113, 0, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 0, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 0, 18, 0, 18, 18, 0, 0, 0, 113
-	                         DB          113, 113, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 160, 65, 65, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 18, 18, 18, 18, 18, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 113, 90, 90, 90, 90, 90, 160, 160, 160, 160, 90, 90, 90, 90, 90, 90
-	                         DB          90, 65, 65, 160, 65, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 0, 0, 0, 0, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 160, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 65, 90, 90, 90, 90, 90, 90, 90, 90
-	                         DB          90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 65, 90, 90, 90, 90, 65, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 18, 0, 18
-	                         DB          18, 18, 18, 19, 18, 18, 18, 18, 18, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 65, 90
-	                         DB          90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 19, 18, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
-	                         DB          90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 19, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18
-	                         DB          18, 19, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 65, 160, 90
-	                         DB          90, 90, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 19, 18, 19, 18, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 19
-	                         DB          19, 18, 19, 19, 19, 18, 19, 19, 18, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 65, 65, 65
-	                         DB          65, 90, 90, 90, 90, 90, 18, 19, 19, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 18, 19, 18, 19, 19, 19, 18, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 29, 236, 236, 236, 65, 90, 90, 65, 18, 19, 19, 18, 65, 65, 65, 65, 65, 65, 65
-	                         DB          90, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 16, 29, 29, 236, 16, 236, 29, 16, 65, 18, 18, 19, 18, 65, 65, 29, 236, 236, 236, 236, 29, 65, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19
-	                         DB          19, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 16, 26, 16, 16, 16, 16, 65, 18, 18, 19, 19, 18
-	                         DB          65, 29, 29, 236, 16, 16, 236, 29, 29, 16, 65, 65, 160, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 16, 16, 16, 16, 16, 16, 16, 18, 18, 19, 19, 18, 65, 16, 26, 16, 16, 16, 16, 16, 16, 65, 65, 18, 160, 18, 18, 19
-	                         DB          19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 65, 65, 65
-	                         DB          65, 18, 18, 18, 18, 19, 18, 65, 65, 65, 16, 16, 16, 16, 16, 16, 16, 65, 18, 18, 18, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 19, 18, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 160, 160, 160, 18, 18, 18, 19, 19, 19, 18, 65, 160, 65, 65, 65, 65, 65, 65, 65
-	                         DB          65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 19, 19, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 160, 65, 160, 18, 18, 19, 19, 19, 19, 18, 65, 90, 160, 160, 160, 160, 160, 160, 160, 160, 18, 18, 18, 19, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 19
-	                         DB          19, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 160, 18, 18, 18, 19, 19, 19, 18, 18, 65
-	                         DB          65, 90, 65, 65, 18, 18, 65, 65, 160, 18, 18, 18, 19, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 160, 18, 18, 19, 19, 19, 19, 18, 18, 65, 65, 65, 65, 18, 18, 65, 65, 160, 18, 18, 19, 18, 19, 18, 19, 19
-	                         DB          20, 19, 19, 20, 19, 18, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18
-	                         DB          18, 19, 19, 19, 19, 18, 18, 18, 65, 65, 18, 18, 18, 65, 160, 18, 18, 19, 19, 18, 19, 19, 18, 19, 20, 19, 19, 20, 19, 19, 20, 19, 19, 19, 20, 19, 18, 18, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18, 18, 19, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 65, 160, 18, 18
-	                         DB          18, 19, 19, 20, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 20, 19, 19, 19, 20, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18, 18, 19, 19, 18, 20, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 20, 19
-	                         DB          19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 19
-	                         DB          18, 19, 19, 18, 160, 18, 18, 19, 19, 19, 20, 19, 19, 19, 18, 19, 20, 19, 20, 20, 19, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 19, 18, 19, 19, 18, 160, 18, 18, 19, 19, 19, 20, 19, 19, 19, 19, 19
-	                         DB          20, 20, 20, 20, 20, 19, 20, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 19, 19, 18, 18, 19, 19, 19, 20, 20, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21, 19, 19, 18, 18, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 20, 19, 18, 18, 19, 19
-	                         DB          19, 20, 20, 19, 19, 19, 19, 20, 21, 20, 20, 20, 21, 20, 20, 20, 21, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18
-	                         DB          18, 18, 18, 18, 19, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 20, 19, 19, 19, 19, 19, 19, 20, 20, 19, 19, 19, 20, 20, 21, 20, 20, 20, 21, 20, 20, 21
-	                         DB          20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19
-	                         DB          18, 19, 20, 19, 19, 20, 19, 19, 19, 20, 20, 19, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 20, 21, 20, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 18, 18, 18, 19, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 19, 18, 19, 18, 19, 20, 20, 19, 20, 20, 19, 19, 20, 19, 19, 19, 20, 20, 21
-	                         DB          20, 21, 20, 20, 21, 20, 21, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 19, 18, 18, 18, 19, 18, 18, 18
-	                         DB          19, 20, 19, 19, 19, 19, 19, 19, 19, 20, 21, 20, 20, 20, 20, 19, 20, 20, 19, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 21, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 18, 19, 18, 19, 18, 18, 18, 19, 19, 20, 20, 19, 19, 20, 19, 19, 20, 21, 20, 20, 20, 20, 19
-	                         DB          20, 21, 19, 19, 19, 20, 21, 20, 21, 21, 21, 21, 21, 21, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19
-	                         DB          18, 19, 18, 18, 19, 18, 18, 19, 19, 19, 20, 20, 20, 19, 21, 21, 20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 21, 19, 19, 18
-	                         DB          18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 18, 18, 19, 18, 18, 19, 19, 19, 20, 21, 20, 20, 20, 21
-	                         DB          20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 21, 20, 21, 20, 21, 20, 21, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 19, 19, 18, 18, 19, 19, 19, 19, 21, 21, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 20, 20, 20
-	                         DB          20, 20, 20, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 18, 18, 18
-	                         DB          19, 19, 19, 20, 21, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 19, 19, 20, 19, 20, 20, 20, 20, 20, 19, 20, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 20, 20, 19
-	                         DB          19, 20, 19, 19, 19, 20, 20, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          18, 19, 19, 19, 19, 19, 18, 18, 19, 19, 19, 19, 20, 21, 20, 20, 21, 20, 20, 20, 20, 20, 20, 20, 19, 20, 19, 19, 19, 19, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 21, 20
-	                         DB          21, 20, 19, 20, 19, 19, 19, 20, 19, 20, 19, 19, 19, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 19, 20, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19
-	                         DB          18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 20, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 19, 19, 19, 19, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18
-	Fenn                     DB          0, 125, 53, 53, 53, 54, 54, 125, 125, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53
-	                         DB          53, 53, 53, 53, 53, 53, 54, 191, 2, 2, 120, 191, 54, 53, 53, 53, 54, 191, 120, 2, 120, 2, 2, 2, 0, 125, 53, 53, 53, 54, 191, 191, 191, 191, 54, 54, 53, 53, 53, 53
-	                         DB          53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 53
-	                         DB          54, 191, 120, 120, 2, 120, 2, 2, 0, 0, 125, 53, 54, 191, 120, 120, 120, 120, 191, 54, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53
-	                         DB          53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 54, 191, 2, 2, 120, 191, 54, 53, 53, 53, 54, 54, 191, 120, 2, 120, 2, 2, 2, 0, 0, 125, 53, 54, 191, 120, 2
-	                         DB          2, 120, 191, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 191, 2
-	                         DB          2, 120, 191, 54, 53, 53, 53, 54, 191, 120, 120, 120, 2, 2, 2, 2, 0, 0, 125, 53, 54, 191, 2, 2, 2, 2, 191, 54, 54, 53, 53, 53, 53, 53, 54, 53, 54, 53, 54, 53
-	                         DB          54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 53, 53, 54, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 54, 191, 120, 120, 2, 120, 2, 2, 2
-	                         DB          0, 0, 125, 53, 54, 191, 2, 2, 2, 2, 191, 54, 53, 53, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54
-	                         DB          53, 54, 53, 54, 53, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 54, 191, 120, 2, 120, 2, 2, 2, 2, 0, 0, 0, 125, 54, 191, 2, 2, 2, 2, 191, 54, 54, 53, 54, 53
-	                         DB          54, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 53, 54, 53, 54, 53, 54, 53, 54, 191, 2, 2, 120, 191, 54, 53, 53, 54
-	                         DB          120, 120, 120, 120, 2, 2, 2, 2, 0, 0, 0, 125, 54, 191, 2, 2, 2, 2, 191, 54, 53, 54, 53, 54, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54
-	                         DB          54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 53, 54, 54, 191, 2, 2, 2, 120, 191, 54, 54, 54, 120, 2, 2, 120, 120, 120, 2, 2, 0, 0, 0, 125, 54, 120, 120, 120
-	                         DB          120, 120, 120, 54, 54, 53, 54, 54, 54, 54, 54, 54, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54
-	                         DB          191, 2, 2, 120, 120, 120, 120, 120, 2, 2, 46, 46, 46, 71, 120, 2, 0, 0, 0, 0, 125, 120, 2, 46, 2, 46, 120, 54, 54, 54, 54, 125, 125, 125, 125, 125, 27, 27, 27, 27
-	                         DB          27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 125, 125, 125, 125, 125, 125, 125, 125, 54, 54, 54, 191, 2, 120, 71, 46, 46, 46, 120, 120, 2, 46, 46, 46, 71, 71, 120
-	                         DB          0, 0, 0, 0, 125, 120, 46, 71, 71, 46, 120, 54, 54, 54, 125, 27, 27, 27, 27, 27, 27, 27, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 27, 27, 27, 27
-	                         DB          27, 27, 27, 27, 27, 125, 125, 125, 125, 120, 46, 46, 71, 71, 71, 46, 46, 120, 120, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71, 71, 46, 120, 125, 125, 125, 27, 27
-	                         DB          27, 27, 27, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 29, 29, 27, 27, 27, 27, 27, 27, 27, 27, 27, 46, 46, 71, 71, 71
-	                         DB          71, 46, 46, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71, 71, 46, 120, 27, 27, 27, 27, 29, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30
-	                         DB          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 27, 27, 27, 27, 27, 120, 120, 46, 46, 71, 71, 71, 71, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71
-	                         DB          71, 46, 120, 27, 27, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 160, 160, 160, 160, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29
-	                         DB          27, 27, 27, 27, 27, 120, 120, 46, 46, 46, 46, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 0, 120, 71, 71, 46, 27, 27, 29, 29, 30, 30, 30, 30, 30, 30, 30, 160, 160, 160
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 27, 27, 27, 27, 22, 120, 120, 120, 120, 71, 71, 71, 71, 71
-	                         DB          0, 0, 0, 0, 0, 0, 0, 120, 120, 120, 29, 29, 29, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 30
-	                         DB          30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 27, 27, 22, 46, 46, 46, 46, 71, 71, 71, 71, 46, 0, 0, 0, 0, 0, 0, 0, 0, 22, 27, 29, 29, 30, 30, 30, 30
-	                         DB          30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 27, 22, 71
-	                         DB          71, 71, 71, 71, 71, 71, 46, 2, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 160, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 71, 71, 71, 71, 71, 71, 46, 2, 191, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 29, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 65, 160, 30, 30, 30
-	                         DB          30, 30, 30, 29, 27, 27, 22, 46, 46, 46, 46, 46, 46, 2, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          183, 183, 183, 183, 183, 183, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 30, 30, 30, 30, 30, 29, 27, 27, 22, 46, 46, 46, 46, 2, 2, 191, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 183, 183, 136, 64, 64, 64, 64, 136, 136, 183, 183, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 65, 65, 160, 30, 30, 30, 30, 30, 30, 27, 27, 22, 2, 2, 2, 191, 191, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 29, 160, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 183, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 30, 30, 27, 27, 22, 191
-	                         DB          191, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 136, 136, 136, 136, 136, 136, 30, 30, 136, 136
-	                         DB          136, 136, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 136, 30, 30, 136, 136, 136, 30, 30, 136, 30, 30, 136, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160
-	                         DB          30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 136, 30
-	                         DB          30, 183, 183, 183, 183, 183, 183, 30, 30, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 183, 183, 89, 89, 89, 89, 89, 89, 183, 183, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 27, 27, 22, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65
-	                         DB          65, 160, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89
-	                         DB          89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 65, 160
-	                         DB          30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 30, 29, 160, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 30, 27, 27, 22, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 30, 30, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 30, 30, 30, 30
-	                         DB          30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89
-	                         DB          89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 160, 160, 160, 30
-	                         DB          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30
-	                         DB          30, 30, 30, 30, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 27, 27, 22, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30
-	                         DB          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          22, 29, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29
-	                         DB          29, 29, 29, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 30, 30, 29, 29, 22, 30, 30, 30, 30, 30, 30, 30, 30
-	                         DB          30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 22, 22, 22, 22, 29, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 29, 29, 22, 22, 22, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 22, 22
-	                         DB          22, 22, 22, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 29
-	                         DB          27, 22, 0, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 27, 22, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22
-	                         DB          29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 22
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 29, 22, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	Asta2                    DB          0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 67, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 67, 18, 18, 18, 67, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 18, 18, 18, 18, 18, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 18, 18, 20
-	                         DB          20, 20, 18, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 67, 18, 18, 20, 20, 20, 20, 18, 18, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 67, 67, 67, 67, 67, 67, 67
-	                         DB          67, 67, 18, 18, 18, 20, 20, 20, 20, 18, 18, 18, 18, 18, 18, 67, 67, 67, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
-	                         DB          18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 20, 20, 20, 20, 20, 18, 136, 65, 65, 65, 65, 18, 18
-	                         DB          18, 18, 18, 18, 18, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 20, 20, 20, 18, 136, 65, 65, 65, 65, 65, 65, 65, 65, 136, 65, 18, 18, 18, 18, 67, 67, 67, 67, 67, 67, 67, 67
-	                         DB          67, 67, 67, 67, 67, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 20, 20, 20, 136
-	                         DB          136, 136, 65, 65, 65, 65, 65, 65, 65, 136, 136, 136, 18, 20, 20, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 18, 18, 136, 90, 90, 136, 136, 136, 136, 65, 65, 65, 65, 136, 65, 136, 18, 20, 20, 20
-	                         DB          20, 20, 20, 20, 20, 20, 20, 20, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 18, 18, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 136, 136, 136, 65, 136, 136, 136, 18, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 18, 18, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
-	                         DB          136, 136, 136, 18, 20, 20, 20, 20, 20, 20, 20, 20, 20, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 20, 20, 20, 20, 20, 20, 18, 18, 18, 16, 16, 16
-	                         DB          22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90
-	                         DB          90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 20, 18, 18, 18, 18, 18, 136, 16, 16, 16, 19, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 136, 90, 90, 90, 90, 90, 90, 90, 90, 18, 18, 18, 19, 19, 65
-	                         DB          65, 65, 136, 16, 16, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 136, 90, 90, 136, 136, 136, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 19, 90, 19, 19, 19, 136, 65, 65, 136, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
-	                         DB          90, 19, 90, 19, 19, 19, 90, 90, 136, 65, 136, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 19, 90, 19, 19, 19, 90, 19, 136, 65, 136, 16, 16, 16, 16, 16
-	                         DB          16, 16, 16, 19, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 65, 65, 90, 90
-	                         DB          90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 19, 19, 19, 90, 19, 90, 65, 136, 136, 16, 19, 19, 19, 19, 19, 19, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 65, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 19, 19, 19, 90, 19, 90, 90
-	                         DB          65, 136, 136, 16, 19, 19, 19, 19, 22, 22, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          136, 90, 65, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 19, 90, 19, 19, 90, 90, 19, 90, 90, 65, 65, 136, 16, 19, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
-	                         DB          19, 19, 19, 90, 19, 90, 90, 90, 65, 65, 136, 16, 16, 16, 16, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 136, 90, 90, 90, 90, 90, 90, 90, 90, 19, 90, 19, 19, 90, 90, 90, 90, 90, 90, 90, 65, 65, 136, 136, 136, 16, 16
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 90, 90, 90, 90, 136, 90
-	                         DB          90, 90, 90, 90, 90, 90, 90, 90, 19, 90, 90, 19, 90, 90, 90, 90, 90, 65, 65, 136, 90, 90, 136, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 65, 29, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 29, 29, 29, 29, 29, 29, 65, 136, 90, 90, 90, 90
-	                         DB          65, 65, 65, 136, 90, 90, 90, 136, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136
-	                         DB          117, 117, 117, 29, 90, 65, 90, 90, 90, 65, 65, 29, 29, 4, 4, 4, 29, 29, 29, 65, 136, 90, 90, 65, 65, 65, 136, 136, 90, 65, 90, 90, 136, 16, 16, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 117, 190, 117, 29, 29, 65, 65, 90, 90, 65, 65, 28, 29, 4, 183, 4
-	                         DB          29, 29, 28, 28, 65, 65, 65, 65, 65, 136, 136, 136, 90, 90, 90, 90, 136, 19, 19, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 26, 19, 190, 190, 117, 28, 19, 21, 65, 90, 90, 90, 65, 16, 28, 183, 183, 4, 28, 28, 28, 28, 19, 65, 65, 65, 136, 16, 136, 136, 90, 65, 65, 90
-	                         DB          136, 19, 19, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 22, 19, 190, 190, 19, 16, 16, 65, 65
-	                         DB          90, 16, 16, 65, 16, 183, 183, 183, 28, 28, 28, 19, 65, 65, 65, 65, 136, 22, 16, 136, 90, 65, 65, 90, 136, 16, 16, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 136, 19, 19, 19, 16, 16, 16, 21, 65, 65, 65, 16, 16, 65, 183, 183, 183, 28, 19, 19, 65, 65, 65, 65, 65
-	                         DB          136, 19, 22, 16, 16, 90, 90, 22, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 136
-	                         DB          65, 65, 65, 19, 22, 16, 16, 16, 65, 65, 65, 16, 16, 65, 16, 16, 16, 65, 136, 65, 136, 136, 136, 136, 16, 16, 19, 19, 16, 16, 16, 183, 16, 16, 16, 16, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 136, 65, 136, 16, 22, 22, 26, 26, 16, 16, 136, 65, 65, 16, 16, 65, 65
-	                         DB          65, 65, 16, 136, 16, 16, 16, 16, 16, 16, 19, 19, 19, 16, 183, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 22, 22, 22, 136, 65, 16, 136, 22, 22, 26, 22, 19, 16, 16, 136, 65, 65, 16, 16, 16, 65, 16, 22, 136, 16, 22, 16, 19, 16, 16, 19, 16, 16, 16, 16, 16
-	                         DB          16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 26, 136, 136, 136, 22, 22, 26, 16, 19, 19
-	                         DB          19, 16, 136, 136, 65, 65, 16, 16, 16, 22, 136, 16, 22, 22, 16, 16, 19, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 22, 136, 136, 22, 22, 26, 26, 16, 19, 22, 19, 19, 16, 136, 136, 136, 136, 136, 19, 19, 16, 16, 19, 19, 16, 16
-	                         DB          19, 19, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 22, 136
-	                         DB          136, 22, 26, 26, 22, 16, 19, 22, 22, 19, 16, 16, 136, 136, 136, 16, 19, 16, 16, 16, 16, 16, 16, 19, 22, 22, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 22, 22, 26, 26, 22, 16, 19, 22, 22, 19, 19, 16, 16, 136, 16, 19
-	                         DB          16, 16, 16, 19, 19, 16, 19, 19, 19, 22, 22, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 22, 22, 21, 21, 21, 22, 22, 16, 19, 19, 19, 19, 19, 16, 16, 16, 16, 16, 16, 19, 19, 16, 16, 22, 16, 16, 16, 16, 16, 22, 16, 16, 16, 16
-	                         DB          16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 16, 16, 16, 16, 21, 21, 21, 16, 16
-	                         DB          16, 16, 19, 16, 16, 19, 19, 19, 19, 16, 16, 16, 16, 16, 22, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
-	                         DB          16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16
-	                         DB          16, 16, 43, 43, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 16, 16, 16, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 68, 43, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
-	                         DB          16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 19, 16, 16, 19, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 16, 16, 16, 43, 68, 68, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19
-	                         DB          19, 16, 16, 19, 19, 19, 19, 22, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 43, 68, 68, 43, 16, 16, 16
-	                         DB          16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 16, 16, 16, 19, 19, 19, 19, 22, 22, 22, 22, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 6, 43, 43, 43, 6, 16, 16, 26, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
-	                         DB          16, 16, 16, 19, 19, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 19, 22, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16
-	                         DB          6, 6, 43, 6, 6, 6, 16, 26, 21, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 16, 19, 16, 16, 16, 16, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 16, 16, 16, 16, 16
-	                         DB          16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 6, 6, 6, 22, 6, 19, 19, 26, 21, 21, 16, 19, 19, 19, 19, 16
-	                         DB          16, 16, 16, 16, 19, 19, 16, 16, 19, 19, 19, 19, 19, 19, 22, 22, 22, 22, 22, 19, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 22, 22, 22, 22, 22, 22, 16, 19, 22, 26, 26, 19, 19, 26, 26, 21, 21, 16, 19, 19, 19, 19, 19, 16, 16, 16, 16, 19, 16, 16, 19, 19, 19, 19, 22, 22, 22, 16
-	                         DB          16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 22, 16, 26, 16, 26, 26, 16, 26
-	                         DB          26, 26, 21, 21, 16, 19, 19, 22, 19, 19, 16, 16, 16, 16, 16, 19, 19, 19, 19, 19, 19, 16, 16, 16, 16, 16, 19, 19, 19, 22, 22, 19, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 22, 26, 26, 22, 26, 22, 26, 26, 26, 26, 22, 16, 16, 19, 19, 22, 19, 19, 16, 19, 16, 16, 16
-	                         DB          16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 19, 19, 0, 0, 19, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26
-	                         DB          26, 22, 22, 26, 22, 22, 22, 22, 26, 26, 26, 22, 26, 16, 16, 19, 22, 22, 19, 16, 19, 19, 19, 19, 19, 19, 19, 16, 16, 19, 19, 19, 19, 19, 19, 16, 0, 0, 0, 22
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 26, 16
-	                         DB          19, 22, 19, 16, 16, 19, 19, 19, 19, 19, 19, 16, 16, 19, 19, 19, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 22, 22, 26, 26, 16, 16, 19, 19, 16, 16, 16, 19, 22, 22, 22, 22, 19, 16, 16, 16, 16
-	                         DB          16, 16, 16, 16, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 26, 26, 26, 26
-	                         DB          26, 26, 22, 26, 22, 16, 26, 22, 16, 19, 16, 16, 16, 16, 19, 19, 19, 16, 16, 16, 16, 16, 16, 19, 19, 19, 19, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 22, 16, 26, 16, 16, 16, 19, 19, 19, 16, 16
-	                         DB          16, 16, 19, 19, 19, 19, 19, 19, 19, 19, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 22
-	                         DB          22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 16, 16, 16, 16, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 26, 26, 16
-	                         DB          19, 19, 16, 16, 19, 19, 19, 19, 19, 19, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 26, 26, 22, 22, 22, 16, 16, 19, 19, 19, 16, 16, 16, 16, 19, 19, 19, 19, 19, 16, 16, 16, 16
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 26, 26, 26, 26, 22, 22, 22, 26, 26, 26, 26
-	                         DB          26, 22, 26, 22, 22, 16, 16, 16, 16, 19, 19, 19, 16, 16, 16, 16, 16, 19, 19, 22, 22, 22, 19, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 22, 22, 22, 22, 22, 22, 22, 26, 26, 16, 16, 19, 19, 19, 16, 16, 0
-	                         DB          0, 0, 0, 0, 22, 22, 22, 22, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22
-	                         DB          22, 26, 26, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 26, 16, 16, 16, 19, 19, 22, 22, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 26, 26, 26, 26, 0, 0
-	                         DB          0, 0, 0, 0, 0, 22, 22, 22, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         characterC    label byte
+	Mikasa2                  DB            0, 0, 0, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 6, 114, 114, 114, 114, 114, 114, 114, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 26, 30, 30, 30
+	                         DB            30, 26, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114
+	                         DB            6, 114, 114, 114, 114, 114, 114, 114, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 26, 30, 30, 30, 30, 26, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
+	                         DB            6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 114, 114, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 113, 113, 113, 113, 4, 4, 4
+	                         DB            4, 113, 113, 113, 26, 30, 30, 30, 30, 26, 114, 114, 6, 6, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 114, 114
+	                         DB            6, 6, 6, 6, 6, 6, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 26, 26, 26, 30, 30, 26, 114, 114, 114, 114, 114, 114
+	                         DB            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 6, 6, 6, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113
+	                         DB            113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 26, 26, 26, 26, 114, 114, 114, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 114, 114, 114, 114
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113
+	                         DB            26, 26, 114, 114, 114, 114, 6, 6, 114, 114, 6, 6, 6, 114, 114, 114, 114, 114, 6, 6, 6, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 6
+	                         DB            114, 114, 114, 114, 114, 114, 114, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 114, 114, 114, 114, 6, 6, 6, 6, 114, 114, 114, 114, 6, 114
+	                         DB            114, 114, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 6, 114, 114, 114, 114, 114, 114, 114, 4, 4, 4, 4, 4, 4, 4, 4, 4
+	                         DB            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 114, 114, 114, 114, 6, 6, 6, 6, 114, 6, 6, 6, 6, 6, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 114, 6, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 4, 4, 4, 4, 114, 114, 114, 6, 6, 6
+	                         DB            6, 6, 114, 114, 6, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 114, 114, 114, 114, 114, 114, 113, 4, 4
+	                         DB            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 4, 4, 4, 114, 114, 114, 6, 6, 6, 6, 6, 6, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 113, 4, 113, 113
+	                         DB            113, 4, 114, 114, 6, 6, 6, 6, 6, 6, 6, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114
+	                         DB            114, 114, 114, 114, 113, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 4, 4, 114, 114, 6, 6, 6, 6, 6, 6, 6, 114, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 113, 4, 4, 4, 113, 113, 4, 4, 4, 4, 4, 4
+	                         DB            113, 113, 113, 4, 113, 113, 4, 113, 113, 113, 114, 114, 114, 114, 114, 6, 6, 6, 6, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 113, 4, 4, 113, 113, 4, 4, 4, 4, 4, 113, 113, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113, 113, 114, 6
+	                         DB            6, 6, 6, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113, 113, 113, 113
+	                         DB            4, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 114, 114, 18, 6, 114, 18, 18, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113, 113, 4, 4, 4, 4, 4, 4, 113, 113, 90, 90, 90, 113, 113, 113, 113, 113, 4
+	                         DB            4, 4, 4, 4, 4, 4, 0, 0, 18, 114, 0, 18, 18, 0, 0, 18, 18, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 113, 4, 4, 4, 4, 4, 113, 90, 90, 90, 90, 90, 90, 90, 113, 113, 113, 113, 113, 4, 4, 4, 4, 113, 0, 0, 18, 18, 0, 18, 18, 18, 0, 18
+	                         DB            18, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 18, 0, 0, 0, 0, 0, 113, 4, 4, 113, 4, 113, 90, 90, 90, 90
+	                         DB            90, 90, 90, 90, 90, 90, 65, 113, 113, 113, 113, 113, 4, 113, 18, 0, 18, 18, 0, 18, 18, 18, 0, 0, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 18, 18, 0, 18, 0, 18, 18, 0, 0, 113, 113, 4, 113, 113, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 160, 113, 113, 113, 0, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 0, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 0, 18, 0, 18, 18, 0, 0, 0, 113
+	                         DB            113, 113, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 160, 65, 65, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 18, 18, 18, 18, 18, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 113, 90, 90, 90, 90, 160, 160, 160, 160, 90, 90, 90, 90, 90, 90, 90
+	                         DB            90, 65, 65, 160, 65, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 0, 0, 0, 0, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 160, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 65, 90, 90, 90, 90, 90, 90, 90, 90
+	                         DB            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 65, 90, 90, 90, 90, 65, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 18, 0, 18
+	                         DB            18, 18, 18, 19, 18, 18, 18, 18, 18, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 65, 90
+	                         DB            90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 19, 18, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
+	                         DB            90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 19, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18
+	                         DB            18, 19, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 65, 160, 90
+	                         DB            90, 90, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 19, 18, 19, 18, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 19
+	                         DB            19, 18, 19, 19, 19, 18, 19, 19, 18, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 65, 65, 65
+	                         DB            65, 90, 90, 90, 90, 90, 18, 19, 19, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 18, 19, 18, 19, 19, 19, 18, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 29, 236, 236, 236, 65, 90, 90, 65, 18, 19, 19, 18, 65, 65, 65, 65, 65, 65, 65
+	                         DB            90, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 16, 29, 29, 236, 16, 236, 29, 16, 65, 18, 18, 19, 18, 65, 65, 29, 236, 236, 236, 236, 29, 65, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19
+	                         DB            19, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 16, 26, 16, 16, 16, 16, 65, 18, 18, 19, 19, 18
+	                         DB            65, 29, 29, 236, 16, 16, 236, 29, 29, 16, 65, 65, 160, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 16, 16, 16, 16, 16, 16, 16, 18, 18, 19, 19, 18, 65, 16, 26, 16, 16, 16, 16, 16, 16, 65, 65, 18, 160, 18, 18, 19
+	                         DB            19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 65, 65, 19
+	                         DB            19, 18, 18, 18, 18, 19, 18, 65, 19, 19, 16, 16, 16, 16, 16, 16, 16, 65, 18, 18, 18, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 19, 18, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 18, 18, 18, 19, 19, 19, 18, 160, 90, 19, 19, 19, 65, 65, 65, 65
+	                         DB            65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 19, 19, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 160, 160, 160, 18, 18, 19, 19, 19, 19, 18, 160, 65, 90, 90, 19, 19, 19, 19, 19, 19, 18, 18, 18, 19, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 19
+	                         DB            19, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 160, 18, 18, 18, 19, 19, 19, 18, 18, 160
+	                         DB            160, 65, 65, 65, 18, 18, 65, 65, 160, 18, 18, 18, 19, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 160, 18, 18, 19, 19, 19, 19, 18, 18, 160, 160, 160, 160, 18, 18, 65, 65, 160, 18, 18, 19, 18, 19, 18, 19, 19
+	                         DB            20, 19, 19, 20, 19, 18, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18
+	                         DB            18, 19, 19, 19, 19, 18, 18, 18, 160, 160, 18, 18, 18, 160, 160, 18, 18, 19, 19, 18, 19, 19, 18, 19, 20, 19, 19, 20, 19, 19, 20, 19, 19, 19, 20, 19, 18, 18, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18, 18, 19, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 160, 160, 18, 18
+	                         DB            18, 19, 19, 20, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 20, 19, 19, 19, 20, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18, 18, 19, 19, 18, 20, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 20, 19
+	                         DB            19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 19
+	                         DB            18, 19, 19, 18, 160, 18, 18, 19, 19, 19, 20, 19, 19, 19, 18, 19, 20, 19, 20, 20, 19, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 19, 18, 19, 19, 18, 160, 18, 18, 19, 19, 19, 20, 19, 19, 19, 19, 19
+	                         DB            20, 20, 20, 20, 20, 19, 20, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 19, 19, 18, 18, 19, 19, 19, 20, 20, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21, 19, 19, 18, 18, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 20, 19, 18, 18, 19, 19
+	                         DB            19, 20, 20, 19, 19, 19, 19, 20, 21, 20, 20, 20, 21, 20, 20, 20, 21, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18
+	                         DB            18, 18, 18, 18, 19, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 20, 19, 19, 19, 19, 19, 19, 20, 20, 19, 19, 19, 20, 20, 21, 20, 20, 20, 21, 20, 20, 21
+	                         DB            20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19
+	                         DB            18, 19, 20, 19, 19, 20, 19, 19, 19, 20, 20, 19, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 20, 21, 20, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 18, 18, 18, 19, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 19, 18, 19, 18, 19, 20, 20, 19, 20, 20, 19, 19, 20, 19, 19, 19, 20, 20, 21
+	                         DB            20, 21, 20, 20, 21, 20, 21, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 19, 18, 18, 18, 19, 18, 18, 18
+	                         DB            19, 20, 19, 19, 19, 19, 19, 19, 19, 20, 21, 20, 20, 20, 20, 19, 20, 20, 19, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 21, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 18, 19, 18, 19, 18, 18, 18, 19, 19, 20, 20, 19, 19, 20, 19, 19, 20, 21, 20, 20, 20, 20, 19
+	                         DB            20, 21, 19, 19, 19, 20, 21, 20, 21, 21, 21, 21, 21, 21, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19
+	                         DB            18, 19, 18, 18, 19, 18, 18, 19, 19, 19, 20, 20, 20, 19, 21, 21, 20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 21, 19, 19, 18
+	                         DB            18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 18, 18, 19, 18, 18, 19, 19, 19, 20, 21, 20, 20, 20, 21
+	                         DB            20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 21, 20, 21, 20, 21, 20, 21, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 19, 19, 18, 18, 19, 19, 19, 19, 21, 21, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 20, 20, 20
+	                         DB            20, 20, 20, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 18, 18, 18
+	                         DB            19, 19, 19, 20, 21, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 19, 19, 20, 19, 20, 20, 20, 20, 20, 19, 20, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 20, 20, 19
+	                         DB            19, 20, 19, 19, 19, 20, 20, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            18, 19, 19, 19, 19, 19, 18, 18, 19, 19, 19, 19, 20, 21, 20, 20, 21, 20, 20, 20, 20, 20, 20, 20, 19, 20, 19, 19, 19, 19, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 21, 20
+	                         DB            21, 20, 19, 20, 19, 19, 19, 20, 19, 20, 19, 19, 19, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 19, 20, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19
+	                         DB            18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19
+	                         DB            19, 19, 19, 19, 19, 19, 20, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 19, 19, 19, 19, 19, 19, 19
+	                         DB            19, 19, 19, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 19, 19
+	                         DB            19, 19, 19, 19, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	Hisoka                   DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 35, 107, 107, 107, 107, 58, 58, 58, 58, 58, 107, 107, 107, 107, 107, 58, 35, 35, 107, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 107, 107, 58, 58, 82, 82, 82, 82, 82, 82, 82, 58, 58, 58, 58, 107, 107, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 35, 58, 107, 107, 107, 107, 107, 107, 107, 107, 82, 82, 58, 58
+	                         DB            35, 35, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 107, 107, 88, 88, 88, 88, 88, 88, 88, 88, 107, 107, 107, 107, 58, 35, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 64, 64, 64, 64, 64, 64
+	                         DB            64, 64, 64, 88, 64, 88, 88, 88, 107, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 64, 112, 112, 112, 112, 112, 112, 112, 112, 64, 88, 64, 88, 88, 88, 64, 184, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 184, 112, 31, 31, 31, 31, 31, 31, 31, 112, 112, 64, 88, 64, 88, 64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 88, 112, 64, 88, 64
+	                         DB            64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 88, 88, 88, 31, 31, 31, 31, 88, 88, 112, 64, 88, 64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 88, 88, 112, 64, 64, 184, 0, 0, 0, 0, 0, 0, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 88, 88, 88, 88, 31, 31, 31, 31, 31, 31, 88, 88, 112, 64, 184, 0, 0, 0, 0, 0, 185
+	                         DB            43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            112, 31, 88, 112, 112, 112, 112, 112, 112, 31, 31, 31, 31, 31, 88, 112, 112, 184, 0, 0, 0, 0, 185, 68, 43, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 112, 31, 31, 31, 31, 31, 31, 112, 112, 31, 31, 31, 31, 88
+	                         DB            112, 184, 0, 0, 0, 185, 68, 43, 43, 43, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 0, 0, 185, 68, 6, 43, 185, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 0, 0, 185, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 185, 68
+	                         DB            68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31
+	                         DB            31, 31, 88, 88, 112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 31, 31, 88, 88, 112, 0, 0, 185, 68, 68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 5, 31, 38, 31, 88, 88, 112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 51, 51
+	                         DB            31, 31, 88, 88, 112, 0, 0, 185, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 112, 5, 38, 38, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 51, 51, 31, 31, 88, 88, 88, 112, 185, 68, 68, 43, 185, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 5, 38, 38, 38, 31, 31, 88, 112, 112, 31, 31
+	                         DB            31, 31, 31, 31, 31, 3, 51, 51, 31, 31, 31, 88, 88, 88, 112, 68, 68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 5, 38, 38, 38, 38, 38, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 51, 31, 31, 31, 88, 31, 88, 88, 112, 185
+	                         DB            6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 38, 31
+	                         DB            31, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 51, 31, 31, 31, 31, 88, 31, 88, 88, 31, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 38, 31, 31, 31, 31, 31, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 88, 31, 31, 43, 6, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 31, 43, 43, 88, 112, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 31, 31, 31, 31, 112, 31, 31, 31, 88, 31, 112, 31, 88, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 112, 31, 31, 31, 31, 112, 31, 31, 31, 31, 31, 31, 112, 31, 31, 31, 31, 31, 112, 31, 31, 31, 88, 31, 31, 88, 112
+	                         DB            112, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 112, 112
+	                         DB            112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 112, 112, 112, 112, 112, 31, 31, 31, 31, 31, 88, 31, 88, 64, 88, 112, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            88, 112, 31, 88, 31, 31, 88, 88, 64, 64, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 112, 88, 31, 112, 88, 31, 31, 31, 31, 88, 31, 31, 31, 31, 31, 31, 88, 88, 31, 31, 31, 31, 88, 112, 31, 31, 31, 88, 112, 112, 112, 112, 64, 112, 88, 112, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 112, 88, 88, 88, 88, 112, 31, 31, 31, 31, 31
+	                         DB            31, 112, 88, 88, 88, 88, 88, 112, 31, 31, 31, 88, 31, 31, 112, 64, 64, 64, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 112, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 112, 112, 88, 88, 112, 31, 31, 31, 31, 31, 88, 31, 88, 112
+	                         DB            64, 112, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 112
+	                         DB            112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 112, 112, 31, 31, 31, 31, 31, 88, 112, 31, 88, 88, 112, 88, 88, 112, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 112, 112, 31, 88, 88, 88, 112, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            107, 5, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 112, 112, 112, 112, 5, 5, 5, 5, 107, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5
+	                         DB            5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 38, 112, 88, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 5, 112, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5
+	                         DB            5, 38, 112, 31, 31, 31, 5, 5, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
+	                         DB            107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 38, 5, 5, 5, 5, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5
+	                         DB            38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 107, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5
+	                         DB            5, 5, 5, 5, 5, 5, 38, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 38, 38, 5, 38, 5, 38, 5, 38, 5
+	                         DB            38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 38, 5, 107, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38, 38, 38, 5, 5, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38
+	                         DB            5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 38, 5, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38
+	                         DB            38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 38
+	                         DB            38, 38, 38, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38
+	                         DB            38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 110, 62, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 110, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38, 38, 38, 5
+	                         DB            38, 5, 38, 5, 38, 5, 5, 5, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 38, 38, 38, 38, 5, 38, 38, 38
+	                         DB            38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 38, 62, 38, 38, 38, 38, 5, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 5
+	                         DB            38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110
+	                         DB            38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 5, 5, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38
+	                         DB            110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 38, 38, 38, 38, 38, 62, 5, 5, 38, 62, 38, 38
+	                         DB            5, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 5, 38, 38, 38, 62, 38, 38, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 62, 38, 38, 38, 62, 38, 62, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 62, 38, 38, 5, 5, 38, 38, 38, 38, 38
+	                         DB            5, 38, 38, 38, 62, 38, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 62, 38, 38, 62, 38
+	                         DB            38, 62, 38, 38, 38, 62, 38, 62, 38, 5, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 62, 38, 62, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 5, 38, 38, 38, 62, 38
+	                         DB            38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 110, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 110, 62, 38, 38, 38, 62, 38, 38, 62, 38, 62, 38, 38, 38, 62, 38, 38, 5, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 62
+	                         DB            110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 38, 62, 38, 38, 62, 38, 38, 38, 38, 38
+	                         DB            62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 62, 38, 38, 62, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38
+	                         DB            38, 62, 38, 62, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38
+	                         DB            62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 110, 110, 62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 38
+	                         DB            38, 38, 38, 62, 62, 38, 38, 38, 38, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 107, 62, 62, 110, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 62, 62, 62, 62, 62, 62, 62, 38, 38, 38, 110, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 110, 0, 110, 38, 110, 110
+	                         DB            62, 38, 38, 38, 62, 62, 38, 38, 38, 38, 38, 38, 38, 110, 110, 110, 110, 110, 110, 110, 62, 62, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 110, 62, 38, 110, 62, 62, 62, 38, 38, 38, 38, 38, 110, 0, 0, 0
+	                         DB            0, 0, 0, 0, 110, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 110, 110, 110, 62, 62, 62, 62, 110, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 110, 110
+	                         DB            110, 110, 0, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	Fenn2                    DB            0, 125, 53, 53, 53, 54, 54, 125, 125, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53
+	                         DB            53, 53, 53, 53, 53, 53, 54, 191, 2, 2, 120, 191, 54, 53, 53, 53, 54, 191, 120, 2, 120, 2, 2, 2, 0, 125, 53, 53, 53, 54, 191, 191, 191, 191, 54, 54, 53, 53, 53, 53
+	                         DB            53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 53
+	                         DB            54, 191, 120, 120, 2, 120, 2, 2, 0, 0, 125, 53, 54, 191, 120, 120, 120, 120, 191, 54, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53
+	                         DB            53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 54, 191, 2, 2, 120, 191, 54, 53, 53, 53, 54, 54, 191, 120, 2, 120, 2, 2, 2, 0, 0, 125, 53, 54, 191, 120, 2
+	                         DB            2, 120, 191, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 191, 2
+	                         DB            2, 120, 191, 54, 53, 53, 53, 54, 191, 120, 120, 120, 2, 2, 2, 2, 0, 0, 125, 53, 54, 191, 2, 2, 2, 2, 191, 54, 54, 53, 53, 53, 53, 53, 54, 53, 54, 53, 54, 53
+	                         DB            54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 53, 53, 54, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 54, 191, 120, 120, 2, 120, 2, 2, 2
+	                         DB            0, 0, 125, 53, 54, 191, 2, 2, 2, 2, 191, 54, 53, 53, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54
+	                         DB            53, 54, 53, 54, 53, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 54, 191, 120, 2, 120, 2, 2, 2, 2, 0, 0, 0, 125, 54, 191, 2, 2, 2, 2, 191, 54, 54, 53, 54, 53
+	                         DB            54, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 53, 54, 53, 54, 53, 54, 53, 54, 191, 2, 2, 120, 191, 54, 53, 53, 54
+	                         DB            120, 120, 120, 120, 2, 2, 2, 2, 0, 0, 0, 125, 54, 191, 2, 2, 2, 2, 191, 54, 53, 54, 53, 54, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54
+	                         DB            54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 53, 54, 54, 191, 2, 2, 2, 120, 191, 54, 54, 54, 120, 2, 2, 120, 120, 120, 2, 2, 0, 0, 0, 125, 54, 120, 120, 120
+	                         DB            120, 120, 120, 54, 54, 53, 54, 54, 54, 54, 54, 54, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54
+	                         DB            191, 2, 2, 120, 120, 120, 120, 120, 2, 2, 46, 46, 46, 71, 120, 2, 0, 0, 0, 0, 125, 120, 2, 46, 2, 46, 120, 54, 54, 54, 54, 125, 125, 125, 125, 125, 27, 27, 27, 27
+	                         DB            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 125, 125, 125, 125, 125, 125, 125, 125, 54, 54, 54, 191, 2, 120, 71, 46, 46, 46, 120, 120, 2, 46, 46, 46, 71, 71, 120
+	                         DB            0, 0, 0, 0, 125, 120, 46, 71, 71, 46, 120, 54, 54, 54, 125, 27, 27, 27, 27, 27, 27, 27, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 27, 27, 27, 27
+	                         DB            27, 27, 27, 27, 27, 125, 125, 125, 125, 120, 46, 46, 71, 71, 71, 46, 46, 120, 120, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71, 71, 46, 120, 125, 125, 125, 27, 27
+	                         DB            27, 27, 27, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 29, 29, 27, 27, 27, 27, 27, 27, 27, 27, 27, 46, 46, 71, 71, 71
+	                         DB            71, 46, 46, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71, 71, 46, 120, 27, 27, 27, 27, 29, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30
+	                         DB            30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 27, 27, 27, 27, 27, 120, 120, 46, 46, 71, 71, 71, 71, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71
+	                         DB            71, 46, 120, 27, 27, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 160, 160, 160, 160, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29
+	                         DB            27, 27, 27, 27, 27, 120, 120, 46, 46, 46, 46, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 0, 120, 71, 71, 46, 27, 27, 29, 29, 30, 30, 30, 30, 30, 30, 30, 160, 160, 160
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 27, 27, 27, 27, 22, 120, 120, 120, 120, 71, 71, 71, 71, 71
+	                         DB            0, 0, 0, 0, 0, 0, 0, 120, 120, 120, 29, 29, 29, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 30
+	                         DB            30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 27, 27, 22, 46, 46, 46, 46, 71, 71, 71, 71, 46, 0, 0, 0, 0, 0, 0, 0, 0, 22, 27, 29, 29, 30, 30, 30, 30
+	                         DB            30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 27, 22, 71
+	                         DB            71, 71, 71, 71, 71, 71, 46, 2, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 160, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 71, 71, 71, 71, 71, 71, 46, 2, 191, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 29, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 65, 160, 30, 30, 30
+	                         DB            30, 30, 30, 29, 27, 27, 22, 46, 46, 46, 46, 46, 46, 2, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            183, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 30, 30, 30, 30, 30, 29, 27, 27, 22, 46, 46, 46, 46, 2, 2, 191, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 65, 65, 160, 30, 30, 30, 30, 30, 30, 27, 27, 22, 2, 2, 2, 191, 191, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 29, 160, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 30, 30, 27, 27, 22, 191
+	                         DB            191, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 183
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160
+	                         DB            30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            183, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 89, 89, 89, 89, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 27, 27, 22, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 183, 183, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65
+	                         DB            65, 160, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 16, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 89, 89, 89, 89, 89, 89, 89, 65, 160
+	                         DB            30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 30, 29, 160, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 30, 27, 27, 22, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 30, 30, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 30, 30, 30, 30
+	                         DB            30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 160, 160, 160, 30
+	                         DB            30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30
+	                         DB            30, 30, 30, 30, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 27, 27, 22, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30
+	                         DB            30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 29, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29
+	                         DB            29, 29, 29, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 30, 30, 29, 29, 22, 30, 30, 30, 30, 30, 30, 30, 30
+	                         DB            30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 22, 22, 22, 22, 29, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 29, 29, 22, 22, 22, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 22, 22
+	                         DB            22, 22, 22, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 29
+	                         DB            27, 22, 0, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 27, 22, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22
+	                         DB            29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 22
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 29, 22, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	Asta                     DB            0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 67, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 67, 18, 18, 18, 67, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 18, 18, 18, 18, 18, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 18, 18, 20
+	                         DB            20, 20, 18, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 67, 18, 18, 20, 20, 20, 20, 18, 18, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 67, 67, 67, 67, 67, 67, 67
+	                         DB            67, 67, 18, 18, 18, 20, 20, 20, 20, 18, 18, 18, 18, 18, 18, 67, 67, 67, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 20, 20, 20, 20, 20, 18, 136, 65, 65, 65, 65, 18, 18
+	                         DB            18, 18, 18, 18, 18, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 20, 20, 20, 18, 136, 65, 65, 65, 65, 65, 65, 65, 65, 136, 65, 18, 18, 18, 18, 67, 67, 67, 67, 67, 67, 67, 67
+	                         DB            67, 67, 67, 67, 67, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 20, 20, 20, 136
+	                         DB            136, 136, 65, 65, 65, 65, 65, 65, 65, 136, 136, 136, 18, 20, 20, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 18, 18, 136, 90, 90, 136, 136, 136, 136, 65, 65, 65, 65, 136, 65, 136, 18, 20, 20, 20
+	                         DB            20, 20, 20, 20, 20, 20, 20, 20, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 18, 18, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 136, 136, 136, 65, 136, 136, 136, 18, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 18, 18, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
+	                         DB            136, 136, 136, 18, 20, 20, 20, 20, 20, 20, 20, 20, 20, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 20, 20, 20, 20, 20, 20, 18, 18, 18, 22, 22, 22
+	                         DB            26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90
+	                         DB            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 20, 18, 18, 18, 18, 18, 136, 22, 22, 22, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 18, 18, 90, 136, 65
+	                         DB            65, 65, 136, 22, 22, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 136, 90, 90, 136, 136, 136, 136, 136, 136, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 136, 65, 65, 136, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 136, 136, 90, 90
+	                         DB            90, 90, 90, 90, 90, 90, 90, 90, 136, 65, 136, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 136, 65, 136, 22, 22, 22, 22, 22
+	                         DB            22, 22, 22, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 65, 65, 90, 90
+	                         DB            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 136, 136, 22, 26, 26, 26, 26, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 65, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
+	                         DB            90, 136, 136, 22, 26, 26, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            136, 90, 65, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 136, 22, 26, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
+	                         DB            90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 136, 22, 22, 22, 22, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 136, 136, 136, 22, 22
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 90, 90, 90, 90, 136, 90
+	                         DB            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 136, 90, 90, 136, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 65, 29, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 29, 29, 29, 29, 29, 29, 65, 136, 90, 90, 90, 90
+	                         DB            90, 90, 65, 136, 90, 90, 90, 136, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136
+	                         DB            117, 117, 117, 29, 90, 65, 90, 90, 90, 65, 65, 29, 29, 117, 117, 117, 29, 29, 29, 65, 136, 90, 90, 90, 90, 90, 65, 136, 90, 65, 90, 90, 136, 22, 22, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 117, 190, 117, 29, 29, 65, 65, 90, 90, 65, 65, 28, 29, 117, 190, 117
+	                         DB            29, 29, 28, 28, 65, 65, 65, 65, 65, 65, 65, 136, 90, 90, 90, 90, 136, 26, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 26, 19, 190, 190, 117, 28, 19, 21, 65, 90, 90, 90, 65, 19, 28, 190, 190, 117, 28, 28, 28, 28, 19, 65, 65, 65, 65, 22, 65, 136, 90, 65, 65, 90
+	                         DB            136, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 22, 19, 190, 190, 19, 65, 21, 65, 65
+	                         DB            90, 90, 90, 65, 19, 19, 19, 190, 28, 28, 28, 19, 65, 65, 65, 65, 136, 26, 22, 136, 90, 65, 65, 90, 136, 16, 16, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 136, 19, 19, 19, 65, 22, 22, 21, 65, 65, 19, 90, 90, 65, 65, 19, 190, 28, 19, 19, 65, 65, 65, 65, 65
+	                         DB            136, 26, 26, 22, 22, 90, 90, 22, 16, 16, 16, 16, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 136
+	                         DB            65, 65, 65, 19, 22, 26, 21, 21, 65, 65, 19, 19, 65, 65, 65, 19, 19, 65, 136, 65, 136, 136, 136, 136, 22, 22, 26, 26, 22, 22, 22, 19, 16, 16, 16, 16, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 136, 65, 136, 19, 22, 22, 26, 26, 21, 21, 136, 65, 65, 19, 19, 65, 65
+	                         DB            65, 65, 22, 136, 22, 22, 22, 22, 21, 22, 26, 26, 26, 22, 19, 19, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 22, 22, 22, 136, 65, 65, 136, 22, 22, 26, 22, 26, 21, 21, 136, 65, 65, 65, 19, 65, 65, 22, 26, 136, 22, 26, 22, 26, 22, 21, 26, 22, 22, 19, 19, 19
+	                         DB            16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 26, 136, 136, 136, 22, 22, 26, 22, 26, 26
+	                         DB            26, 21, 136, 136, 65, 65, 65, 136, 136, 26, 136, 22, 26, 26, 22, 22, 26, 22, 21, 19, 19, 19, 19, 19, 19, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 22, 136, 136, 22, 22, 26, 26, 22, 26, 26, 26, 26, 21, 136, 136, 136, 136, 136, 26, 26, 21, 21, 26, 26, 22, 22
+	                         DB            26, 26, 22, 19, 19, 19, 19, 19, 19, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 22, 136
+	                         DB            136, 22, 26, 26, 22, 22, 26, 26, 26, 26, 26, 21, 136, 136, 136, 22, 26, 22, 22, 21, 21, 21, 22, 19, 19, 26, 22, 19, 19, 19, 19, 19, 19, 16, 16, 21, 21, 21, 21, 26
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 22, 22, 26, 26, 22, 22, 26, 26, 26, 26, 26, 26, 21, 136, 22, 26
+	                         DB            22, 22, 22, 26, 26, 21, 19, 19, 19, 19, 26, 22, 19, 19, 19, 19, 19, 16, 16, 21, 21, 21, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 22, 22, 21, 21, 21, 22, 22, 22, 26, 26, 26, 26, 26, 26, 21, 21, 21, 21, 21, 19, 19, 19, 19, 26, 22, 19, 19, 19, 19, 26, 19, 19, 19, 19
+	                         DB            19, 16, 16, 21, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 19, 19, 19, 19, 21, 21, 21, 21, 21
+	                         DB            21, 21, 21, 21, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 26, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 16, 21, 21, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19
+	                         DB            19, 19, 19, 19, 19, 19, 19, 19, 16, 16, 21, 21, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19
+	                         DB            19, 19, 43, 43, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 16, 22, 22, 26, 21, 21, 21, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19, 19, 19, 68, 43, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19
+	                         DB            19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 16, 16, 16, 16, 26, 26, 26, 21, 21, 26, 21, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 16, 19, 19, 43, 68, 68, 19, 19, 19, 19, 19, 19, 19, 19, 21, 21, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 16, 16, 21, 21, 26, 26
+	                         DB            26, 21, 21, 26, 26, 26, 26, 22, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19, 19, 43, 68, 68, 43, 19, 19, 19
+	                         DB            19, 19, 19, 19, 26, 21, 21, 19, 19, 19, 19, 26, 19, 19, 19, 19, 19, 16, 21, 21, 21, 21, 26, 26, 21, 21, 21, 26, 26, 26, 26, 26, 26, 26, 22, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19, 6, 43, 43, 43, 6, 19, 19, 26, 19, 19, 19, 19, 26, 26, 21, 21, 19, 19, 19, 21, 26, 19, 16, 16
+	                         DB            16, 21, 21, 26, 26, 21, 21, 21, 21, 21, 21, 21, 21, 26, 26, 26, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16
+	                         DB            6, 6, 43, 6, 6, 6, 19, 26, 21, 19, 19, 19, 26, 26, 21, 21, 21, 19, 19, 21, 26, 16, 16, 21, 21, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 21, 21, 21, 21, 21
+	                         DB            21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 6, 6, 6, 22, 6, 19, 19, 26, 21, 21, 19, 19, 26, 26, 26, 21
+	                         DB            21, 21, 16, 21, 26, 26, 21, 21, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 21, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 22, 22, 22, 22, 22, 22, 16, 19, 22, 26, 26, 19, 19, 26, 26, 21, 21, 16, 26, 26, 26, 26, 26, 21, 21, 21, 21, 26, 21, 21, 26, 26, 26, 26, 26, 26, 26, 22
+	                         DB            22, 21, 21, 21, 21, 21, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 22, 16, 26, 16, 26, 26, 16, 26
+	                         DB            26, 26, 21, 21, 26, 26, 26, 26, 26, 26, 21, 21, 22, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 26, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 22, 26, 26, 22, 26, 22, 26, 26, 26, 26, 22, 22, 22, 26, 26, 26, 26, 26, 22, 26, 22, 22, 22
+	                         DB            22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 26, 26, 0, 0, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26
+	                         DB            26, 22, 22, 26, 22, 22, 22, 22, 26, 26, 26, 22, 26, 22, 22, 26, 26, 26, 26, 22, 26, 26, 26, 26, 26, 26, 26, 22, 22, 26, 26, 26, 26, 26, 26, 22, 0, 0, 0, 26
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 26, 22
+	                         DB            26, 26, 26, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 26, 26, 26, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 22, 22, 26, 26, 22, 22, 26, 26, 22, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 22, 22
+	                         DB            22, 22, 22, 22, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 26, 26, 26, 26
+	                         DB            26, 26, 22, 26, 22, 22, 26, 26, 22, 26, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 22, 26, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 22, 22, 26, 22, 22, 22, 26, 26, 26, 22, 22
+	                         DB            22, 22, 26, 26, 26, 26, 26, 26, 26, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 22
+	                         DB            22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 22, 22, 22, 22, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 26, 26, 22
+	                         DB            26, 26, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 26, 26, 26, 26, 26, 22, 22, 22, 22
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 26, 26, 26, 26, 22, 22, 22, 26, 26, 26, 26
+	                         DB            26, 22, 26, 22, 22, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 26, 26, 26, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 22, 22, 22, 22, 22, 22, 22, 26, 26, 22, 22, 26, 26, 26, 22, 22, 0
+	                         DB            0, 0, 0, 0, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22
+	                         DB            22, 26, 26, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 26, 22, 22, 22, 26, 26, 26, 26, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 26, 26, 26, 26, 0, 0
+	                         DB            0, 0, 0, 0, 0, 26, 26, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	Hisoka2                  DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 35, 107, 107, 107, 107, 58, 58, 58, 58, 58, 107, 107, 107, 107, 107, 58, 35, 35, 107, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 107, 107, 58, 58, 82, 82, 82, 82, 82, 82, 82, 58, 58, 58, 58, 107, 107, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 35, 58, 107, 107, 107, 107, 107, 107, 107, 107, 82, 82, 58, 58
+	                         DB            35, 35, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 107, 107, 88, 88, 88, 88, 88, 88, 88, 88, 107, 107, 107, 107, 58, 35, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 64, 64, 64, 64, 64, 64
+	                         DB            64, 64, 64, 88, 64, 88, 88, 88, 107, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 64, 112, 112, 112, 112, 112, 112, 112, 112, 64, 88, 64, 88, 88, 88, 64, 184, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 184, 112, 31, 31, 31, 31, 31, 31, 31, 112, 112, 64, 88, 64, 88, 64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 88, 112, 64, 88, 64
+	                         DB            64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 88, 88, 88, 31, 31, 31, 31, 88, 88, 112, 64, 88, 64, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 88, 88, 112, 64, 64, 184, 0, 0, 0, 0, 0, 0, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 64, 184, 0, 0, 0, 0, 0, 185
+	                         DB            43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            112, 31, 112, 88, 88, 88, 88, 88, 88, 112, 112, 31, 31, 31, 88, 112, 112, 184, 0, 0, 0, 0, 185, 68, 43, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 112, 112, 112, 112, 112, 112, 31, 31, 31, 31, 31, 31, 88
+	                         DB            112, 184, 0, 0, 0, 185, 68, 43, 43, 43, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 0, 0, 185, 68, 6, 43, 185, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 0, 0, 185, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 88, 112, 0, 0, 185, 68
+	                         DB            68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31
+	                         DB            31, 31, 88, 88, 112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 31, 31, 88, 88, 112, 0, 0, 185, 68, 68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 5, 31, 38, 31, 88, 88, 112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 51, 51
+	                         DB            31, 31, 88, 88, 112, 0, 0, 185, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 112, 5, 38, 38, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 3, 51, 51, 31, 31, 88, 88, 88, 112, 185, 68, 68, 43, 185, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 5, 38, 38, 38, 31, 31, 88, 112, 112, 31, 31
+	                         DB            31, 31, 31, 31, 31, 3, 51, 51, 31, 31, 31, 88, 88, 88, 112, 68, 68, 43, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 5, 38, 38, 38, 38, 38, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 51, 31, 31, 31, 88, 31, 88, 88, 112, 185
+	                         DB            6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 38, 31
+	                         DB            31, 31, 31, 88, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 51, 31, 31, 31, 31, 88, 31, 88, 88, 31, 6, 185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 31, 38, 31, 31, 31, 31, 31, 88, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 88, 31, 31, 43, 6, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 31, 43, 43, 88, 112, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 31, 112, 31, 42, 42, 42, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 42, 42, 42, 31, 31, 112, 31, 31, 31, 88, 31, 112, 31, 88, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 112, 42, 68, 42, 31, 112, 31, 31, 31, 31, 31, 31, 112, 31, 42, 68, 42, 31, 112, 31, 31, 31, 88, 31, 31, 88, 112
+	                         DB            112, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 112, 112
+	                         DB            112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 112, 112, 112, 112, 112, 31, 31, 31, 31, 31, 88, 31, 88, 64, 88, 112, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            88, 112, 31, 88, 31, 31, 88, 88, 64, 64, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 112, 88, 31, 112, 88, 31, 31, 31, 31, 88, 31, 31, 31, 31, 31, 31, 88, 88, 31, 31, 31, 31, 88, 112, 31, 31, 31, 88, 112, 112, 112, 112, 64, 112, 88, 112, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 112, 88, 88, 88, 88, 112, 31, 31, 31, 31, 31
+	                         DB            31, 112, 88, 88, 88, 88, 88, 112, 31, 31, 31, 88, 31, 31, 112, 64, 64, 64, 112, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 112, 112, 112, 112, 31, 31, 31, 31, 31, 31, 31, 31, 112, 112, 112, 112, 112, 31, 31, 31, 31, 31, 88, 31, 88, 112
+	                         DB            64, 112, 88, 88, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 88, 112, 31, 88, 88, 112, 88, 88, 112, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 112, 112, 31, 88, 88, 88, 112, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            107, 5, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 112, 112, 112, 112, 5, 5, 5, 5, 107, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 112, 88, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 112, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5
+	                         DB            5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 38, 112, 88, 31, 31, 31, 31
+	                         DB            31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 5, 5, 112, 31, 31, 31, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 31, 31, 31, 31, 31, 31, 31, 31
+	                         DB            31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5
+	                         DB            5, 38, 112, 31, 31, 31, 5, 5, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 31, 31, 31, 31, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
+	                         DB            107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 38, 5, 5, 5, 5, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5
+	                         DB            38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 107, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5
+	                         DB            5, 5, 5, 5, 5, 5, 38, 5, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 5, 38, 38, 5, 38, 5, 38, 5, 38, 5
+	                         DB            38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 38, 5, 107, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38, 38, 38, 5, 5, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38, 5, 38
+	                         DB            5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 5, 38, 5, 107, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38
+	                         DB            38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 5, 5, 38, 5, 38, 5, 5, 5, 38, 5, 38, 5, 5, 5, 5, 5, 5, 5, 5, 38
+	                         DB            38, 38, 38, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38
+	                         DB            38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 5, 38, 5, 38, 5, 5, 5, 5, 5, 110, 62, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 110, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38, 38, 38, 5
+	                         DB            38, 5, 38, 5, 38, 5, 5, 5, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 38, 38, 38, 38, 5, 38, 38, 38
+	                         DB            38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 38, 62, 38, 38, 38, 38, 5, 38, 38, 5, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 5
+	                         DB            38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110
+	                         DB            38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 5, 5, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38
+	                         DB            110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 38, 38, 38, 38, 38, 62, 5, 5, 38, 62, 38, 38
+	                         DB            5, 38, 38, 38, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 5, 5, 38, 38, 38, 62, 38, 38, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 110, 38, 62, 38, 38, 38, 62, 38, 62, 38, 38, 5, 38, 38, 38, 38, 5, 38, 38, 38, 38, 38, 62, 38, 38, 5, 5, 38, 38, 38, 38, 38
+	                         DB            5, 38, 38, 38, 62, 38, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 62, 38, 38, 62, 38
+	                         DB            38, 62, 38, 38, 38, 62, 38, 62, 38, 5, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 110, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 62, 38, 62, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 5, 38, 38, 38, 62, 38
+	                         DB            38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 110, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 110, 62, 38, 38, 38, 62, 38, 38, 62, 38, 62, 38, 38, 38, 62, 38, 38, 5, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 62
+	                         DB            110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 38, 62, 38, 38, 62, 38, 38, 38, 38, 38
+	                         DB            62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 62, 38, 38, 62, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38
+	                         DB            38, 62, 38, 62, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 38, 38
+	                         DB            62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 110, 110, 62, 38, 38, 38, 38, 38, 62, 38, 38, 38, 38, 62, 38, 38, 38, 38
+	                         DB            38, 38, 38, 62, 62, 38, 38, 38, 38, 38, 38, 38, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 62, 110, 38, 38, 38, 62, 38, 38, 38, 62, 38, 38, 38, 38, 38, 38, 38, 38, 62, 62, 62, 62, 62, 62, 62, 38, 38, 38, 110, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 110, 0, 110, 38, 110, 110
+	                         DB            62, 38, 38, 38, 62, 62, 38, 38, 38, 38, 38, 38, 38, 110, 110, 110, 110, 110, 110, 110, 62, 62, 38, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 110, 62, 38, 110, 62, 62, 62, 38, 38, 38, 38, 38, 110, 0, 0, 0
+	                         DB            0, 0, 0, 0, 110, 110, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 62, 110, 110, 110, 62, 62, 62, 62, 110, 62, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 110, 110
+	                         DB            110, 110, 0, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	Mikasa                   DB            0, 0, 0, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 6, 114, 114, 114, 114, 114, 114, 114, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 26, 30, 30, 30
+	                         DB            30, 26, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114
+	                         DB            6, 114, 114, 114, 114, 114, 114, 114, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 26, 30, 30, 30, 30, 26, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
+	                         DB            6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 114, 114, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 113, 113, 113, 113, 4, 4, 4
+	                         DB            4, 113, 113, 113, 26, 30, 30, 30, 30, 26, 114, 114, 6, 6, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 114, 114
+	                         DB            6, 6, 6, 6, 6, 6, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 26, 26, 26, 30, 30, 26, 114, 114, 114, 114, 114, 114
+	                         DB            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 6, 6, 6, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113
+	                         DB            113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 26, 26, 26, 26, 114, 114, 114, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 114, 114, 114, 114, 114
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 114, 114, 6, 114, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113
+	                         DB            26, 26, 114, 114, 114, 114, 6, 6, 114, 114, 6, 6, 6, 114, 114, 114, 114, 114, 6, 6, 6, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 6
+	                         DB            114, 114, 114, 114, 114, 114, 114, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 114, 114, 114, 114, 6, 6, 6, 6, 114, 114, 114, 114, 6, 114
+	                         DB            114, 114, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 6, 114, 114, 114, 114, 114, 114, 114, 4, 4, 4, 4, 4, 4, 4, 4, 4
+	                         DB            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 114, 114, 114, 114, 6, 6, 6, 6, 114, 6, 6, 6, 6, 6, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 114, 6, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 4, 4, 4, 4, 114, 114, 114, 6, 6, 6
+	                         DB            6, 6, 114, 114, 6, 114, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 114, 114, 114, 114, 114, 114, 113, 4, 4
+	                         DB            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 4, 4, 4, 114, 114, 114, 6, 6, 6, 6, 6, 6, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 114, 114, 114, 114, 114, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 113, 4, 113, 113
+	                         DB            113, 4, 114, 114, 6, 6, 6, 6, 6, 6, 6, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114
+	                         DB            114, 114, 114, 114, 113, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 113, 4, 4, 114, 114, 6, 6, 6, 6, 6, 6, 6, 114, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 114, 113, 4, 4, 4, 113, 113, 4, 4, 4, 4, 4, 4
+	                         DB            113, 113, 113, 4, 113, 113, 4, 113, 113, 113, 114, 114, 114, 114, 114, 6, 6, 6, 6, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 114, 113, 4, 4, 113, 113, 4, 4, 4, 4, 4, 113, 113, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 113, 113, 114, 6
+	                         DB            6, 6, 6, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113, 113, 113, 113
+	                         DB            4, 4, 4, 4, 4, 113, 113, 113, 113, 113, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 4, 113, 114, 114, 18, 6, 114, 18, 18, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113, 113, 4, 4, 4, 4, 4, 4, 113, 113, 90, 90, 90, 113, 113, 113, 113, 113, 4
+	                         DB            4, 4, 4, 4, 4, 4, 0, 0, 18, 114, 0, 18, 18, 0, 0, 18, 18, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 113, 4, 4, 4, 4, 4, 113, 90, 90, 90, 90, 90, 90, 90, 113, 113, 113, 113, 113, 4, 4, 4, 4, 113, 0, 0, 18, 18, 0, 18, 18, 18, 0, 18
+	                         DB            18, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 18, 0, 0, 0, 0, 0, 113, 4, 4, 113, 4, 113, 90, 90, 90, 90
+	                         DB            90, 90, 90, 90, 90, 90, 65, 113, 113, 113, 113, 113, 4, 113, 18, 0, 18, 18, 0, 18, 18, 18, 0, 0, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 18, 18, 0, 18, 0, 18, 18, 0, 0, 113, 113, 4, 113, 113, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 160, 113, 113, 113, 0, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 0, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 0, 18, 0, 18, 18, 0, 0, 0, 113
+	                         DB            113, 113, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 160, 65, 65, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 18, 18, 18, 18, 18, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 113, 90, 90, 90, 90, 90, 160, 160, 160, 160, 90, 90, 90, 90, 90, 90
+	                         DB            90, 65, 65, 160, 65, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 0, 0, 0, 0, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 160, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 65, 90, 90, 90, 90, 90, 90, 90, 90
+	                         DB            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 65, 90, 90, 90, 90, 65, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 65, 18, 0, 18
+	                         DB            18, 18, 18, 19, 18, 18, 18, 18, 18, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 65, 90
+	                         DB            90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 19, 18, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
+	                         DB            90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 19, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 65, 65, 160, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18
+	                         DB            18, 19, 18, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 65, 160, 90
+	                         DB            90, 90, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 19, 18, 19, 18, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 19
+	                         DB            19, 18, 19, 19, 19, 18, 19, 19, 18, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 65, 65, 65
+	                         DB            65, 90, 90, 90, 90, 90, 18, 19, 19, 18, 65, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 18, 19, 18, 19, 19, 19, 18, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 65, 29, 236, 236, 236, 65, 90, 90, 65, 18, 19, 19, 18, 65, 65, 65, 65, 65, 65, 65
+	                         DB            90, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 16, 29, 29, 236, 16, 236, 29, 16, 65, 18, 18, 19, 18, 65, 65, 29, 236, 236, 236, 236, 29, 65, 90, 90, 90, 65, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19
+	                         DB            19, 19, 18, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 16, 26, 16, 16, 16, 16, 65, 18, 18, 19, 19, 18
+	                         DB            65, 29, 29, 236, 16, 16, 236, 29, 29, 16, 65, 65, 160, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 16, 16, 16, 16, 16, 16, 16, 18, 18, 19, 19, 18, 65, 16, 26, 16, 16, 16, 16, 16, 16, 65, 65, 18, 160, 18, 18, 19
+	                         DB            19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 65, 65, 65
+	                         DB            65, 18, 18, 18, 18, 19, 18, 65, 65, 65, 16, 16, 16, 16, 16, 16, 16, 65, 18, 18, 18, 18, 18, 19, 19, 18, 19, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 19, 18, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 160, 160, 160, 18, 18, 18, 19, 19, 19, 18, 65, 160, 65, 65, 65, 65, 65, 65, 65
+	                         DB            65, 18, 18, 18, 18, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 19, 19, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 160, 65, 160, 18, 18, 19, 19, 19, 19, 18, 65, 90, 160, 160, 160, 160, 160, 160, 160, 160, 18, 18, 18, 19, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 19
+	                         DB            19, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 160, 18, 18, 18, 19, 19, 19, 18, 18, 65
+	                         DB            65, 90, 65, 65, 18, 18, 65, 65, 160, 18, 18, 18, 19, 18, 19, 19, 19, 18, 19, 20, 19, 18, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 160, 18, 18, 19, 19, 19, 19, 18, 18, 65, 65, 65, 65, 18, 18, 65, 65, 160, 18, 18, 19, 18, 19, 18, 19, 19
+	                         DB            20, 19, 19, 20, 19, 18, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18
+	                         DB            18, 19, 19, 19, 19, 18, 18, 18, 65, 65, 18, 18, 18, 65, 160, 18, 18, 19, 19, 18, 19, 19, 18, 19, 20, 19, 19, 20, 19, 19, 20, 19, 19, 19, 20, 19, 18, 18, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18, 18, 19, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 65, 160, 18, 18
+	                         DB            18, 19, 19, 20, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 20, 19, 19, 19, 20, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 160, 18, 18, 18, 19, 19, 18, 20, 19, 19, 18, 19, 19, 19, 19, 20, 19, 19, 20, 19
+	                         DB            19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 19
+	                         DB            18, 19, 19, 18, 160, 18, 18, 19, 19, 19, 20, 19, 19, 19, 18, 19, 20, 19, 20, 20, 19, 19, 20, 19, 19, 20, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 18, 18, 19, 18, 19, 19, 18, 160, 18, 18, 19, 19, 19, 20, 19, 19, 19, 19, 19
+	                         DB            20, 20, 20, 20, 20, 19, 20, 19, 20, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 19, 19, 18, 18, 19, 19, 19, 20, 20, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21, 19, 19, 18, 18, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 20, 19, 18, 18, 19, 19
+	                         DB            19, 20, 20, 19, 19, 19, 19, 20, 21, 20, 20, 20, 21, 20, 20, 20, 21, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18
+	                         DB            18, 18, 18, 18, 19, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19, 18, 19, 20, 19, 19, 19, 19, 19, 19, 20, 20, 19, 19, 19, 20, 20, 21, 20, 20, 20, 21, 20, 20, 21
+	                         DB            20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 18, 18, 19
+	                         DB            18, 19, 20, 19, 19, 20, 19, 19, 19, 20, 20, 19, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 20, 21, 20, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 18, 18, 18, 19, 18, 18, 18, 18, 18, 18, 18, 19, 20, 19, 19, 19, 19, 18, 19, 18, 19, 20, 20, 19, 20, 20, 19, 19, 20, 19, 19, 19, 20, 20, 21
+	                         DB            20, 21, 20, 20, 21, 20, 21, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 19, 18, 18, 18, 19, 18, 18, 18
+	                         DB            19, 20, 19, 19, 19, 19, 19, 19, 19, 20, 21, 20, 20, 20, 20, 19, 20, 20, 19, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 21, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 18, 19, 18, 19, 18, 18, 18, 19, 19, 20, 20, 19, 19, 20, 19, 19, 20, 21, 20, 20, 20, 20, 19
+	                         DB            20, 21, 19, 19, 19, 20, 21, 20, 21, 21, 21, 21, 21, 21, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19
+	                         DB            18, 19, 18, 18, 19, 18, 18, 19, 19, 19, 20, 20, 20, 19, 21, 21, 20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 21, 20, 20, 21, 20, 21, 20, 21, 19, 19, 18
+	                         DB            18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 18, 18, 19, 18, 18, 19, 19, 19, 20, 21, 20, 20, 20, 21
+	                         DB            20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 21, 20, 21, 20, 21, 20, 21, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 18, 19, 18, 18, 19, 19, 18, 18, 19, 19, 19, 19, 21, 21, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 19, 20, 21, 19, 19, 20, 20, 20, 20
+	                         DB            20, 20, 20, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 18, 18, 18
+	                         DB            19, 19, 19, 20, 21, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 19, 19, 20, 19, 20, 20, 20, 20, 20, 19, 20, 20, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 21, 20, 20, 21, 20, 20, 21, 20, 20, 20, 19
+	                         DB            19, 20, 19, 19, 19, 20, 20, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            18, 19, 19, 19, 19, 19, 18, 18, 19, 19, 19, 19, 20, 21, 20, 20, 21, 20, 20, 20, 20, 20, 20, 20, 19, 20, 19, 19, 19, 19, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 21, 20
+	                         DB            21, 20, 19, 20, 19, 19, 19, 20, 19, 20, 19, 19, 19, 20, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19, 19, 18, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 19, 20, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19
+	                         DB            18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 19, 19, 19
+	                         DB            19, 19, 19, 19, 19, 19, 20, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 19, 19, 19, 19, 19, 19, 19
+	                         DB            19, 19, 19, 19, 19, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 19, 19
+	                         DB            19, 19, 19, 19, 19, 19, 19, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18
+	Fenn                     DB            0, 125, 53, 53, 53, 54, 54, 125, 125, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53
+	                         DB            53, 53, 53, 53, 53, 53, 54, 191, 2, 2, 120, 191, 54, 53, 53, 53, 54, 191, 120, 2, 120, 2, 2, 2, 0, 125, 53, 53, 53, 54, 191, 191, 191, 191, 54, 54, 53, 53, 53, 53
+	                         DB            53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 53
+	                         DB            54, 191, 120, 120, 2, 120, 2, 2, 0, 0, 125, 53, 54, 191, 120, 120, 120, 120, 191, 54, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53
+	                         DB            53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 54, 191, 2, 2, 120, 191, 54, 53, 53, 53, 54, 54, 191, 120, 2, 120, 2, 2, 2, 0, 0, 125, 53, 54, 191, 120, 2
+	                         DB            2, 120, 191, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 191, 2
+	                         DB            2, 120, 191, 54, 53, 53, 53, 54, 191, 120, 120, 120, 2, 2, 2, 2, 0, 0, 125, 53, 54, 191, 2, 2, 2, 2, 191, 54, 54, 53, 53, 53, 53, 53, 54, 53, 54, 53, 54, 53
+	                         DB            54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 53, 53, 54, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 54, 191, 120, 120, 2, 120, 2, 2, 2
+	                         DB            0, 0, 125, 53, 54, 191, 2, 2, 2, 2, 191, 54, 53, 53, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54, 53, 54
+	                         DB            53, 54, 53, 54, 53, 54, 191, 2, 2, 2, 120, 191, 54, 53, 53, 54, 191, 120, 2, 120, 2, 2, 2, 2, 0, 0, 0, 125, 54, 191, 2, 2, 2, 2, 191, 54, 54, 53, 54, 53
+	                         DB            54, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 53, 54, 53, 54, 53, 54, 53, 54, 191, 2, 2, 120, 191, 54, 53, 53, 54
+	                         DB            120, 120, 120, 120, 2, 2, 2, 2, 0, 0, 0, 125, 54, 191, 2, 2, 2, 2, 191, 54, 53, 54, 53, 54, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54
+	                         DB            54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 53, 54, 54, 191, 2, 2, 2, 120, 191, 54, 54, 54, 120, 2, 2, 120, 120, 120, 2, 2, 0, 0, 0, 125, 54, 120, 120, 120
+	                         DB            120, 120, 120, 54, 54, 53, 54, 54, 54, 54, 54, 54, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 125, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54
+	                         DB            191, 2, 2, 120, 120, 120, 120, 120, 2, 2, 46, 46, 46, 71, 120, 2, 0, 0, 0, 0, 125, 120, 2, 46, 2, 46, 120, 54, 54, 54, 54, 125, 125, 125, 125, 125, 27, 27, 27, 27
+	                         DB            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 125, 125, 125, 125, 125, 125, 125, 125, 54, 54, 54, 191, 2, 120, 71, 46, 46, 46, 120, 120, 2, 46, 46, 46, 71, 71, 120
+	                         DB            0, 0, 0, 0, 125, 120, 46, 71, 71, 46, 120, 54, 54, 54, 125, 27, 27, 27, 27, 27, 27, 27, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 27, 27, 27, 27
+	                         DB            27, 27, 27, 27, 27, 125, 125, 125, 125, 120, 46, 46, 71, 71, 71, 46, 46, 120, 120, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71, 71, 46, 120, 125, 125, 125, 27, 27
+	                         DB            27, 27, 27, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 29, 29, 27, 27, 27, 27, 27, 27, 27, 27, 27, 46, 46, 71, 71, 71
+	                         DB            71, 46, 46, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71, 71, 46, 120, 27, 27, 27, 27, 29, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30
+	                         DB            30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 27, 27, 27, 27, 27, 120, 120, 46, 46, 71, 71, 71, 71, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 120, 46, 71
+	                         DB            71, 46, 120, 27, 27, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 160, 160, 160, 160, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29
+	                         DB            27, 27, 27, 27, 27, 120, 120, 46, 46, 46, 46, 71, 71, 71, 71, 71, 0, 0, 0, 0, 0, 0, 120, 71, 71, 46, 27, 27, 29, 29, 30, 30, 30, 30, 30, 30, 30, 160, 160, 160
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 27, 27, 27, 27, 22, 120, 120, 120, 120, 71, 71, 71, 71, 71
+	                         DB            0, 0, 0, 0, 0, 0, 0, 120, 120, 120, 29, 29, 29, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 30
+	                         DB            30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 27, 27, 22, 46, 46, 46, 46, 71, 71, 71, 71, 46, 0, 0, 0, 0, 0, 0, 0, 0, 22, 27, 29, 29, 30, 30, 30, 30
+	                         DB            30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 27, 22, 71
+	                         DB            71, 71, 71, 71, 71, 71, 46, 2, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 160, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 71, 71, 71, 71, 71, 71, 46, 2, 191, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 29, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 65, 160, 30, 30, 30
+	                         DB            30, 30, 30, 29, 27, 27, 22, 46, 46, 46, 46, 46, 46, 2, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            183, 183, 183, 183, 183, 183, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 30, 30, 30, 30, 30, 29, 27, 27, 22, 46, 46, 46, 46, 2, 2, 191, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 183, 183, 136, 64, 64, 64, 64, 136, 136, 183, 183, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 65, 65, 160, 30, 30, 30, 30, 30, 30, 27, 27, 22, 2, 2, 2, 191, 191, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 29, 160, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 183, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 30, 30, 27, 27, 22, 191
+	                         DB            191, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 136, 136, 136, 136, 136, 136, 30, 30, 136, 136
+	                         DB            136, 136, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 136, 30, 30, 136, 136, 136, 30, 30, 136, 30, 30, 136, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160
+	                         DB            30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 136, 30
+	                         DB            30, 183, 183, 183, 183, 183, 183, 30, 30, 183, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 183, 183, 183, 89, 89, 89, 89, 89, 89, 183, 183, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 27, 27, 22, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 65, 160, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65
+	                         DB            65, 160, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 160, 89, 89, 89, 89, 89
+	                         DB            89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 27, 27, 22, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 16, 16, 16, 89, 89, 89, 89, 89, 89, 89, 65, 160
+	                         DB            30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 65, 160, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 30, 29, 160, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 30, 27, 27, 22, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 30, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 30, 30, 30, 30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 30, 30, 30, 30, 30, 29, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 30, 30, 30, 30
+	                         DB            30, 30, 30, 30, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89
+	                         DB            89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30, 30, 30, 160, 160, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 160, 160, 160, 160, 160, 160, 30
+	                         DB            30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 27, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 30
+	                         DB            30, 30, 30, 30, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 27, 27, 22, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30
+	                         DB            30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            22, 29, 29, 29, 29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29
+	                         DB            29, 29, 29, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 30, 30, 29, 29, 22, 30, 30, 30, 30, 30, 30, 30, 30
+	                         DB            30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 22, 22, 22, 22, 29, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 29, 29, 22, 22, 22, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 22, 22
+	                         DB            22, 22, 22, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 29
+	                         DB            27, 22, 0, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 30, 27, 22, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22
+	                         DB            29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 30, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 27, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 30, 29, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 30, 30, 29, 22
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 29, 22, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 29, 29, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 22, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	Asta2                    DB            0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 67, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 67, 18, 18, 18, 67, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 18, 18, 18, 18, 18, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 18, 18, 20
+	                         DB            20, 20, 18, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 67, 67, 18, 18, 20, 20, 20, 20, 18, 18, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 67, 67, 67, 67, 67, 67, 67
+	                         DB            67, 67, 18, 18, 18, 20, 20, 20, 20, 18, 18, 18, 18, 18, 18, 67, 67, 67, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+	                         DB            18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 20, 20, 20, 20, 20, 18, 136, 65, 65, 65, 65, 18, 18
+	                         DB            18, 18, 18, 18, 18, 67, 67, 67, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 20, 20, 20, 18, 136, 65, 65, 65, 65, 65, 65, 65, 65, 136, 65, 18, 18, 18, 18, 67, 67, 67, 67, 67, 67, 67, 67
+	                         DB            67, 67, 67, 67, 67, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 20, 20, 20, 136
+	                         DB            136, 136, 65, 65, 65, 65, 65, 65, 65, 136, 136, 136, 18, 20, 20, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 20, 20, 18, 18, 136, 90, 90, 136, 136, 136, 136, 65, 65, 65, 65, 136, 65, 136, 18, 20, 20, 20
+	                         DB            20, 20, 20, 20, 20, 20, 20, 20, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 18, 18, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 136, 136, 136, 65, 136, 136, 136, 18, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 18, 18, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 18, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
+	                         DB            136, 136, 136, 18, 20, 20, 20, 20, 20, 20, 20, 20, 20, 18, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 20, 20, 20, 20, 20, 20, 18, 18, 18, 16, 16, 16
+	                         DB            22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90
+	                         DB            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 18, 20, 18, 18, 18, 18, 18, 136, 16, 16, 16, 19, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 136, 90, 90, 90, 90, 90, 90, 90, 90, 18, 18, 18, 19, 19, 65
+	                         DB            65, 65, 136, 16, 16, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 136, 90, 90, 136, 136, 136, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 19, 90, 19, 19, 19, 136, 65, 65, 136, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
+	                         DB            90, 19, 90, 19, 19, 19, 90, 90, 136, 65, 136, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 19, 90, 19, 19, 19, 90, 19, 136, 65, 136, 16, 16, 16, 16, 16
+	                         DB            16, 16, 16, 19, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 65, 65, 90, 90
+	                         DB            90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 19, 19, 19, 90, 19, 90, 65, 136, 136, 16, 19, 19, 19, 19, 19, 19, 22, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 65, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 19, 19, 19, 90, 19, 90, 90
+	                         DB            65, 136, 136, 16, 19, 19, 19, 19, 22, 22, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            136, 90, 65, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 19, 90, 19, 19, 90, 90, 19, 90, 90, 65, 65, 136, 16, 19, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 136, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90
+	                         DB            19, 19, 19, 90, 19, 90, 90, 90, 65, 65, 136, 16, 16, 16, 16, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 136, 90, 90, 90, 90, 90, 136, 90, 90, 90, 90, 90, 90, 90, 90, 19, 90, 19, 19, 90, 90, 90, 90, 90, 90, 90, 65, 65, 136, 136, 136, 16, 16
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 90, 65, 90, 90, 90, 90, 136, 90
+	                         DB            90, 90, 90, 90, 90, 90, 90, 90, 19, 90, 90, 19, 90, 90, 90, 90, 90, 65, 65, 136, 90, 90, 136, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 65, 29, 90, 90, 90, 90, 90, 90, 90, 90, 90, 65, 29, 29, 29, 29, 29, 29, 65, 136, 90, 90, 90, 90
+	                         DB            65, 65, 65, 136, 90, 90, 90, 136, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 136
+	                         DB            117, 117, 117, 29, 90, 65, 90, 90, 90, 65, 65, 29, 29, 4, 4, 4, 29, 29, 29, 65, 136, 90, 90, 65, 65, 65, 136, 136, 90, 65, 90, 90, 136, 16, 16, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 117, 190, 117, 29, 29, 65, 65, 90, 90, 65, 65, 28, 29, 4, 183, 4
+	                         DB            29, 29, 28, 28, 65, 65, 65, 65, 65, 136, 136, 136, 90, 90, 90, 90, 136, 19, 19, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 26, 19, 190, 190, 117, 28, 19, 21, 65, 90, 90, 90, 65, 16, 28, 183, 183, 4, 28, 28, 28, 28, 19, 65, 65, 65, 136, 16, 136, 136, 90, 65, 65, 90
+	                         DB            136, 19, 19, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 22, 19, 190, 190, 19, 16, 16, 65, 65
+	                         DB            90, 16, 16, 65, 16, 183, 183, 183, 28, 28, 28, 19, 65, 65, 65, 65, 136, 22, 16, 136, 90, 65, 65, 90, 136, 16, 16, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 136, 19, 19, 19, 16, 16, 16, 21, 65, 65, 65, 16, 16, 65, 183, 183, 183, 28, 19, 19, 65, 65, 65, 65, 65
+	                         DB            136, 19, 22, 16, 16, 90, 90, 22, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 136
+	                         DB            65, 65, 65, 19, 22, 16, 16, 16, 65, 65, 65, 16, 16, 65, 16, 16, 16, 65, 136, 65, 136, 136, 136, 136, 16, 16, 19, 19, 16, 16, 16, 183, 16, 16, 16, 16, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 136, 65, 136, 16, 22, 22, 26, 26, 16, 16, 136, 65, 65, 16, 16, 65, 65
+	                         DB            65, 65, 16, 136, 16, 16, 16, 16, 16, 16, 19, 19, 19, 16, 183, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 22, 22, 22, 136, 65, 16, 136, 22, 22, 26, 22, 19, 16, 16, 136, 65, 65, 16, 16, 16, 65, 16, 22, 136, 16, 22, 16, 19, 16, 16, 19, 16, 16, 16, 16, 16
+	                         DB            16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 26, 136, 136, 136, 22, 22, 26, 16, 19, 19
+	                         DB            19, 16, 136, 136, 65, 65, 16, 16, 16, 22, 136, 16, 22, 22, 16, 16, 19, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 22, 136, 136, 22, 22, 26, 26, 16, 19, 22, 19, 19, 16, 136, 136, 136, 136, 136, 19, 19, 16, 16, 19, 19, 16, 16
+	                         DB            19, 19, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 22, 136
+	                         DB            136, 22, 26, 26, 22, 16, 19, 22, 22, 19, 16, 16, 136, 136, 136, 16, 19, 16, 16, 16, 16, 16, 16, 19, 22, 22, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 22, 22, 26, 26, 22, 16, 19, 22, 22, 19, 19, 16, 16, 136, 16, 19
+	                         DB            16, 16, 16, 19, 19, 16, 19, 19, 19, 22, 22, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 22, 22, 21, 21, 21, 22, 22, 16, 19, 19, 19, 19, 19, 16, 16, 16, 16, 16, 16, 19, 19, 16, 16, 22, 16, 16, 16, 16, 16, 22, 16, 16, 16, 16
+	                         DB            16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 16, 16, 16, 16, 21, 21, 21, 16, 16
+	                         DB            16, 16, 19, 16, 16, 19, 19, 19, 19, 16, 16, 16, 16, 16, 22, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+	                         DB            16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16
+	                         DB            16, 16, 43, 43, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 16, 16, 16, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 68, 43, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+	                         DB            16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 19, 16, 16, 19, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 16, 16, 16, 43, 68, 68, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19
+	                         DB            19, 16, 16, 19, 19, 19, 19, 22, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 43, 68, 68, 43, 16, 16, 16
+	                         DB            16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 16, 16, 16, 19, 19, 19, 19, 22, 22, 22, 22, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 6, 43, 43, 43, 6, 16, 16, 26, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+	                         DB            16, 16, 16, 19, 19, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 19, 22, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16
+	                         DB            6, 6, 43, 6, 6, 6, 16, 26, 21, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 16, 19, 16, 16, 16, 16, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 16, 16, 16, 16, 16
+	                         DB            16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 6, 6, 6, 22, 6, 19, 19, 26, 21, 21, 16, 19, 19, 19, 19, 16
+	                         DB            16, 16, 16, 16, 19, 19, 16, 16, 19, 19, 19, 19, 19, 19, 22, 22, 22, 22, 22, 19, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 22, 22, 22, 22, 22, 22, 16, 19, 22, 26, 26, 19, 19, 26, 26, 21, 21, 16, 19, 19, 19, 19, 19, 16, 16, 16, 16, 19, 16, 16, 19, 19, 19, 19, 22, 22, 22, 16
+	                         DB            16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 22, 16, 26, 16, 26, 26, 16, 26
+	                         DB            26, 26, 21, 21, 16, 19, 19, 22, 19, 19, 16, 16, 16, 16, 16, 19, 19, 19, 19, 19, 19, 16, 16, 16, 16, 16, 19, 19, 19, 22, 22, 19, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 26, 22, 26, 26, 22, 26, 22, 26, 26, 26, 26, 22, 16, 16, 19, 19, 22, 19, 19, 16, 19, 16, 16, 16
+	                         DB            16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 19, 19, 0, 0, 19, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26
+	                         DB            26, 22, 22, 26, 22, 22, 22, 22, 26, 26, 26, 22, 26, 16, 16, 19, 22, 22, 19, 16, 19, 19, 19, 19, 19, 19, 19, 16, 16, 19, 19, 19, 19, 19, 19, 16, 0, 0, 0, 22
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 26, 16
+	                         DB            19, 22, 19, 16, 16, 19, 19, 19, 19, 19, 19, 16, 16, 19, 19, 19, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 26, 26, 26, 22, 22, 22, 22, 26, 26, 16, 16, 19, 19, 16, 16, 16, 19, 22, 22, 22, 22, 19, 16, 16, 16, 16
+	                         DB            16, 16, 16, 16, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 26, 26, 26, 26
+	                         DB            26, 26, 22, 26, 22, 16, 26, 22, 16, 19, 16, 16, 16, 16, 19, 19, 19, 16, 16, 16, 16, 16, 16, 19, 19, 19, 19, 22, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 22, 16, 26, 16, 16, 16, 19, 19, 19, 16, 16
+	                         DB            16, 16, 19, 19, 19, 19, 19, 19, 19, 19, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 26, 22
+	                         DB            22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 26, 26, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 16, 16, 16, 16, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 22, 22, 22, 26, 26, 16
+	                         DB            19, 19, 16, 16, 19, 19, 19, 19, 19, 19, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 22, 22, 22, 26, 26, 26, 22, 22, 22, 22, 22, 26, 26, 26, 26, 26, 22, 22, 22, 16, 16, 19, 19, 19, 16, 16, 16, 16, 19, 19, 19, 19, 19, 16, 16, 16, 16
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 26, 26, 26, 26, 22, 22, 22, 26, 26, 26, 26
+	                         DB            26, 22, 26, 22, 22, 16, 16, 16, 16, 19, 19, 19, 16, 16, 16, 16, 16, 19, 19, 22, 22, 22, 19, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 0, 0, 0, 0, 22, 22, 26, 26, 26, 26, 22, 22, 22, 22, 22, 22, 22, 26, 26, 16, 16, 19, 19, 19, 16, 16, 0
+	                         DB            0, 0, 0, 0, 22, 22, 22, 22, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22
+	                         DB            22, 26, 26, 0, 0, 0, 0, 22, 22, 22, 22, 26, 26, 26, 26, 16, 16, 16, 19, 19, 22, 22, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 26, 26, 26, 26, 26, 0, 0
+	                         DB            0, 0, 0, 0, 0, 22, 22, 22, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 26, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 
 	
 	; Planes
-	shipSizeX                equ         32
-	shipSizeY                equ         32
-	firstShipOffsetX         equ         96
-	secondShipOffsetX        equ         200
-	thirdShipOffsetX         equ         304
-	fourthShipOffsetX        equ         408
-	fifthShipOffsetX         equ         512
-	shipOffsetY              equ         304
+	shipSizeX                equ           32
+	shipSizeY                equ           32
+	firstShipOffsetX         equ           96
+	secondShipOffsetX        equ           200
+	thirdShipOffsetX         equ           304
+	fourthShipOffsetX        equ           408
+	fifthShipOffsetX         equ           512
+	shipOffsetY              equ           304
 	
 	
-	                         arrow       label byte
-	                         ship2       label byte                                                                                                                                                                                            	; remove before adding ship2
-	                         ship1       label byte
-	Meruem_Plane             DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169
-	                         DB          73, 169, 73, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169, 73, 169, 169, 19, 19, 169, 169, 19
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 169, 73, 19, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95
-	                         DB          95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 42, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 73, 169, 169, 169, 169, 169
-	                         DB          169, 19, 42, 44, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95, 95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 19, 19, 19, 19, 169, 169, 169, 169, 169, 73, 73, 169, 169, 73, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 73, 73, 73, 73, 73, 73, 73
-	                         DB          73, 95, 169, 73, 73, 95, 169, 73, 169, 169, 169, 19, 0, 0, 0, 0, 0, 19, 73, 73, 95, 95, 95, 95, 95, 95, 95, 95, 73, 95, 73, 73, 73, 73, 95, 169, 73, 73, 95, 169
-	                         DB          73, 73, 73, 73, 42, 66, 66, 0, 19, 73, 73, 95, 95, 35, 35, 35, 95, 95, 95, 95, 95, 73, 95, 73, 73, 73, 95, 73, 73, 73, 95, 73, 73, 73, 73, 73, 43, 44, 44, 44
-	                         DB          19, 73, 95, 35, 58, 58, 58, 58, 35, 95, 95, 95, 73, 95, 73, 95, 95, 95, 95, 169, 73, 73, 95, 169, 73, 73, 169, 19, 0, 0, 0, 0, 19, 73, 95, 35, 58, 58, 58, 58
-	                         DB          35, 95, 95, 95, 73, 95, 73, 95, 95, 95, 95, 169, 73, 73, 95, 169, 73, 73, 169, 19, 0, 0, 0, 0, 19, 73, 73, 95, 95, 35, 35, 35, 95, 95, 95, 95, 95, 73, 95, 73
-	                         DB          73, 73, 95, 73, 73, 73, 95, 73, 73, 73, 73, 73, 43, 44, 44, 44, 0, 19, 73, 73, 95, 95, 95, 95, 95, 95, 95, 95, 73, 95, 73, 73, 73, 73, 95, 169, 73, 73, 95, 169
-	                         DB          73, 73, 73, 73, 42, 66, 66, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 73, 73, 73, 73, 73, 73, 73, 73, 95, 169, 73, 73, 95, 169, 73, 169, 169, 169, 19, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 169, 169, 169, 169, 169, 73, 73, 169, 169, 73, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95
-	                         DB          95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 73, 169, 169, 169, 169, 169
-	                         DB          169, 19, 42, 44, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95, 95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 42, 43, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 19, 19, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19
-	                         DB          19, 169, 73, 19, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169, 73, 169, 169, 19, 19, 169, 169, 19
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169, 73, 169, 73, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	Asta_Plane               DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 16, 42, 43, 16, 41, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 16, 16, 0, 16, 42, 16, 4, 41, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 41, 16, 0, 16, 16
-	                         DB          41, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 41, 4, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 41, 16, 0, 16, 4, 41, 16, 16, 16, 16, 16, 16
-	                         DB          16, 16, 16, 16, 16, 16, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 16, 4, 41, 4, 16, 41, 16, 41, 16, 41, 4, 16, 41, 16, 41, 16
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 16, 41, 16, 41, 4, 16, 0, 41, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 16, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          16, 41, 16, 16, 16, 4, 41, 4, 41, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 0, 55, 55, 55, 0, 0, 0, 0, 16, 4, 41, 16, 41, 41, 4, 41
-	                         DB          114, 114, 114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 55, 54, 54, 53, 55, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 114, 114, 114, 114, 114, 114, 114
-	                         DB          114, 114, 114, 114, 114, 114, 114, 16, 54, 54, 53, 53, 55, 0, 0, 0, 16, 0, 0, 16, 0, 0, 0, 0, 16, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16
-	                         DB          54, 54, 53, 53, 53, 55, 55, 0, 0, 0, 0, 16, 0, 0, 16, 16, 16, 54, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 16, 54, 53, 53, 52, 52, 52, 53, 55
-	                         DB          0, 0, 0, 0, 0, 16, 16, 16, 114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 54, 53, 53, 52, 76, 76, 76, 76, 0, 0, 0, 0, 0, 16, 16, 16
-	                         DB          114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 54, 53, 53, 52, 52, 52, 53, 55, 0, 0, 0, 16, 0, 0, 16, 16, 16, 54, 114, 114, 114, 114, 114, 114
-	                         DB          114, 114, 114, 114, 114, 114, 114, 16, 54, 53, 53, 52, 53, 54, 54, 55, 16, 0, 0, 16, 0, 0, 0, 0, 16, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16
-	                         DB          54, 54, 53, 53, 53, 55, 55, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 16, 54, 54, 53, 53, 55, 0, 0, 0
-	                         DB          16, 4, 41, 16, 41, 41, 4, 41, 114, 114, 114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 55, 54, 54, 54, 55, 0, 0, 0, 16, 41, 16, 16, 16, 4, 41, 4
-	                         DB          41, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 0, 55, 55, 55, 0, 0, 0, 0, 16, 4, 16, 41, 16, 41, 4, 16, 0, 41, 114, 114, 114, 114, 114, 114
-	                         DB          114, 114, 114, 114, 114, 114, 114, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 16, 4, 41, 4, 16, 41, 16, 41, 16, 41, 4, 16, 41, 16, 41, 16
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 41, 16, 0, 16, 4, 41, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 16, 41, 16, 0, 16, 16, 41, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 41, 4, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 0, 16, 42, 16
-	                         DB          4, 41, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 16, 42, 43, 16, 41, 4, 16, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	Hisoka_Plane             DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134
-	                         DB          63, 134, 63, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 134, 19, 19, 134, 134, 19
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 134, 63, 19, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 134, 134, 134, 134, 134, 134, 134, 63, 63, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 63, 134, 63
-	                         DB          134, 63, 134, 63, 134, 134, 134, 134, 134, 63, 63, 63, 134, 63, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 63, 63, 63, 63, 134, 134
-	                         DB          63, 63, 63, 63, 63, 63, 134, 134, 134, 19, 42, 43, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 134, 63, 134, 134, 63, 134, 134, 63, 63, 63, 134, 63, 134, 134
-	                         DB          134, 19, 42, 44, 44, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 63, 63, 63, 63, 134, 63, 134, 134, 134, 63, 63, 134, 134, 134, 134, 19, 42, 44, 0, 0, 0, 0
-	                         DB          0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 134, 63, 134, 134, 63, 134, 63, 134, 134, 134, 134, 134, 134, 134, 134, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 19, 63, 134, 134, 63, 134, 63, 134, 19, 19, 19, 19, 63, 134, 134, 134, 134, 42, 43, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19
-	                         DB          19, 19, 63, 63, 63, 63, 134, 63, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 43, 43, 86, 86, 86, 86, 86, 86, 86, 86, 63, 86, 134
-	                         DB          63, 63, 63, 63, 42, 66, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 43, 43, 86, 86, 35, 35, 35, 86, 86, 86, 86, 86, 86, 63, 63, 63, 63, 63, 43, 44, 44, 44
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 43, 86, 35, 58, 58, 58, 58, 35, 86, 86, 86, 63, 86, 134, 63, 63, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 19, 43, 86, 35, 58, 58, 58, 58, 35, 86, 86, 86, 63, 86, 134, 63, 63, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 43, 43, 86, 86, 35, 35
-	                         DB          35, 86, 86, 86, 86, 86, 86, 63, 63, 63, 63, 63, 43, 44, 44, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 43, 43, 86, 86, 86, 86, 86, 86, 86, 86, 63, 86, 134
-	                         DB          63, 63, 63, 63, 42, 66, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 63, 63, 63, 63, 134, 63, 134, 134, 134, 19, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 63, 134, 63, 134, 63, 134, 19, 19, 19, 19, 63, 134, 134, 134, 134, 42, 43, 44, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19
-	                         DB          19, 19, 134, 63, 134, 134, 63, 134, 63, 134, 134, 134, 134, 134, 134, 134, 134, 19, 19, 19, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 63, 63, 63, 63, 134, 63
-	                         DB          134, 134, 134, 63, 63, 134, 134, 134, 134, 19, 42, 44, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 134, 63, 134, 134, 63, 134, 134, 63, 63, 63, 63, 63, 63, 134
-	                         DB          134, 19, 42, 44, 44, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 63, 63, 63, 63, 134, 134, 63, 63, 63, 63, 63, 63, 63, 63, 134, 19, 42, 43, 0, 0, 0, 0
-	                         DB          0, 0, 0, 19, 19, 63, 134, 63, 134, 63, 134, 63, 134, 134, 134, 134, 134, 63, 63, 63, 63, 63, 63, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19
-	                         DB          19, 19, 19, 19, 134, 134, 134, 134, 134, 134, 134, 63, 63, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19
-	                         DB          19, 134, 63, 19, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 134, 19, 19, 134, 134, 19
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	Mikasa_Plane             DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19
-	                         DB          138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 66, 138, 19, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 19, 19, 19, 0, 0, 0, 19, 138, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 19, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29
-	                         DB          29, 19, 19, 19, 19, 19, 19, 138, 66, 66, 138, 19, 0, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 19, 19, 66
-	                         DB          138, 66, 138, 19, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 138, 66, 138, 138, 66, 138, 19, 0, 0, 0, 0
-	                         DB          0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 23, 19, 19, 19, 66, 138, 66, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 19, 19, 138, 138, 138, 138, 138, 138, 19, 23, 23, 27, 27, 19, 138, 66, 66, 66, 66, 19, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 66, 66, 66, 66, 66, 66, 66
-	                         DB          66, 138, 19, 19, 19, 19, 138, 66, 66, 138, 138, 19, 19, 23, 23, 27, 0, 0, 19, 19, 66, 66, 91, 91, 91, 91, 66, 91, 66, 91, 66, 138, 138, 138, 91, 138, 66, 66, 91, 138
-	                         DB          66, 66, 66, 66, 4, 65, 65, 23, 0, 19, 66, 91, 91, 4, 4, 4, 91, 91, 91, 91, 91, 66, 91, 66, 66, 66, 91, 66, 66, 91, 91, 66, 66, 66, 66, 66, 6, 64, 64, 64
-	                         DB          19, 66, 91, 4, 64, 64, 64, 64, 4, 91, 91, 91, 66, 91, 66, 91, 91, 91, 91, 138, 66, 66, 91, 138, 66, 66, 138, 19, 67, 67, 67, 67, 19, 66, 91, 4, 64, 64, 64, 64
-	                         DB          4, 91, 91, 91, 66, 91, 66, 91, 91, 91, 91, 138, 66, 66, 91, 138, 66, 66, 138, 19, 67, 67, 67, 67, 0, 19, 66, 91, 91, 4, 4, 4, 91, 91, 91, 91, 91, 66, 91, 66
-	                         DB          66, 66, 91, 66, 66, 91, 91, 66, 66, 66, 66, 66, 6, 64, 64, 64, 0, 0, 19, 19, 66, 66, 91, 91, 91, 91, 66, 91, 66, 91, 66, 138, 138, 138, 91, 138, 66, 66, 91, 138
-	                         DB          66, 66, 66, 66, 4, 65, 65, 23, 0, 0, 0, 0, 19, 19, 19, 19, 19, 66, 66, 66, 66, 66, 66, 66, 66, 138, 19, 19, 19, 19, 138, 66, 66, 138, 138, 19, 19, 23, 23, 27
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 138, 138, 138, 138, 19, 23, 23, 27, 27, 19, 138, 66, 66, 66, 66, 19, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 23, 19, 19, 19, 66, 138, 66, 66, 138, 19, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27
-	                         DB          27, 19, 19, 19, 19, 138, 66, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 19, 19, 66
-	                         DB          138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 19, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 19, 19, 19, 19, 19, 19, 138, 66, 66, 138, 19, 0, 0, 0, 0
-	                         DB          0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 0, 0, 0, 19, 138, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19
-	                         DB          138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 19, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 0, 0, 0
-	Fenn_Plane               DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151
-	                         DB          77, 151, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151, 77, 151, 151, 19, 19, 19, 19, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 4, 4, 4, 19, 77, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 4, 151, 151, 151, 77, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 19, 19, 112, 4, 112, 151, 151, 151, 151, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 112
-	                         DB          0, 4, 0, 112, 151, 151, 151, 151, 151, 19, 42, 43, 0, 0, 0, 0, 0, 19, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 112, 4, 4, 4, 112, 112, 4, 112, 4
-	                         DB          40, 64, 42, 44, 44, 0, 0, 0, 0, 0, 19, 19, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 112, 0, 4, 0, 112, 151, 151, 151, 151, 4, 40, 19, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 112, 4, 112, 151, 151, 151, 151, 151, 151, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 19, 19, 19, 19, 151, 151, 151, 151, 4, 151, 151, 77, 77, 77, 151, 77, 77, 77, 77, 19, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 77, 77, 77, 77, 77, 77, 151
-	                         DB          4, 4, 4, 151, 77, 100, 151, 77, 77, 151, 151, 19, 0, 0, 0, 0, 0, 19, 77, 77, 77, 100, 100, 100, 100, 100, 77, 100, 77, 100, 77, 151, 151, 151, 100, 151, 77, 77, 100, 151
-	                         DB          77, 77, 77, 77, 42, 66, 66, 0, 19, 77, 77, 100, 100, 47, 47, 47, 100, 100, 100, 100, 100, 77, 100, 77, 77, 77, 100, 77, 77, 77, 100, 77, 77, 77, 77, 77, 43, 44, 44, 44
-	                         DB          19, 77, 100, 47, 73, 73, 73, 73, 47, 100, 100, 100, 77, 100, 77, 100, 100, 100, 100, 151, 77, 77, 100, 151, 77, 77, 151, 19, 0, 0, 0, 0, 19, 77, 100, 47, 73, 73, 73, 73
-	                         DB          47, 100, 100, 100, 77, 100, 77, 100, 100, 100, 100, 151, 77, 77, 100, 151, 77, 77, 151, 19, 0, 0, 0, 0, 19, 77, 77, 100, 100, 47, 47, 47, 100, 100, 100, 100, 100, 77, 100, 77
-	                         DB          77, 77, 100, 77, 77, 77, 100, 77, 77, 77, 77, 77, 43, 44, 44, 44, 0, 19, 77, 77, 77, 100, 100, 100, 100, 100, 77, 100, 77, 100, 77, 151, 151, 151, 100, 151, 77, 77, 100, 151
-	                         DB          77, 77, 77, 77, 42, 66, 66, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 77, 77, 77, 77, 77, 77, 151, 4, 4, 4, 151, 77, 100, 151, 77, 77, 151, 151, 19, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 151, 151, 151, 151, 4, 151, 151, 77, 77, 77, 151, 77, 77, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 19, 19, 112, 4, 112, 151, 151, 151, 151, 151, 151, 19, 19, 19, 0, 0, 0, 0, 0, 0, 19, 19, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 112
-	                         DB          0, 4, 0, 112, 151, 151, 151, 151, 4, 40, 19, 0, 0, 0, 0, 0, 0, 19, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 112, 4, 4, 4, 112, 112, 4, 112, 4
-	                         DB          40, 64, 42, 44, 44, 0, 0, 0, 0, 0, 19, 19, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 112, 0, 4, 0, 112, 151, 151, 151, 151, 151, 19, 42, 43, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 112, 4, 112, 151, 151, 151, 151, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 19, 4, 151, 151, 151, 77, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19
-	                         DB          4, 4, 4, 19, 77, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151, 77, 151, 151, 19, 19, 19, 19, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151, 77, 151, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         arrow         label byte
+	                         ship2         label byte                                                                                                                                                                                            	; remove before adding ship2
+	                         ship1         label byte
+	Meruem_Plane             DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169
+	                         DB            73, 169, 73, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169, 73, 169, 169, 19, 19, 169, 169, 19
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 169, 73, 19, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95
+	                         DB            95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 42, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 73, 169, 169, 169, 169, 169
+	                         DB            169, 19, 42, 44, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95, 95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 19, 19, 19, 19, 169, 169, 169, 169, 169, 73, 73, 169, 169, 73, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 73, 73, 73, 73, 73, 73, 73
+	                         DB            73, 95, 169, 73, 73, 95, 169, 73, 169, 169, 169, 19, 0, 0, 0, 0, 0, 19, 73, 73, 95, 95, 95, 95, 95, 95, 95, 95, 73, 95, 73, 73, 73, 73, 95, 169, 73, 73, 95, 169
+	                         DB            73, 73, 73, 73, 42, 66, 66, 0, 19, 73, 73, 95, 95, 35, 35, 35, 95, 95, 95, 95, 95, 73, 95, 73, 73, 73, 95, 73, 73, 73, 95, 73, 73, 73, 73, 73, 43, 44, 44, 44
+	                         DB            19, 73, 95, 35, 58, 58, 58, 58, 35, 95, 95, 95, 73, 95, 73, 95, 95, 95, 95, 169, 73, 73, 95, 169, 73, 73, 169, 19, 0, 0, 0, 0, 19, 73, 95, 35, 58, 58, 58, 58
+	                         DB            35, 95, 95, 95, 73, 95, 73, 95, 95, 95, 95, 169, 73, 73, 95, 169, 73, 73, 169, 19, 0, 0, 0, 0, 19, 73, 73, 95, 95, 35, 35, 35, 95, 95, 95, 95, 95, 73, 95, 73
+	                         DB            73, 73, 95, 73, 73, 73, 95, 73, 73, 73, 73, 73, 43, 44, 44, 44, 0, 19, 73, 73, 95, 95, 95, 95, 95, 95, 95, 95, 73, 95, 73, 73, 73, 73, 95, 169, 73, 73, 95, 169
+	                         DB            73, 73, 73, 73, 42, 66, 66, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 73, 73, 73, 73, 73, 73, 73, 73, 95, 169, 73, 73, 95, 169, 73, 169, 169, 169, 19, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 169, 169, 169, 169, 169, 73, 73, 169, 169, 73, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95
+	                         DB            95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 73, 169, 169, 169, 169, 169
+	                         DB            169, 19, 42, 44, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 95, 95, 95, 95, 95, 95, 95, 95, 95, 73, 73, 73, 73, 73, 73, 169, 19, 42, 43, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 169, 169, 169, 169, 169, 73, 73, 73, 73, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 19, 19, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19
+	                         DB            19, 169, 73, 19, 169, 169, 169, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169, 73, 169, 169, 19, 19, 169, 169, 19
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169, 73, 169, 73, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	Asta_Plane               DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 16, 42, 43, 16, 41, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 16, 16, 0, 16, 42, 16, 4, 41, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 41, 16, 0, 16, 16
+	                         DB            41, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 41, 4, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 41, 16, 0, 16, 4, 41, 16, 16, 16, 16, 16, 16
+	                         DB            16, 16, 16, 16, 16, 16, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 16, 4, 41, 4, 16, 41, 16, 41, 16, 41, 4, 16, 41, 16, 41, 16
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 16, 41, 16, 41, 4, 16, 0, 41, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 16, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            16, 41, 16, 16, 16, 4, 41, 4, 41, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 0, 55, 55, 55, 0, 0, 0, 0, 16, 4, 41, 16, 41, 41, 4, 41
+	                         DB            114, 114, 114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 55, 54, 54, 53, 55, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 114, 114, 114, 114, 114, 114, 114
+	                         DB            114, 114, 114, 114, 114, 114, 114, 16, 54, 54, 53, 53, 55, 0, 0, 0, 16, 0, 0, 16, 0, 0, 0, 0, 16, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16
+	                         DB            54, 54, 53, 53, 53, 55, 55, 0, 0, 0, 0, 16, 0, 0, 16, 16, 16, 54, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 16, 54, 53, 53, 52, 52, 52, 53, 55
+	                         DB            0, 0, 0, 0, 0, 16, 16, 16, 114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 54, 53, 53, 52, 76, 76, 76, 76, 0, 0, 0, 0, 0, 16, 16, 16
+	                         DB            114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 54, 53, 53, 52, 52, 52, 53, 55, 0, 0, 0, 16, 0, 0, 16, 16, 16, 54, 114, 114, 114, 114, 114, 114
+	                         DB            114, 114, 114, 114, 114, 114, 114, 16, 54, 53, 53, 52, 53, 54, 54, 55, 16, 0, 0, 16, 0, 0, 0, 0, 16, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16
+	                         DB            54, 54, 53, 53, 53, 55, 55, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 114, 16, 54, 54, 53, 53, 55, 0, 0, 0
+	                         DB            16, 4, 41, 16, 41, 41, 4, 41, 114, 114, 114, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 55, 54, 54, 54, 55, 0, 0, 0, 16, 41, 16, 16, 16, 4, 41, 4
+	                         DB            41, 114, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 42, 114, 16, 0, 55, 55, 55, 0, 0, 0, 0, 16, 4, 16, 41, 16, 41, 4, 16, 0, 41, 114, 114, 114, 114, 114, 114
+	                         DB            114, 114, 114, 114, 114, 114, 114, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 16, 4, 41, 4, 16, 41, 16, 41, 16, 41, 4, 16, 41, 16, 41, 16
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 41, 16, 0, 16, 4, 41, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 16, 41, 16, 0, 16, 16, 41, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 41, 4, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 0, 16, 42, 16
+	                         DB            4, 41, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 16, 42, 43, 16, 41, 4, 16, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	Hisoka_Plane             DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134
+	                         DB            63, 134, 63, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 134, 19, 19, 134, 134, 19
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 134, 63, 19, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 134, 134, 134, 134, 134, 134, 134, 63, 63, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 63, 134, 63
+	                         DB            134, 63, 134, 63, 134, 134, 134, 134, 134, 63, 63, 63, 134, 63, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 63, 63, 63, 63, 134, 134
+	                         DB            63, 63, 63, 63, 63, 63, 134, 134, 134, 19, 42, 43, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 134, 63, 134, 134, 63, 134, 134, 63, 63, 63, 134, 63, 134, 134
+	                         DB            134, 19, 42, 44, 44, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 63, 63, 63, 63, 134, 63, 134, 134, 134, 63, 63, 134, 134, 134, 134, 19, 42, 44, 0, 0, 0, 0
+	                         DB            0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 134, 63, 134, 134, 63, 134, 63, 134, 134, 134, 134, 134, 134, 134, 134, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 19, 63, 134, 134, 63, 134, 63, 134, 19, 19, 19, 19, 63, 134, 134, 134, 134, 42, 43, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19
+	                         DB            19, 19, 63, 63, 63, 63, 134, 63, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 43, 43, 86, 86, 86, 86, 86, 86, 86, 86, 63, 86, 134
+	                         DB            63, 63, 63, 63, 42, 66, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 43, 43, 86, 86, 35, 35, 35, 86, 86, 86, 86, 86, 86, 63, 63, 63, 63, 63, 43, 44, 44, 44
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 43, 86, 35, 58, 58, 58, 58, 35, 86, 86, 86, 63, 86, 134, 63, 63, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 19, 43, 86, 35, 58, 58, 58, 58, 35, 86, 86, 86, 63, 86, 134, 63, 63, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 43, 43, 86, 86, 35, 35
+	                         DB            35, 86, 86, 86, 86, 86, 86, 63, 63, 63, 63, 63, 43, 44, 44, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 43, 43, 86, 86, 86, 86, 86, 86, 86, 86, 63, 86, 134
+	                         DB            63, 63, 63, 63, 42, 66, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 63, 63, 63, 63, 134, 63, 134, 134, 134, 19, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 63, 134, 63, 134, 63, 134, 19, 19, 19, 19, 63, 134, 134, 134, 134, 42, 43, 44, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19
+	                         DB            19, 19, 134, 63, 134, 134, 63, 134, 63, 134, 134, 134, 134, 134, 134, 134, 134, 19, 19, 19, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 63, 63, 63, 63, 134, 63
+	                         DB            134, 134, 134, 63, 63, 134, 134, 134, 134, 19, 42, 44, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 134, 63, 134, 134, 63, 134, 134, 63, 63, 63, 63, 63, 63, 134
+	                         DB            134, 19, 42, 44, 44, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 134, 63, 63, 63, 63, 63, 134, 134, 63, 63, 63, 63, 63, 63, 63, 63, 134, 19, 42, 43, 0, 0, 0, 0
+	                         DB            0, 0, 0, 19, 19, 63, 134, 63, 134, 63, 134, 63, 134, 134, 134, 134, 134, 63, 63, 63, 63, 63, 63, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19
+	                         DB            19, 19, 19, 19, 134, 134, 134, 134, 134, 134, 134, 63, 63, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19
+	                         DB            19, 134, 63, 19, 134, 134, 134, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 134, 19, 19, 134, 134, 19
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	Mikasa_Plane             DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19
+	                         DB            138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 66, 138, 19, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19
+	                         DB            19, 19, 19, 19, 19, 19, 19, 19, 19, 0, 0, 0, 19, 138, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 19, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29
+	                         DB            29, 19, 19, 19, 19, 19, 19, 138, 66, 66, 138, 19, 0, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 19, 19, 66
+	                         DB            138, 66, 138, 19, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 138, 66, 138, 138, 66, 138, 19, 0, 0, 0, 0
+	                         DB            0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 23, 19, 19, 19, 66, 138, 66, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 19, 19, 138, 138, 138, 138, 138, 138, 19, 23, 23, 27, 27, 19, 138, 66, 66, 66, 66, 19, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 66, 66, 66, 66, 66, 66, 66
+	                         DB            66, 138, 19, 19, 19, 19, 138, 66, 66, 138, 138, 19, 19, 23, 23, 27, 0, 0, 19, 19, 66, 66, 91, 91, 91, 91, 66, 91, 66, 91, 66, 138, 138, 138, 91, 138, 66, 66, 91, 138
+	                         DB            66, 66, 66, 66, 4, 65, 65, 23, 0, 19, 66, 91, 91, 4, 4, 4, 91, 91, 91, 91, 91, 66, 91, 66, 66, 66, 91, 66, 66, 91, 91, 66, 66, 66, 66, 66, 6, 64, 64, 64
+	                         DB            19, 66, 91, 4, 64, 64, 64, 64, 4, 91, 91, 91, 66, 91, 66, 91, 91, 91, 91, 138, 66, 66, 91, 138, 66, 66, 138, 19, 67, 67, 67, 67, 19, 66, 91, 4, 64, 64, 64, 64
+	                         DB            4, 91, 91, 91, 66, 91, 66, 91, 91, 91, 91, 138, 66, 66, 91, 138, 66, 66, 138, 19, 67, 67, 67, 67, 0, 19, 66, 91, 91, 4, 4, 4, 91, 91, 91, 91, 91, 66, 91, 66
+	                         DB            66, 66, 91, 66, 66, 91, 91, 66, 66, 66, 66, 66, 6, 64, 64, 64, 0, 0, 19, 19, 66, 66, 91, 91, 91, 91, 66, 91, 66, 91, 66, 138, 138, 138, 91, 138, 66, 66, 91, 138
+	                         DB            66, 66, 66, 66, 4, 65, 65, 23, 0, 0, 0, 0, 19, 19, 19, 19, 19, 66, 66, 66, 66, 66, 66, 66, 66, 138, 19, 19, 19, 19, 138, 66, 66, 138, 138, 19, 19, 23, 23, 27
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 138, 138, 138, 138, 19, 23, 23, 27, 27, 19, 138, 66, 66, 66, 66, 19, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19
+	                         DB            19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 23, 19, 19, 19, 66, 138, 66, 66, 138, 19, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27
+	                         DB            27, 19, 19, 19, 19, 138, 66, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 19, 19, 66
+	                         DB            138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 19, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 19, 19, 19, 19, 19, 19, 138, 66, 66, 138, 19, 0, 0, 0, 0
+	                         DB            0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 0, 0, 0, 19, 138, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19
+	                         DB            138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 19, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 0, 0, 0
+	Fenn_Plane               DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151
+	                         DB            77, 151, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151, 77, 151, 151, 19, 19, 19, 19, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 4, 4, 4, 19, 77, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 4, 151, 151, 151, 77, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19
+	                         DB            19, 19, 19, 19, 19, 19, 19, 19, 112, 4, 112, 151, 151, 151, 151, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 112
+	                         DB            0, 4, 0, 112, 151, 151, 151, 151, 151, 19, 42, 43, 0, 0, 0, 0, 0, 19, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 112, 4, 4, 4, 112, 112, 4, 112, 4
+	                         DB            40, 64, 42, 44, 44, 0, 0, 0, 0, 0, 19, 19, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 112, 0, 4, 0, 112, 151, 151, 151, 151, 4, 40, 19, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 112, 4, 112, 151, 151, 151, 151, 151, 151, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 19, 19, 19, 19, 151, 151, 151, 151, 4, 151, 151, 77, 77, 77, 151, 77, 77, 77, 77, 19, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 77, 77, 77, 77, 77, 77, 151
+	                         DB            4, 4, 4, 151, 77, 100, 151, 77, 77, 151, 151, 19, 0, 0, 0, 0, 0, 19, 77, 77, 77, 100, 100, 100, 100, 100, 77, 100, 77, 100, 77, 151, 151, 151, 100, 151, 77, 77, 100, 151
+	                         DB            77, 77, 77, 77, 42, 66, 66, 0, 19, 77, 77, 100, 100, 47, 47, 47, 100, 100, 100, 100, 100, 77, 100, 77, 77, 77, 100, 77, 77, 77, 100, 77, 77, 77, 77, 77, 43, 44, 44, 44
+	                         DB            19, 77, 100, 47, 73, 73, 73, 73, 47, 100, 100, 100, 77, 100, 77, 100, 100, 100, 100, 151, 77, 77, 100, 151, 77, 77, 151, 19, 0, 0, 0, 0, 19, 77, 100, 47, 73, 73, 73, 73
+	                         DB            47, 100, 100, 100, 77, 100, 77, 100, 100, 100, 100, 151, 77, 77, 100, 151, 77, 77, 151, 19, 0, 0, 0, 0, 19, 77, 77, 100, 100, 47, 47, 47, 100, 100, 100, 100, 100, 77, 100, 77
+	                         DB            77, 77, 100, 77, 77, 77, 100, 77, 77, 77, 77, 77, 43, 44, 44, 44, 0, 19, 77, 77, 77, 100, 100, 100, 100, 100, 77, 100, 77, 100, 77, 151, 151, 151, 100, 151, 77, 77, 100, 151
+	                         DB            77, 77, 77, 77, 42, 66, 66, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 77, 77, 77, 77, 77, 77, 151, 4, 4, 4, 151, 77, 100, 151, 77, 77, 151, 151, 19, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 151, 151, 151, 151, 4, 151, 151, 77, 77, 77, 151, 77, 77, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19
+	                         DB            19, 19, 19, 19, 19, 19, 19, 19, 112, 4, 112, 151, 151, 151, 151, 151, 151, 19, 19, 19, 0, 0, 0, 0, 0, 0, 19, 19, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 112
+	                         DB            0, 4, 0, 112, 151, 151, 151, 151, 4, 40, 19, 0, 0, 0, 0, 0, 0, 19, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 112, 4, 4, 4, 112, 112, 4, 112, 4
+	                         DB            40, 64, 42, 44, 44, 0, 0, 0, 0, 0, 19, 19, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 112, 0, 4, 0, 112, 151, 151, 151, 151, 151, 19, 42, 43, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 112, 4, 112, 151, 151, 151, 151, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 19, 4, 151, 151, 151, 77, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19
+	                         DB            4, 4, 4, 19, 77, 77, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151, 77, 151, 151, 19, 19, 19, 19, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151, 77, 151, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 
 
-	NameBoxC                 DB          0, 0, 0, 0, 0, 0, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222
-	                         DB          222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 222, 222, 150, 150, 222, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150
-	                         DB          150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 222, 150, 150, 222, 222, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 150, 3, 150, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 150, 222, 150, 3, 150
-	                         DB          222, 222, 0, 0, 0, 0, 0, 0, 0, 222, 222, 150, 77, 53, 150, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 150, 222, 150
-	                         DB          53, 77, 150, 222, 222, 0, 0, 0, 0, 0, 222, 222, 150, 77, 3, 3, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          150, 222, 3, 3, 77, 150, 222, 222, 0, 0, 0, 222, 222, 150, 77, 3, 77, 53, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 150, 222, 53, 77, 3, 77, 150, 222, 222, 0, 222, 222, 150, 77, 77, 77, 3, 3, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 150, 222, 3, 3, 77, 77, 77, 150, 222, 222, 222, 150, 77, 77, 77, 3, 77, 53, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 77, 77, 150, 222, 53, 77, 3, 77, 77, 77, 150, 222, 222, 150, 77, 77, 77, 77, 3, 3, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 77, 77, 77, 77, 150, 222, 3, 3, 77, 77, 77, 77, 150, 222, 222, 150, 77, 77, 77, 3, 77, 53, 222, 150, 77, 77, 77, 77, 100, 100, 100, 100, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 77, 77, 77, 77, 150, 222, 53, 77, 3, 77, 77, 77, 150, 222, 222, 222, 150, 77, 77, 77, 3, 3, 222, 150, 77, 77, 77, 100, 100, 100, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 77, 150, 222, 3, 3, 77, 77, 77, 150, 222, 222, 0, 222, 222, 150, 77, 3, 77, 53, 222, 150, 77, 77, 100, 100, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 150, 222, 53, 77, 3, 77, 150, 222, 222, 0, 0, 0, 222, 222, 150, 77, 3, 3, 222, 150, 77, 77, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 150, 222, 3, 3, 77, 150, 222, 222, 0, 0, 0, 0, 222, 150, 77, 3, 77, 53, 222, 150, 77, 77, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 150, 222, 53, 77, 3, 77, 150, 222, 0, 0, 0, 222, 222, 150, 77, 77, 3, 3, 222, 150, 77, 77
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 150, 222, 3, 3, 77, 77, 150, 222, 222, 0, 0, 222, 150, 77, 77, 3, 77, 53, 222, 150
-	                         DB          77, 77, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 150, 222, 53, 77, 3, 77, 77, 150, 222, 0, 0, 222, 150, 77, 77, 77, 3, 3
-	                         DB          222, 150, 77, 77, 77, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
-	                         DB          100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 77, 150, 222, 3, 3, 77, 77, 77, 150, 222, 0, 0, 222, 150, 77, 77, 3
-	                         DB          77, 53, 150, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 150, 222, 150, 53, 77, 3, 77, 77, 150, 222, 0, 222, 222, 150, 77
-	                         DB          77, 77, 3, 3, 150, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
-	                         DB          77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 150, 222, 150, 3, 3, 77, 77, 77, 150, 222, 222, 222, 150
-	                         DB          77, 77, 77, 3, 77, 53, 150, 222, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150
-	                         DB          150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 222, 150, 53, 77, 3, 77, 77, 77, 150, 222
-	                         DB          222, 150, 77, 77, 77, 77, 3, 150, 150, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222
-	                         DB          222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 150, 150, 3, 77, 77, 77, 77
-	                         DB          150, 222, 222, 150, 77, 77, 77, 3, 150, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 150, 3, 77
-	                         DB          77, 77, 150, 222, 222, 150, 77, 77, 77, 150, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222
-	                         DB          150, 77, 77, 77, 150, 222, 222, 150, 77, 77, 150, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 222, 222, 150, 77, 77, 150, 222, 222, 150, 150, 150, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 222, 222, 150, 150, 150, 222, 222, 222, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	NameBoxC                 DB            0, 0, 0, 0, 0, 0, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222
+	                         DB            222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 222, 222, 150, 150, 222, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150
+	                         DB            150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 222, 150, 150, 222, 222, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 150, 3, 150, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 150, 222, 150, 3, 150
+	                         DB            222, 222, 0, 0, 0, 0, 0, 0, 0, 222, 222, 150, 77, 53, 150, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 150, 222, 150
+	                         DB            53, 77, 150, 222, 222, 0, 0, 0, 0, 0, 222, 222, 150, 77, 3, 3, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            150, 222, 3, 3, 77, 150, 222, 222, 0, 0, 0, 222, 222, 150, 77, 3, 77, 53, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 150, 222, 53, 77, 3, 77, 150, 222, 222, 0, 222, 222, 150, 77, 77, 77, 3, 3, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 150, 222, 3, 3, 77, 77, 77, 150, 222, 222, 222, 150, 77, 77, 77, 3, 77, 53, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 77, 77, 150, 222, 53, 77, 3, 77, 77, 77, 150, 222, 222, 150, 77, 77, 77, 77, 3, 3, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 77, 77, 77, 77, 150, 222, 3, 3, 77, 77, 77, 77, 150, 222, 222, 150, 77, 77, 77, 3, 77, 53, 222, 150, 77, 77, 77, 77, 100, 100, 100, 100, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 77, 77, 77, 77, 150, 222, 53, 77, 3, 77, 77, 77, 150, 222, 222, 222, 150, 77, 77, 77, 3, 3, 222, 150, 77, 77, 77, 100, 100, 100, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 77, 150, 222, 3, 3, 77, 77, 77, 150, 222, 222, 0, 222, 222, 150, 77, 3, 77, 53, 222, 150, 77, 77, 100, 100, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 150, 222, 53, 77, 3, 77, 150, 222, 222, 0, 0, 0, 222, 222, 150, 77, 3, 3, 222, 150, 77, 77, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 150, 222, 3, 3, 77, 150, 222, 222, 0, 0, 0, 0, 222, 150, 77, 3, 77, 53, 222, 150, 77, 77, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 150, 222, 53, 77, 3, 77, 150, 222, 0, 0, 0, 222, 222, 150, 77, 77, 3, 3, 222, 150, 77, 77
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 150, 222, 3, 3, 77, 77, 150, 222, 222, 0, 0, 222, 150, 77, 77, 3, 77, 53, 222, 150
+	                         DB            77, 77, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 150, 222, 53, 77, 3, 77, 77, 150, 222, 0, 0, 222, 150, 77, 77, 77, 3, 3
+	                         DB            222, 150, 77, 77, 77, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
+	                         DB            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 77, 77, 77, 150, 222, 3, 3, 77, 77, 77, 150, 222, 0, 0, 222, 150, 77, 77, 3
+	                         DB            77, 53, 150, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 150, 222, 150, 53, 77, 3, 77, 77, 150, 222, 0, 222, 222, 150, 77
+	                         DB            77, 77, 3, 3, 150, 222, 150, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
+	                         DB            77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 150, 222, 150, 3, 3, 77, 77, 77, 150, 222, 222, 222, 150
+	                         DB            77, 77, 77, 3, 77, 53, 150, 222, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150
+	                         DB            150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 222, 150, 53, 77, 3, 77, 77, 77, 150, 222
+	                         DB            222, 150, 77, 77, 77, 77, 3, 150, 150, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222
+	                         DB            222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 150, 150, 3, 77, 77, 77, 77
+	                         DB            150, 222, 222, 150, 77, 77, 77, 3, 150, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 150, 3, 77
+	                         DB            77, 77, 150, 222, 222, 150, 77, 77, 77, 150, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222
+	                         DB            150, 77, 77, 77, 150, 222, 222, 150, 77, 77, 150, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 222, 222, 150, 77, 77, 150, 222, 222, 150, 150, 150, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 222, 222, 150, 150, 150, 222, 222, 222, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 222, 222
 .code
 MAIN PROC FAR
@@ -2453,56 +2438,25 @@ MAIN PROC FAR
 	                              ASSUME           ES:extra
 	                              mov              ax, extra
 	                              mov              es, ax
+
+	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
+	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
+	                              int              10h
 	;///////////////////////////////First Screen////////////////////////////////////
-
-	firstScreenLoop:              
-	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
-	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
-	                              int              10h
-
-	                              mov              ah,09h
-	                              lea              dx, firstScreen                                                                      	; show the first screen
-	                              int              21h
-
-	                              mov              ah,09h
-	                              lea              dx, getName                                                                          	; ask for player's name
-	                              int              21h
-
-	getNameLoop:                  lea              si, playerName1                                                                      	; get player's name
-	                              mov              ah, 0Ah
-	                              mov              dx, si
-	                              int              21h
-
-	
-	SecondScreenLoop:             
-	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
-	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
-	                              int              10h
-
-	                              mov              ah,09h
-	                              lea              dx, firstScreen                                                                      	; show the first screen
-	                              int              21h
-
-	                              mov              ah,09h
-	                              lea              dx, getName                                                                          	; ask for player's name
-	                              int              21h
-
-	getNameLoop2:                 lea              si, playerName2                                                                      	; get player's name
-	                              mov              ah, 0Ah
-	                              mov              dx, si
-	                              int              21h
-
-	                              clearWholeScreen
-	                              mov              ax, graphicsModeAX                                                                   	; enter graphicsMode
-	                              mov              bx, graphicsModeBX                                                                   	; BX = 81FFh
-	                              int              10h
 
 	;fill background
 	                              call             DrawRec
+	;////////////////////////////// get player's name'
+	                              printStringAtLoc getname1, 2, 28
+
+	                              lea              si, playerName1                                                                      	; get player's name
+	                              mov              ah, 0Ah
+	                              mov              dx, si
+	                              int              21h
+	;////////////////////////////////
 	; Draw pointer
 	                              editDrawPrams    MSGTAIL, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
 	                              call             drawShape
-							
 	; Draw Characters
 	                              editDrawPrams    Fenn, charSizeX, charSizeY, firstCharOffsetX, charOffsetY
 	                              call             drawShape
@@ -2607,6 +2561,14 @@ MAIN PROC FAR
 
 	;fill background
 	                              call             DrawRec
+	;////////////////////////////// get player's name'
+	                              printStringAtLoc getname2, 2, 28
+
+	                              lea              si, playerName2                                                                      	; get player's name
+	                              mov              ah, 0Ah
+	                              mov              dx, si
+	                              int              21h
+	;////////////////////////////////
 	; Draw pointer
 	                              editDrawPrams    MSGTAIL, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
 	                              call             drawShape
@@ -3309,7 +3271,7 @@ GameWinner PROC
 	                              INT              10H
 
 	                              mov              ah,09h
-	                              lea              dx, Player1MSG                                                                       	; show the bye bye screen
+	                              lea              dx, congrats                                                                         	; show the bye bye screen
 	                              int              21h
 
 	                              jmp              CONINUE_ENDMSG
@@ -3327,7 +3289,7 @@ GameWinner PROC
 	                              INT              10H
 
 	                              mov              ah,09h
-	                              lea              dx, Player2MSG                                                                       	; show the bye bye screen
+	                              lea              dx, congrats                                                                         	; show the bye bye screen
 	                              int              21h
 	;jmp EndGameWinner
 
@@ -4337,12 +4299,12 @@ DrawLayout PROC near
 	DrawLayout2_start:            call             drawShape
 	                              mov              REV, 0
 	                              mov              Ers, 0
-	                              editDrawPrams    NameBoxC, NameBoxSizeX, NameBoxSizeY, 2, 66
+	                              editDrawPrams    NameBoxC, NameBoxSizeX, NameBoxSizeY, 2, 72
 	                              call             drawShape
 
 	                              mov              REV, 0
 	                              mov              Ers, 0
-	                              editDrawPrams    NameBoxC, NameBoxSizeX, NameBoxSizeY, 554, 66
+	                              editDrawPrams    NameBoxC, NameBoxSizeX, NameBoxSizeY, 554, 72
 	                              call             drawShape
           
      
