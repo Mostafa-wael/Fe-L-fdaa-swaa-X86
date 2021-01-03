@@ -1293,8 +1293,8 @@ extra SEGMENT
 	getName2                 DB          "  Player2 Name: $"
 
 	enterValidName           DB          "  Please, enter a valid name: $"
-	playerName1              DB          21,?,21 dup("$")
-	playerName2              DB          21,?,21 dup("$")
+	playerName1              DB          8,?,7 dup("$")
+	playerName2              DB          8,?,7 dup("$")
     Is_Valid_Name               DB          1
 	                         firstScreen label byte
 	                         DB          '  ',0ah,0dh
