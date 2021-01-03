@@ -1266,6 +1266,8 @@ extra SEGMENT
 	                         logoOffset  label word
 	logoOffsetX              dW          190
 	logoOffsetY              DW          8
+	logoOffsetX2             dW          255
+	logoOffsetY2             DW          100
 	logoSizeX                equ         130
 	logoSizeY                equ         95
 	
@@ -2662,6 +2664,7 @@ MAIN PROC FAR
 	                              int              16h
 	;fill background
 	                              call             DrawRec
+								  call             drawLogoMin
 	;////////////////////////////// get player's name'
 	                              printStringAtLoc getname1, 2, 28
 
@@ -2777,6 +2780,7 @@ MAIN PROC FAR
 
 	;fill background
 	                              call             DrawRec
+	                              call             drawLogoMin
 	;////////////////////////////// get player's name'
 	                              printStringAtLoc getname2, 2, 28
 
@@ -4886,6 +4890,34 @@ drawLogo PROC
 	                              jmp              drawlogo_drawIt
 	drawlogo_allDrawn:            ret
 drawLogo ENDP
+drawLogoMin PROC
+	; initialize container
+
+	                              mov              SI, offset logo
+	                              mov              cx, logoSizeX                                                                        	;Column X
+	                              mov              dx, logoSizeY                                                                        	;Row Y
+	                              mov              ah, 0ch                                                                              	;Draw Pixel Command
+	drawlogoMIN_drawIt:           
+	                              mov              bl, ES:[SI]                                                                          	;use color from array color for testing
+	                              and              bl, bl
+	                              JZ               drawlogoMIN_back
+	                              mov              al, ES:[SI]                                                                          	;  use color from array color for testing
+	                              add              cx,logoOffsetX2
+	                              add              dx,logoOffsetY2
+	                              int              10h
+	                              sub              cx,logoOffsetX2
+	                              sub              dx,logoOffsetY2
+
+	drawlogoMIN_back:             
+	                              inc              SI
+	                              DEC              Cx
+	                              JNZ              drawlogoMIN_drawIt                                                                   	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov              Cx, logoSizeX                                                                        	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC              DX
+	                              JZ               drawlogoMIN_allDrawn                                                                 	;  both x and y reached 00 so finish drawing
+	                              jmp              drawlogoMIN_drawIt
+	drawlogoMIN_allDrawn:         ret
+drawLogoMin ENDP
 
 	;//////////////////////////////Procedures//////////////////////////////////////////////
         END MAIN
