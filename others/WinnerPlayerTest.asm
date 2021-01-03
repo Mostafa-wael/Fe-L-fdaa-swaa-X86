@@ -2408,7 +2408,6 @@ CONINUE_ENDMSG:		mov ah, 2
 	                              lea              dx, byebye                                                                           	; show the bye bye screen
 	                              int              21h
 
-<<<<<<< HEAD
 	                              mov              ah,4ch
 	                              int              21h
 								  JMP EndGameWinner
@@ -2417,14 +2416,12 @@ CONINUE_ENDMSG:		mov ah, 2
 				call NewGameInitializer
 
 
-=======
-               
->>>>>>> 89c2fc447e8e6906da14b17ec3f3ba903eaf6e9f
     EndGameWinner: 
     ret
     GameWinner ENDP
 
 NewGameInitializer PROC near
+				call InitalizeBullets
 				mov dl, 1
 				mov ISNEWGAME, dl
 				mov dl, 200
@@ -2440,6 +2437,18 @@ NewGameInitializer PROC near
 				ret
 
 	NewGameInitializer ENDP
+
+InitalizeBullets PROC NEAR
+
+mov bx, offset BulletDirection
+mov SI, 100
+InitializeBullet:
+	mov dx, 0
+	mov bx[SI], dx
+	dec SI
+	JNZ InitializeBullet
+	ret
+InitalizeBullets ENDP
 
 drawGameBtn PROC
 	; initialize containers
