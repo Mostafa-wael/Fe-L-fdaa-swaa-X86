@@ -1,5 +1,5 @@
 from PIL import Image
-filename = 'Mereum2.png'
+filename = 'Mikasa2.png'
 im = Image.open(filename)
 width, height = im.size
 pixels = list(im.getdata())
