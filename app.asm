@@ -124,7 +124,7 @@ getAndValidatePlayerName MACRO varForPlayerName, drawPointer_Label_macro, Valida
 	GetPlayerName:           
 	                         mov              dl, 1
 	                         mov              Is_Valid_Name, dl
-	                         lea              si, varForPlayerName   	; get player's name
+	                         lea              si, varForPlayerName     	; get player's name
 	                         mov              ah, 0Ah
 	                         mov              dx, si
 	                         int              21h
@@ -134,6 +134,94 @@ getAndValidatePlayerName MACRO varForPlayerName, drawPointer_Label_macro, Valida
 	                         JE               drawPointer_Label_macro
 	                         printStringAtLoc enterValidName, 2, 28
 	                         JMP              GetPlayerName
+	ENDM
+displayMainMenu MACRO
+	                call          background
+	                mov           Ers, 0
+	                mov           REV, 0
+	                call          drawGameBtn
+	                call          drawChatBtn
+	                call          drawExitBtn
+	                call          drawLogo
+	                call          eraseArrows
+	                add           arrowoffsetY, arrowStep
+	                call          eraseArrows
+	                add           arrowoffsetY, arrowStep
+	                call          eraseArrows
+	                sub           arrowoffsetY, arrowStep
+	                sub           arrowoffsetY, arrowStep
+	                              
+
+	                mov           Rev, 1
+	                editDrawPrams ship1, shipSizeX1, shipSizeY1, arrowOffsetXRev, arrowoffsetY
+	                call          drawShape
+	                mov           Rev, 0
+	                mov           AX, arrowOffsetX
+	                mov           shapeOffsetX, AX
+	                Lea           SI, Ship1
+	                call          drawShape
+	ENDM
+checkMainMenuOptions MACRO gameLoop_label, exitProg_label; remember to add the chatLoop_label
+	local CheckInMainMenu, Make_THE_JMP_CLOSER, downArrow_label, enterKey_label
+CheckInMainMenu:              
+	                              mov                      ah,0                                                                                 	;  ah:al = scan code: ASCII code
+	                              int                      16h
+
+	                              cmp                      ah, key_upArrow                                                                      	; up arrow
+	                              jne                      downArrow_label
+	                              cmp                      arrowoffsetY, arrowAtgame
+	                              je                       CheckInMainMenu
+	                              call                     eraseArrows
+	                              mov                      AX, arrowStep
+	                              SUB                      arrowoffsetY, AX
+	                              mov                      Rev, 1
+	                              Lea                      SI, Ship1
+	                              mov                      AX, arrowOffsetXRev
+	                              mov                      shapeOffsetX, AX
+	                              mov                      AX, arrowoffsetY
+	                              mov                      shapeOffsetY, AX
+	                              call                     drawShape
+	                              Lea                      SI, Ship1
+
+	                              mov                      Rev, 0
+	                              mov                      AX, arrowOffsetX
+	                              mov                      shapeOffsetX, AX
+	                              call                     drawShape
+	Make_THE_JMP_CLOSER:          jmp                      CheckInMainMenu
+
+	downArrow_label:              cmp                      ah, key_downArrow                                                                    	; down arrow
+	                              jne                      enterKey_label
+	                              cmp                      arrowoffsetY, arrowAtExit
+	                              je                       CheckInMainMenu
+	                              call                     eraseArrows
+
+	                              mov                      AX, arrowStep
+	                              ADD                      arrowoffsetY, AX
+	                              mov                      Rev, 1
+	                              Lea                      SI, Ship1
+	                              mov                      AX, arrowOffsetXRev
+	                              mov                      shapeOffsetX, AX
+	                              mov                      AX, arrowoffsetY
+	                              mov                      shapeOffsetY, AX
+	                              call                     drawShape
+	                              Lea                      SI, Ship1
+	                              mov                      Rev, 0
+	                              mov                      AX, arrowOffsetX
+	                              mov                      shapeOffsetX, AX
+	                              call                     drawShape
+
+	                              jmp                      Make_THE_JMP_CLOSER
+
+	enterKey_label:               cmp                      ah, key_enter                                                                        	; enter
+	                              jne                      Make_THE_JMP_CLOSER                                                                  	; added to prevent other buttons from doing enter's action
+
+	                              cmp                      arrowoffsetY, arrowAtChat
+	;je gameLoop
+	                              cmp                      arrowoffsetY, arrowAtgame
+	                              je                       gameLoop
+	                              cmp                      arrowoffsetY, arrowAtExit
+	                              je                       exitProg
+	                              jmp                      Make_THE_JMP_CLOSER
 	ENDM
 ;///////////////////////////////Macros////////////////////////////////////
 ;///////////////////////////////Data Initializations////////////////////////////////////
@@ -2724,14 +2812,30 @@ MAIN PROC FAR
 	                              call                     DrawRec
 	                              call                     drawLogoMin
 	;////////////////////////////// get player1 name
-	                              getAndValidatePlayerName playerName1, drawPointer1_Label, Validate_Player2_Name
+	                              ;getAndValidatePlayerName playerName1, drawPointer1_Label, Validate_Player2_Name
+								  printStringAtLoc getname1, 2, 28
+
+	      GetPlayer1Name: 
+          mov dl, 1
+          mov Is_Valid_Name, dl
+                                  lea              si, playerName1                                                                      	; get player's name
+	                             mov              ah, 0Ah
+	                              mov              dx, si
+	                              int              21h
+
+                                ; Validate Player Name
+                                CALL Validate_Player1_Name
+                                CMP Is_Valid_Name, 1
+                                JE drawPointer1_Label
+                                printStringAtLoc enterValidName, 2, 28
+                                JMP GetPlayer1Name
 
 	;////////////////////////////////
 	drawPointer1_Label:           
 	                              drawPointer
 	                              drawCharacters
 	                              drawPlanes
-
+	;////////////////////////////// choose character1
 	checkFirstScreen:             mov                      ah,0
 	                              int                      16h
 	                              cmp                      ah, key_rightArrow                                                                   	; up pointer
@@ -2800,14 +2904,27 @@ MAIN PROC FAR
 	                              mov                      ax, graphicsModeAX                                                                   	; enter graphicsMode
 	                              mov                      bx, graphicsModeBX                                                                   	; BX = 81FFh
 	                              int                      10h
-
 	;fill background
 	                              call                     DrawRec
 	                              call                     drawLogoMin
 	;////////////////////////////// get player's name'
-	                              getAndValidatePlayerName playerName2, drawPointer2_Label, Validate_Player2_Name
+	                              ;getAndValidatePlayerName playerName2, drawPointer2_Label, Validate_Player2_Name
+printStringAtLoc getname2, 2, 28
 
-	;////////////////////////////////
+	GetPlayer2Name:
+    mov dl, 1
+    mov Is_Valid_Name, dl
+                   lea              si, playerName2                                                                      	; get player's name
+	                              mov              ah, 0Ah
+	                              mov              dx, si
+	                              int              21h
+
+                                CALL Validate_Player2_Name
+                                CMP Is_Valid_Name, 1
+                                JE drawPointer2_Label
+                                printStringAtLoc enterValidName, 2, 28
+                                JMP GetPlayer2Name
+	;////////////////////////////// choose character2
 	drawPointer2_Label:           
 	                              drawPointer
 	                              drawCharacters
@@ -2872,112 +2989,20 @@ MAIN PROC FAR
 	                              call                     drawShape
 						
 	checkFirstScreen_22:          JMP                      checkFirstScreen2
-
 	enterpointer_label2:          CMP                      AH, key_enter
 	                              JNE                      checkFirstScreen_22
 	                              MOV                      BL, pointerAt
 	                              MOV                      secondPlayerId, BL
-
-	; TODO check of the name is valid
-	; mov bp, offset playerName1 + 1
-	; or           [bp], 0
-	; jnz            mainMenuLoop
-
-	; mov            ah,09h
-	; lea            dx, enterValidName      	; ask for a valid player's name
-	; int            21h
-	; jmp            getNameLoop
 	;///////////////////////////////Main Menu////////////////////////////////////
 	mainMenuLoop:                 
 	                              clearWholeScreen
 	                              mov                      ax, graphicsModeAX                                                                   	; enter graphicsMode
 	                              mov                      bx, graphicsModeBX                                                                   	; BX = 81FFh
 	                              int                      10h
-	                              call                     background
-	                              mov                      Ers, 0
-	                              mov                      REV, 0
-	                              
-	                              call                     drawGameBtn
-	                              call                     drawChatBtn
-	                              call                     drawExitBtn
-	                              call                     drawLogo
-	                              call                     eraseArrows
-	                              add                      arrowoffsetY, arrowStep
-	                              call                     eraseArrows
-	                              add                      arrowoffsetY, arrowStep
-	                              call                     eraseArrows
-	                              sub                      arrowoffsetY, arrowStep
-	                              sub                      arrowoffsetY, arrowStep
-	                              
 
-	                              mov                      Rev, 1
-	                              editDrawPrams            ship1, shipSizeX1, shipSizeY1, arrowOffsetXRev, arrowoffsetY
-	                              call                     drawShape
-	                              mov                      Rev, 0
-	                              mov                      AX, arrowOffsetX
-	                              mov                      shapeOffsetX, AX
-	                              Lea                      SI, Ship1
-	                              call                     drawShape
-
-	CheckInMainMenu:              
-	                              mov                      ah,0                                                                                 	;  ah:al = scan code: ASCII code
-	                              int                      16h
-
-	                              cmp                      ah, key_upArrow                                                                      	; up arrow
-	                              jne                      downArrow_label
-	                              cmp                      arrowoffsetY, arrowAtgame
-	                              je                       CheckInMainMenu
-	                              call                     eraseArrows
-	                              mov                      AX, arrowStep
-	                              SUB                      arrowoffsetY, AX
-	                              mov                      Rev, 1
-	                              Lea                      SI, Ship1
-	                              mov                      AX, arrowOffsetXRev
-	                              mov                      shapeOffsetX, AX
-	                              mov                      AX, arrowoffsetY
-	                              mov                      shapeOffsetY, AX
-	                              call                     drawShape
-	                              Lea                      SI, Ship1
-
-	                              mov                      Rev, 0
-	                              mov                      AX, arrowOffsetX
-	                              mov                      shapeOffsetX, AX
-	                              call                     drawShape
-	Make_THE_JMP_CLOSER:          jmp                      CheckInMainMenu
-
-	downArrow_label:              cmp                      ah, key_downArrow                                                                    	; down arrow
-	                              jne                      enterKey_label
-	                              cmp                      arrowoffsetY, arrowAtExit
-	                              je                       CheckInMainMenu
-	                              call                     eraseArrows
-
-	                              mov                      AX, arrowStep
-	                              ADD                      arrowoffsetY, AX
-	                              mov                      Rev, 1
-	                              Lea                      SI, Ship1
-	                              mov                      AX, arrowOffsetXRev
-	                              mov                      shapeOffsetX, AX
-	                              mov                      AX, arrowoffsetY
-	                              mov                      shapeOffsetY, AX
-	                              call                     drawShape
-	                              Lea                      SI, Ship1
-	                              mov                      Rev, 0
-	                              mov                      AX, arrowOffsetX
-	                              mov                      shapeOffsetX, AX
-	                              call                     drawShape
-
-	                              jmp                      Make_THE_JMP_CLOSER
-
-	enterKey_label:               cmp                      ah, key_enter                                                                        	; enter
-	                              jne                      Make_THE_JMP_CLOSER                                                                  	; added to prevent other buttons from doing enter's action
-
-	                              cmp                      arrowoffsetY, arrowAtChat
-	;je gameLoop
-	                              cmp                      arrowoffsetY, arrowAtgame
-	                              je                       gameLoop
-	                              cmp                      arrowoffsetY, arrowAtExit
-	                              je                       exitProg
-	                              jmp                      Make_THE_JMP_CLOSER
+	                             displayMainMenu
+								 checkMainMenuOptions gameLoop, exitProg
+	
 	;///////////////////////////////Game Loop////////////////////////////////////
 	gameLoop:                                                                                                                                   	;NOTE:since we are using words, we will use the value '2' to traverse pixels
 	;//////////////////////////////initializations////////////////////////////////////
