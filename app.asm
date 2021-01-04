@@ -1461,7 +1461,7 @@ extra SEGMENT
 	                         DB          09,'     ||                                                ||',0ah,0dh
 	                         DB          09,'     ||------------------------------------------------||',0ah,0dh
 	                         DB          09,'     ||                                                ||',0ah,0dh
-	                         DB          09,'     ||       Please, Enter your name(max 7 chars)     ||',0ah,0dh
+	                         DB          09,'     ||       Please, Enter your name(max 5 chars)     ||',0ah,0dh
 	                         DB          09,'     ||       Then, choose your favourite character    ||',0ah,0dh
 	                         DB          09,'     ||                                                ||',0ah,0dh
 	                         DB          09,'     ||           **press any key to continue**        ||',0ah,0dh
