@@ -11,7 +11,7 @@ In the game, every player can choose from five different characters. every chara
 <img width="60%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/Art/Fenn Plane.png">|<img width="60%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/Art/Mikasa Plane.png">|<img width="60%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/Art/Hisoka Plane.png">|<img width="60%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/Art/Asta%20plane.png">|<img width="60%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/Art/Meruem%20Plane.png">
 
 ### GameArt
-![ALL_ART](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/ART.PNG)
+![ALL_ART](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/ART.png)
 
 ### ScreenShots
 ![First Screen](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/first_screen.PNG)
