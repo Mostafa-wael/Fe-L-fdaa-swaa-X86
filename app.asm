@@ -3871,7 +3871,7 @@ DrawExplosion Proc near
 	                              mov                  ers, 0
 	                              editDrawPrams        Explosion1, shipSizeX, shipSizeY, ExplosionOffsetX, ExplosionOffsetY
 	                              mov                  DI, SI
-								  mov				   RECCOLOR, 00h
+								  mov				   RECCOLOR, background_Game_Color
 
 	ExplosionAnimate:             
 	                              call                 drawShape
