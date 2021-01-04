@@ -4,7 +4,7 @@
 </p>
 
 #### A 2 players Assembly X86 space war game
-In the game every player can choose from five diffrent charcter. every charcter has it own space craft and special weapon 
+In the game, every player can choose from five different characters. every character has its own spacecraft and special weapon  
 ## Characters
 
 
