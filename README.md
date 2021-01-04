@@ -22,6 +22,4 @@ In the game, every player can choose from five different characters. every chara
 ![Second Player](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/second_player.PNG)
 ![main](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/main.PNG)
 <img width="100%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/Game.gif">
-![In game](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/In_game.PNG)
 ![In game2](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/In_game2.PNG)
-![In game3](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/In_game3.PNG)
