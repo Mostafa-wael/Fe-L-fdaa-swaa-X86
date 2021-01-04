@@ -16,5 +16,5 @@ In the game, every player can choose from five different characters. every chara
 <img width="100px" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/Exp.gif">
 </p>
 
-### ScreenShots
+### GamePlay
 <img width="100%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/Game.gif">
