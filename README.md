@@ -5,18 +5,20 @@
 
 #### A 2 players Assembly X86 space war game
 In the game every player can choose from five diffrent charcter. every charcter has it own space craft and special weapon 
-### Characters
-<p align="left" width="100%">
-    <img style ="padding: 0 10px" height="64px" width="64px" src="Art/Fenn.png">
-    <img style ="padding: 0 10px" height="64px" width="64px" src="Art/Mikasa.png">
-    <img style ="padding: 0 10px" height="64px" width="64px" src="Art/Hisoka.png">
-    <img style ="padding: 0 10px" height="64px" width="64px" src="Art/Asta.png">
-    <img style ="padding: 0 10px" height="64px" width="64px" src="Art/Mereum.png">
-</p>
-<p align="left" width="100%">
-    <img style ="padding: 0 25px" height="32px" width="32px" src="Art/Fenn Plane.png">
-    <img style ="padding: 0 25px" height="32px" width="32px" src="Art/Mikasa Plane.png">
-    <img style ="padding: 0 25px" height="32px" width="32px" src="Art/Hisoka Plane.png">
-    <img style ="padding: 0 25px" height="32px" width="32px" src="Art/Asta Plane.png">
-    <img style ="padding: 0 25px" height="32px" width="32px" src="Art/Meruem Plane.png">
-</p>
+## Characters
+
+
+
+<img width="100%" src="Art/Fenn.png">|<img width="100%" src="Art/Mikasa.png">|<img width="100%" src="Art/Hisoka.png">|<img width="100%" src="Art/Asta.png">|<img width="100%" src="Art/Mereum.png">
+----------------------------------|---------------------------------------|---------------------------------------|-------------------------------------|---
+<img width="60%" src="Art/Fenn Plane.png">|<img width="60%" src="Art/Mikasa Plane.png">|<img width="60%" src="Art/Hisoka Plane.png">|<img width="60%" src="Art/Asta Plane.png">|<img width="60%" src="Art/Meruem plane.png">
+
+
+### ScreenShots
+![First Screen](ScreenShots/first_screen.png)
+![First Player](ScreenShots/first_player.png)
+![Second Player](ScreenShots/second_player.png)
+![In game](ScreenShots/In_game.png)
+![In game2](ScreenShots/In_game2.png)
+![In game3](ScreenShots/In_game3.png)
+![main](ScreenShots/main.png)
