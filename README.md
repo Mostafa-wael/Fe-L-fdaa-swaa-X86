@@ -13,11 +13,14 @@ In the game, every player can choose from five different characters. every chara
 ### GameArt
 ![ALL_ART](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/ART.png)
 
+<img width="300%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/Exp.gif">
+
 ### ScreenShots
 ![First Screen](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/first_screen.PNG)
 ![First Player](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/first_player.PNG)
 ![Second Player](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/second_player.PNG)
 ![main](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/main.PNG)
+![While_in_game](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/Game.gif)
 ![In game](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/In_game.PNG)
 ![In game2](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/In_game2.PNG)
 ![In game3](https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/ScreenShots/In_game3.PNG)
