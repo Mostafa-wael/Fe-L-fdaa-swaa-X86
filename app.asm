@@ -14,24 +14,28 @@ printStringAtLoc MACRO string, row, col		; pass the whole string not (string +2)
 	                 mov ah,09h        	; print player's name
 	                 lea dx, string + 2
 	                 int 21h
-
-	;                               mov              bx, OFFSET playerName1                                                               	;1.
-	; Again:
-	;                               mov              dl, [bx]                                                                             	;2.
-	;                               cmp              dl, "$"
-	;                               je               noName
-	;                               mov              ah, 02h                                                                              	;3.
-	;                               int              21h
-	;                               inc              bx                                                                                   	;4.
-	;                               cmp              dl, 0Ah                                                                              	;5.
-	;                               jne              Again
-	; noName:
 ENDM 
+printString MACRO string
+	            mov ah,09h
+	            lea dx, string
+	            int 21h
+	ENDM
 getString MACRO string         		; get a string from the user, wait for the user to press enter
 	          mov ah, 0Ah
 	          mov dx, offset string
 	          int 21h
 	ENDM
+waitForInput MACRO   		;  ah:al = scan code: ASCII code, it also fetch the input from the buffer
+	             mov ah,0
+	             int 16h
+ENDM
+checkIfInput MACRO   		;  ah:al = scan code: ASCII code
+	             mov ah,1
+	             int 16h
+	ENDM
+;///////////////////////////////
+;/////////////////////////////// Name operations
+;///////////////////////////////
 checkStringSize MACRO string, size, invalidSizeLabel		; check if the string is less than or equal to a given size
 	                mov al, string+1
 	                cmp al, size
@@ -57,6 +61,7 @@ checkFirstChar MACRO string, invalidCharLabel  		; check if the first character 
 	; 97 <= char <= 122
 	charIsALetter: 
 				   ENDM
+;
 validateName MACRO string, size, validLabel, invalidLabel                              		; check if the name is valid (size and the first char)
 	                local            invalidNameSize, invalidNameChar
 	                checkStringSize  string, size, invalidNameSize
@@ -202,67 +207,66 @@ displayMainMenu MACRO                                                           
 	                Lea           SI, Ship1
 	                call          drawShape
 	ENDM
-checkMainMenuOptions MACRO gameLoop_label, exitProg_label                                       		; remember to add the chatLoop_label
-	                     local CheckInMainMenu, Make_THE_JMP_CLOSER, downArrow_label, enterKey_label
+checkMainMenuOptions MACRO gameLoop_label, exitProg_label                                              		; remember to add the chatLoop_label
+	                     local        CheckInMainMenu, Make_THE_JMP_CLOSER, downArrow_label, enterKey_label
 	CheckInMainMenu:     
-	                     mov   ah,0                                                                 	;  ah:al = scan code: ASCII code
-	                     int   16h
+	                     waitForInput
 
-	                     cmp   ah, key_upArrow                                                      	; up arrow
-	                     jne   downArrow_label
-	                     cmp   arrowoffsetY, arrowAtgame
-	                     je    CheckInMainMenu
-	                     call  eraseArrows
-	                     mov   AX, arrowStep
-	                     SUB   arrowoffsetY, AX
-	                     mov   Rev, 1
-	                     Lea   SI, Ship1
-	                     mov   AX, arrowOffsetXRev
-	                     mov   shapeOffsetX, AX
-	                     mov   AX, arrowoffsetY
-	                     mov   shapeOffsetY, AX
-	                     call  drawShape
-	                     Lea   SI, Ship1
+	                     cmp          ah, key_upArrow                                                      	; up arrow
+	                     jne          downArrow_label
+	                     cmp          arrowoffsetY, arrowAtgame
+	                     je           CheckInMainMenu
+	                     call         eraseArrows
+	                     mov          AX, arrowStep
+	                     SUB          arrowoffsetY, AX
+	                     mov          Rev, 1
+	                     Lea          SI, Ship1
+	                     mov          AX, arrowOffsetXRev
+	                     mov          shapeOffsetX, AX
+	                     mov          AX, arrowoffsetY
+	                     mov          shapeOffsetY, AX
+	                     call         drawShape
+	                     Lea          SI, Ship1
 
-	                     mov   Rev, 0
-	                     mov   AX, arrowOffsetX
-	                     mov   shapeOffsetX, AX
-	                     call  drawShape
-	Make_THE_JMP_CLOSER: jmp   CheckInMainMenu
+	                     mov          Rev, 0
+	                     mov          AX, arrowOffsetX
+	                     mov          shapeOffsetX, AX
+	                     call         drawShape
+	Make_THE_JMP_CLOSER: jmp          CheckInMainMenu
 
-	downArrow_label:     cmp   ah, key_downArrow                                                    	; down arrow
-	                     jne   enterKey_label
-	                     cmp   arrowoffsetY, arrowAtExit
-	                     je    CheckInMainMenu
-	                     call  eraseArrows
+	downArrow_label:     cmp          ah, key_downArrow                                                    	; down arrow
+	                     jne          enterKey_label
+	                     cmp          arrowoffsetY, arrowAtExit
+	                     je           CheckInMainMenu
+	                     call         eraseArrows
 
-	                     mov   AX, arrowStep
-	                     ADD   arrowoffsetY, AX
-	                     mov   Rev, 1
-	                     Lea   SI, Ship1
-	                     mov   AX, arrowOffsetXRev
-	                     mov   shapeOffsetX, AX
-	                     mov   AX, arrowoffsetY
-	                     mov   shapeOffsetY, AX
-	                     call  drawShape
-	                     Lea   SI, Ship1
-	                     mov   Rev, 0
-	                     mov   AX, arrowOffsetX
-	                     mov   shapeOffsetX, AX
-	                     call  drawShape
+	                     mov          AX, arrowStep
+	                     ADD          arrowoffsetY, AX
+	                     mov          Rev, 1
+	                     Lea          SI, Ship1
+	                     mov          AX, arrowOffsetXRev
+	                     mov          shapeOffsetX, AX
+	                     mov          AX, arrowoffsetY
+	                     mov          shapeOffsetY, AX
+	                     call         drawShape
+	                     Lea          SI, Ship1
+	                     mov          Rev, 0
+	                     mov          AX, arrowOffsetX
+	                     mov          shapeOffsetX, AX
+	                     call         drawShape
 
-	                     jmp   Make_THE_JMP_CLOSER
+	                     jmp          Make_THE_JMP_CLOSER
 
-	enterKey_label:      cmp   ah, key_enter                                                        	; enter
-	                     jne   Make_THE_JMP_CLOSER                                                  	; added to prevent other buttons from doing enter's action
+	enterKey_label:      cmp          ah, key_enter                                                        	; enter
+	                     jne          Make_THE_JMP_CLOSER                                                  	; added to prevent other buttons from doing enter's action
 
-	                     cmp   arrowoffsetY, arrowAtChat
+	                     cmp          arrowoffsetY, arrowAtChat
 	;je gameLoop
-	                     cmp   arrowoffsetY, arrowAtgame
-	                     je    gameLoop
-	                     cmp   arrowoffsetY, arrowAtExit
-	                     je    exitProg
-	                     jmp   Make_THE_JMP_CLOSER
+	                     cmp          arrowoffsetY, arrowAtgame
+	                     je           gameLoop
+	                     cmp          arrowoffsetY, arrowAtExit
+	                     je           exitProg
+	                     jmp          Make_THE_JMP_CLOSER
 	ENDM
 ;///////////////////////////////
 ;/////////////////////////////// Other operations
@@ -2687,6 +2691,35 @@ extra SEGMENT
 	fifthShipOffsetX         equ         512
 	shipOffsetY              equ         304
 	;
+	                         arrow       label byte
+	                         ship2       label byte                                                                                                                                                                                            	; remove before adding ship2
+	                         ship1       label byte
+	Mikasa_Plane             DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19
+	                         DB          138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 66, 138, 19, 0, 0, 0
+	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19
+	                         DB          19, 19, 19, 19, 19, 19, 19, 19, 19, 0, 0, 0, 19, 138, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 19, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29
+	                         DB          29, 19, 19, 19, 19, 19, 19, 138, 66, 66, 138, 19, 0, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 19, 19, 66
+	                         DB          138, 66, 138, 19, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 138, 66, 138, 138, 66, 138, 19, 0, 0, 0, 0
+	                         DB          0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 23, 19, 19, 19, 66, 138, 66, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB          0, 19, 19, 138, 138, 138, 138, 138, 138, 19, 23, 23, 27, 27, 19, 138, 66, 66, 66, 66, 19, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 66, 66, 66, 66, 66, 66, 66
+	                         DB          66, 138, 19, 19, 19, 19, 138, 66, 66, 138, 138, 19, 19, 23, 23, 27, 0, 0, 19, 19, 66, 66, 91, 91, 91, 91, 66, 91, 66, 91, 66, 138, 138, 138, 91, 138, 66, 66, 91, 138
+	                         DB          66, 66, 66, 66, 4, 65, 65, 23, 0, 19, 66, 91, 91, 4, 4, 4, 91, 91, 91, 91, 91, 66, 91, 66, 66, 66, 91, 66, 66, 91, 91, 66, 66, 66, 66, 66, 6, 64, 64, 64
+	                         DB          19, 66, 91, 4, 64, 64, 64, 64, 4, 91, 91, 91, 66, 91, 66, 91, 91, 91, 91, 138, 66, 66, 91, 138, 66, 66, 138, 19, 67, 67, 67, 67, 19, 66, 91, 4, 64, 64, 64, 64
+	                         DB          4, 91, 91, 91, 66, 91, 66, 91, 91, 91, 91, 138, 66, 66, 91, 138, 66, 66, 138, 19, 67, 67, 67, 67, 0, 19, 66, 91, 91, 4, 4, 4, 91, 91, 91, 91, 91, 66, 91, 66
+	                         DB          66, 66, 91, 66, 66, 91, 91, 66, 66, 66, 66, 66, 6, 64, 64, 64, 0, 0, 19, 19, 66, 66, 91, 91, 91, 91, 66, 91, 66, 91, 66, 138, 138, 138, 91, 138, 66, 66, 91, 138
+	                         DB          66, 66, 66, 66, 4, 65, 65, 23, 0, 0, 0, 0, 19, 19, 19, 19, 19, 66, 66, 66, 66, 66, 66, 66, 66, 138, 19, 19, 19, 19, 138, 66, 66, 138, 138, 19, 19, 23, 23, 27
+	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 138, 138, 138, 138, 19, 23, 23, 27, 27, 19, 138, 66, 66, 66, 66, 19, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19
+	                         DB          19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 23, 19, 19, 19, 66, 138, 66, 66, 138, 19, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27
+	                         DB          27, 19, 19, 19, 19, 138, 66, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 19, 19, 66
+	                         DB          138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 19, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 19, 19, 19, 19, 19, 19, 138, 66, 66, 138, 19, 0, 0, 0, 0
+	                         DB          0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 0, 0, 0, 19, 138, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB          0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19
+	                         DB          138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 19, 0, 0, 0
+	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 0, 0, 0
 	Meruem_Plane             DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169
 	                         DB          73, 169, 73, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169, 73, 169, 169, 19, 19, 169, 169, 19
@@ -2765,35 +2798,7 @@ extra SEGMENT
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         arrow       label byte
-	                         ship2       label byte                                                                                                                                                                                            	; remove before adding ship2
-	                         ship1       label byte
-	Mikasa_Plane             DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19
-	                         DB          138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 66, 138, 19, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 19, 19, 19, 0, 0, 0, 19, 138, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 19, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29
-	                         DB          29, 19, 19, 19, 19, 19, 19, 138, 66, 66, 138, 19, 0, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 19, 19, 66
-	                         DB          138, 66, 138, 19, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 138, 66, 138, 138, 66, 138, 19, 0, 0, 0, 0
-	                         DB          0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 23, 19, 19, 19, 66, 138, 66, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 19, 19, 138, 138, 138, 138, 138, 138, 19, 23, 23, 27, 27, 19, 138, 66, 66, 66, 66, 19, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 66, 66, 66, 66, 66, 66, 66
-	                         DB          66, 138, 19, 19, 19, 19, 138, 66, 66, 138, 138, 19, 19, 23, 23, 27, 0, 0, 19, 19, 66, 66, 91, 91, 91, 91, 66, 91, 66, 91, 66, 138, 138, 138, 91, 138, 66, 66, 91, 138
-	                         DB          66, 66, 66, 66, 4, 65, 65, 23, 0, 19, 66, 91, 91, 4, 4, 4, 91, 91, 91, 91, 91, 66, 91, 66, 66, 66, 91, 66, 66, 91, 91, 66, 66, 66, 66, 66, 6, 64, 64, 64
-	                         DB          19, 66, 91, 4, 64, 64, 64, 64, 4, 91, 91, 91, 66, 91, 66, 91, 91, 91, 91, 138, 66, 66, 91, 138, 66, 66, 138, 19, 67, 67, 67, 67, 19, 66, 91, 4, 64, 64, 64, 64
-	                         DB          4, 91, 91, 91, 66, 91, 66, 91, 91, 91, 91, 138, 66, 66, 91, 138, 66, 66, 138, 19, 67, 67, 67, 67, 0, 19, 66, 91, 91, 4, 4, 4, 91, 91, 91, 91, 91, 66, 91, 66
-	                         DB          66, 66, 91, 66, 66, 91, 91, 66, 66, 66, 66, 66, 6, 64, 64, 64, 0, 0, 19, 19, 66, 66, 91, 91, 91, 91, 66, 91, 66, 91, 66, 138, 138, 138, 91, 138, 66, 66, 91, 138
-	                         DB          66, 66, 66, 66, 4, 65, 65, 23, 0, 0, 0, 0, 19, 19, 19, 19, 19, 66, 66, 66, 66, 66, 66, 66, 66, 138, 19, 19, 19, 19, 138, 66, 66, 138, 138, 19, 19, 23, 23, 27
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 138, 138, 138, 138, 19, 23, 23, 27, 27, 19, 138, 66, 66, 66, 66, 19, 0, 0, 0, 0, 19, 19, 19, 19, 19, 19, 19
-	                         DB          19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 23, 19, 19, 19, 66, 138, 66, 66, 138, 19, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27
-	                         DB          27, 19, 19, 19, 19, 138, 66, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 19, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19, 19, 19, 19, 19, 19, 66
-	                         DB          138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 19, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 19, 19, 19, 19, 19, 19, 138, 66, 66, 138, 19, 0, 0, 0, 0
-	                         DB          0, 0, 0, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 0, 0, 0, 19, 138, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 19, 138, 138, 138, 66, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19
-	                         DB          138, 138, 138, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 138, 138, 19, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 138, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 0, 0, 0
+	                         
 	Fenn_Plane               DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151
 	                         DB          77, 151, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151, 77, 151, 151, 19, 19, 19, 19, 0
@@ -3067,17 +3072,14 @@ MAIN PROC FAR
 	;///////////////////////////////Initializations////////////////////////////////////
 	                              mov                  AX,@data                                                                             	;initializing the data segemnt
 	                              mov                  DS,AX
-
 	                              ASSUME               ES:extra
 	                              mov                  ax, extra
 	                              mov                  es, ax
-
 	                              enterGraphicsMode
 	;///////////////////////////////First Screen////////////////////////////////////
 	                              showScreen           firstScreen
-	                              mov                  ah, 0
-	                              int                  16h                                                                                  	; wait for any character to procced
-	;///////////////////////////////Name & character Screen////////////////////////////////////
+	                              waitForInput                                                                                              	; wait for any character to procced
+	;///////////////////////////////Name & character Screen////////////////////////
 	                              getPlayersName_ID
 	;///////////////////////////////Main Menu////////////////////////////////////
 	mainMenuLoop:                 
@@ -3099,11 +3101,8 @@ MAIN PROC FAR
 
 	                              call                 BulletChecker
 	                              call                 updateBullets
-
-	;////////////////////////////////////check for user input/////////////////////////////////////////////
-
-	                              mov                  ah,1
-	                              int                  16h
+	;////////////////////////////////////check for user input///////////////////////////
+	                              checkIfInput
 	                              jz                   gameLoopRoutine                                                                      	; check if there is any input
 
 	                              inputToMoveShip      key_w, key_s, key_a, key_d, key_f, moveShip1_label
@@ -3139,6 +3138,7 @@ initializeGameLoop PROC near                                                    
 	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
 	                              call                 DrawMsgWithBox
 	;this subroutine is responsible for drawing the ship using its cooardinates
+	ret
 	                              ENDP
 NewGameInitializer PROC near
 	                              call                 InitalizeBullets
@@ -3196,8 +3196,7 @@ movShip1 PROC near
 	movShip1_readKey:             
 	                              call                 drawShip1
 
-	                              mov                  ah,0                                                                                 	;wait for a key to be pressed and put it in ah, ah:al = scan code: ASCII code
-	                              int                  16h
+	                              waitForInput
 
 	                              mov                  cx, 0                                                                                	; initialize cx to use it to iterate over the shipSize
 	                              jmp                  gameLoopRoutine
@@ -3205,8 +3204,7 @@ movShip1 PROC near
 
 	movShip1_readFire:            
 
-	                              mov                  ah,0                                                                                 	;wait for a key to be pressed and put it in ah, ah:al = scan code: ASCII code
-	                              int                  16h
+	                              waitForInput
 
 	                              mov                  cx, 0                                                                                	; initialize cx to use it to iterate over the Bullet Size
 	                              jmp                  gameLoopRoutine
@@ -3341,8 +3339,7 @@ movShip2 PROC near
 	movShip2_readKey:             
 	                              call                 Drawship2
 
-	                              mov                  ah,0                                                                                 	;wait for a key to be pressed and put it in ah, ah:al = scan code: ASCII code
-	                              int                  16h
+	                              waitForInput
 
 	                              mov                  cx, 0                                                                                	; initialize cx to use it to iterate over the shipSize
 	                              jmp                  gameLoopRoutine
@@ -3446,7 +3443,7 @@ movShip2 PROC near
 	                              mov                  [DI] + 2, dx
 	                              jmp                  movShip1_readFire
 
-	                      
+	                      ret
 movShip2 ENDP
 	;
 drawShip1 PROC	near
@@ -3701,6 +3698,7 @@ updateBullets proc NEAR
 
 	updateBullets_ContinueBullets:
 	                              delay                delayDuration
+								  ret
 
 updateBullets endp
 BulletChecker PROC NEAR
@@ -4276,11 +4274,7 @@ DrawLayout PROC near
 	                              mov                  BorderMIDDLED2, 5
 	                              mov                  BorderYSTART, 0
 	                              call                 DrawHorizBorder
-
-
 	;//////////////////////////////////DrawCharacter\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
 	                              mov                  REV, 0
 	                              mov                  Ers, 0
 
@@ -4349,9 +4343,6 @@ DrawLayout PROC near
 	                              mov                  Ers, 0
 	                              editDrawPrams        NameBoxC, NameBoxSizeX, NameBoxSizeY, 554, 72
 	                              call                 drawShape
-          
-     
-
 	;///////////////////////////LowerPart\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 	                              mov                  RECXEND, screenMaxX2
@@ -4537,7 +4528,7 @@ DrawVertBorder PROC NEAR
 	                              ret
 DrawVertBorder endp
 	;/////////////////////////////// related to the win and lose
-GameWinner PROC near
+GameWinner PROC NEAR
 	                              mov                  ah, HEALTH1
 	                              mov                  al, 0
 	                              CMP                  ah, al
@@ -4565,7 +4556,7 @@ GameWinner PROC near
 	                              INT                  10H
 
 	                              mov                  ah,09h
-	                              lea                  dx, congrats                                                                         	; show the bye bye screen
+	                              lea                  dx, congrats                                                                         	
 	                              int                  21h
 
 	                              jmp                  CONINUE_ENDMSG
@@ -4587,7 +4578,7 @@ GameWinner PROC near
 	                              INT                  10H
 
 	                              mov                  ah,09h
-	                              lea                  dx, congrats                                                                         	; show the bye bye screen
+	                              lea                  dx, congrats                                                                         	
 	                              int                  21h
 
 CONINUE_ENDMSG: mov ah, 2
@@ -4602,8 +4593,7 @@ CONINUE_ENDMSG: mov ah, 2
 	                              lea                  dx, NewEndGame
 	                              int                  21h
 
-	ReadNewGame:                  mov                  ah,1
-	                              int                  16h
+	ReadNewGame:                  checkIfInput
 	                              JZ                   ReadNewGame
 	                              CMP                  ah, 15H
 	                              JE                   NewGameCreator
@@ -4688,8 +4678,7 @@ displayChooseCharScreen proc NEAR                                               
 getCharID proc                                                                                                                          		; adds the player ID in BL
 	drawPointer1_Label:           
 	                              call                 displayChooseCharScreen
-	checkFirstScreen:             mov                  ah,0
-	                              int                  16h
+	checkFirstScreen:             waitForInput
 	                              cmp                  ah, key_rightArrow                                                                   	; up pointer
 	                              jne                  leftpointer_label
 	                              cmp                  pointerOffsetX, pointerAtFifthChar
