@@ -1,4 +1,4 @@
-.model COMPACT
+.model COMPACT ; no restrictions on the data segemnt
 ;///////////////////////////////Macros////////////////////////////////////
 printStringAtLoc MACRO string, row, col		; pass the whole string not (string +2)
 	                 mov dh, row       	;Cursor position line
@@ -81,7 +81,7 @@ inputToMoveShip macro UP, DOWN, LEFT, RIGHT, FIRE_BTN, movShip_label		; pass the
 	                cmp ah, FIRE_BTN
 	                jz  movShip_label
 ENDM
-drawCharacters MACRO
+drawCharactersFirstMenu MACRO
 	               editDrawPrams Fenn, charSizeX, charSizeY, firstCharOffsetX, charOffsetY
 	               call          drawShape
 
@@ -97,7 +97,7 @@ drawCharacters MACRO
 	               editDrawPrams Meruem2, charSizeX, charSizeY, fifthCharOffsetX, charOffsetY
 	               call          drawShape
 ENDM
-drawPlanes MACRO
+drawPlanesFirstMenu MACRO
 	           editDrawPrams Fenn_Plane, shipSizeX, shipSizeY, firstShipOffsetX, shipOffsetY
 	           call          drawShape
 
@@ -113,27 +113,9 @@ drawPlanes MACRO
 	           editDrawPrams Meruem_Plane, shipSizeX, shipSizeY, fifthShipOffsetX, shipOffsetY
 	           call          drawShape
 	ENDM
-drawPointer MACRO
+drawPointerFirstMenu MACRO
 	            editDrawPrams MSGTAIL, pointerSizeX, pointerSizeY, pointerOffsetX, pointerOffsetY
 	            call          drawShape
-	ENDM
-getAndValidatePlayerName MACRO varForPlayerName, drawPointer_Label_macro, Validate_Player_Name_func
-	                         local            GetPlayerName
-	                         printStringAtLoc getname2, 2, 28
-
-	GetPlayerName:           
-	                         mov              dl, 1
-	                         mov              Is_Valid_Name, dl
-	                         lea              si, varForPlayerName     	; get player's name
-	                         mov              ah, 0Ah
-	                         mov              dx, si
-	                         int              21h
-
-	                         CALL             Validate_Player_Name_func
-	                         CMP              Is_Valid_Name, 1
-	                         JE               drawPointer_Label_macro
-	                         printStringAtLoc enterValidName, 2, 28
-	                         JMP              GetPlayerName
 	ENDM
 displayMainMenu MACRO
 	                call          background
@@ -224,7 +206,8 @@ checkMainMenuOptions MACRO gameLoop_label, exitProg_label                       
 	                     jmp   Make_THE_JMP_CLOSER
 	ENDM
 ;///////////////////////////////Macros////////////////////////////////////
-;///////////////////////////////Data Initializations////////////////////////////////////
+;
+;///////////////////////////////Extra segment////////////////////////////////////
 extra SEGMENT
 	        org 900
 	exitbtn DB  0, 0, 0, 0, 0, 0, 0, 0, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
@@ -1339,10 +1322,14 @@ extra SEGMENT
 	
 	
 	extra ENDS
-
+;///////////////////////////////Extra segment////////////////////////////////////
+;
+;///////////////////////////////Data segment////////////////////////////////////
 .data
-
-	background_Game_Color	 equ		 0C5h
+	; initializations
+	REV                      DB          0
+	Ers                      DB          0
+	;////////////////////////////////
 	; keys
 	key_upArrow              equ         048h
 	key_downArrow            equ         050h
@@ -1357,11 +1344,14 @@ extra SEGMENT
 	key_a                    equ         1EH
 	key_d                    equ         20h
 	key_f                    equ         21h
+	;////////////////////////////////
 	; constrains depend on the graphics mode
 	graphicsModeAX           equ         4F02h
 	graphicsModeBX           equ         0100h
 	delayDuration            equ         260
 	;DRAW FUNCS PARAMETERS
+	background_Game_Color    equ         0C5h
+	;
 	RECXEND                  DW          640
 	RECYEND                  DW          400
 	RECXSTART                DW          0
@@ -1395,7 +1385,7 @@ extra SEGMENT
 	screenMinX2              equ         320
 	screenMaxY2              equ         370
 	screenMaxX2              equ         640
-
+	;
 	SHIP_DAMAGE_COLOR        db          04h
 	SHIP_DAMAGE_EFFECT_DELAY equ         650
 	HEALTH_ANGRY             EQU         100
@@ -1406,6 +1396,7 @@ extra SEGMENT
 	shipSpeed1               equ         4
 	shipSpeed2               equ         4
 	;////////////////////////////////
+	; main menu buttons
 	gamebtnOffset            dw          226, 204
 	chatbtnOffset            dw          226, 268
 	exitbtnOffset            dw          226, 332
@@ -1423,11 +1414,7 @@ extra SEGMENT
 	shapeOffsetY             DW          0
 	shapeSizeX               DW          0
 	shapeSizeY               DW          0
-	REV                      DB          0
-	Ers                      DB          0
-
 	;
-
 	                         arrowOffset label word
 	arrowOffsetX             dw          184
 	arrowOffsetY             dw          216
@@ -1438,15 +1425,18 @@ extra SEGMENT
 	arrowAtgame              equ         216
 	arrowAtChat              equ         280
 	arrowAtExit              equ         344
-	;////////////////////////////////     	                                                                                                                                                                                      	;don't make this 0
+	;////////////////////////////////     
+	; getting players' names	                                                                                                                                                                                      	;don't make this 0
 	getName1                 DB          "  Player1 Name: $"
 	getName2                 DB          "  Player2 Name: $"
-
+	;
 	enterValidName           DB          "  Please, enter a valid name: $"
 	Is_Valid_Name            DB          1
-
+	;
 	playerName1              DB          8,?,7 dup("$")
 	playerName2              DB          8,?,7 dup("$")
+	;////////////////////////////////
+	; some text screens
 	                         firstScreen label byte
 	                         DB          '  ',0ah,0dh
 	                         DB          '  ',0ah,0dh
@@ -1489,9 +1479,8 @@ extra SEGMENT
 	                         DB          09,'       ||                           ',0ah,0dh
 	                         DB          '$',0ah,0dh
 				   
-	;///////////////////////////////Data Initializations////////////////////////////////////
 	;//////////////////////////////////////Art/////////////////////////////////////////////
-	; For Bullets
+	; For Bullets, health and damage
 	Bullet                   DB          0, 0, 43, 43, 43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 0, 0, 68, 68, 68, 68, 68, 68
 	BulletXSize              equ         8
 	BulletYSize              equ         4
@@ -1501,12 +1490,13 @@ extra SEGMENT
 	BulletDirection          DB          100 DUP(0)
 	MAXBULLETLEFT            equ         631
 	MAXBULLETRIGHT           equ         8
-
+	;
 	HEALTH1                  DB          200
 	HEALTH2                  DB          200
 	DAMAGE                   equ         5
 	ISNEWGAME                db          0
- 
+	;////////////////////////////////
+	; messages
 	congrats                 DB          " is the Winner, Congrats", "$"
 	NewEndGame               DB          " Press Y For New Game (suprise!!!), N To End the Game ", "$"
 
@@ -1526,7 +1516,6 @@ extra SEGMENT
 	                         DB          27, 27, 27, 26, 26, 18, 18, 0, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 18, 0, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0
 	                         DB          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0, 0, 0
 	;//////////////////////////////////////Art/////////////////////////////////////////////
-
 	;game layout
 	CharacteroffsetX         dw          7
 	CharacteroffsetX2        dw          568                                                                                                                                                                                                   	;position of first from left pixel                                                                                                                                                                                              	;position of first from left pixel
@@ -1551,7 +1540,7 @@ extra SEGMENT
 	firstPlayerId            db          0
 	secondPlayerId           db          0
 
-	; pointer
+	; pointer of the 'choose character menu'
 	pointerAt                DB          0
 	pointerAtFirstChar       equ         60
 	pointerAtFifthChar       equ         476
@@ -2602,9 +2591,7 @@ extra SEGMENT
 	fourthShipOffsetX        equ         408
 	fifthShipOffsetX         equ         512
 	shipOffsetY              equ         304
-	
-	
-	                        
+	;                     
 	Meruem_Plane             DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169
 	                         DB          73, 169, 73, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 73, 169, 73, 169, 169, 19, 19, 169, 169, 19
@@ -2683,7 +2670,7 @@ extra SEGMENT
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 63, 134, 63, 134, 63, 19, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	 			 arrow       label byte
+	                         arrow       label byte
 	                         ship2       label byte                                                                                                                                                                                            	; remove before adding ship2
 	                         ship1       label byte
 	Mikasa_Plane             DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -2738,9 +2725,7 @@ extra SEGMENT
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 77, 151, 77, 151, 77, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 19, 19, 19, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-
-
-
+	;
 	NameBoxC                 DB          0, 0, 0, 0, 0, 0, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222
 	                         DB          222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 222, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 222, 222, 150, 150, 222, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150
@@ -2795,7 +2780,7 @@ extra SEGMENT
 	                         DB          0, 0, 0, 0, 222, 222, 150, 150, 150, 222, 222, 222, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 222, 222
-
+	;
 	Explosion1               DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -2978,6 +2963,10 @@ extra SEGMENT
 	                         DB          0, 27, 27, 0, 0, 27, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 27, 27, 0, 0, 27, 27, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 27, 27, 0, 0, 0, 0
 	                         DB          0, 0, 27, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 27, 27, 0, 0, 0, 0, 0, 0, 27, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 							 DB          0, 0, 27, 0, 0, 0, 27, 27, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+;///////////////////////////////Data segment////////////////////////////////////
+;
+;///////////////////////////////Code segment////////////////////////////////////
 .code
 MAIN PROC FAR
 	;///////////////////////////////Initialization////////////////////////////////////
@@ -2997,7 +2986,6 @@ MAIN PROC FAR
 	                              int                  21h
 	                              mov                  ah, 0
 	                              int                  16h
-	;fill background
 	                              call                 DrawRec
 	                              call                 drawLogoMin
 	;////////////////////////////// get player1 name
@@ -3021,9 +3009,9 @@ MAIN PROC FAR
 
 	;////////////////////////////////
 	drawPointer1_Label:           
-	                              drawPointer
-	                              drawCharacters
-	                              drawPlanes
+	                              drawPointerFirstMenu
+	                              drawCharactersFirstMenu
+	                              drawPlanesFirstMenu
 	;////////////////////////////// choose character1
 	checkFirstScreen:             mov                  ah,0
 	                              int                  16h
@@ -3115,9 +3103,9 @@ MAIN PROC FAR
 	                              JMP                  GetPlayer2Name
 	;////////////////////////////// choose character2
 	drawPointer2_Label:           
-	                              drawPointer
-	                              drawCharacters
-	                              drawPlanes
+	                              drawPointerFirstMenu
+	                              drawCharactersFirstMenu
+	                              drawPlanesFirstMenu
 
 	checkFirstScreen2:            mov                  ah,0
 	                              int                  16h
@@ -3234,7 +3222,7 @@ MAIN PROC FAR
 	                              mov                  ah,4ch
 	                              int                  21h
 MAIN ENDP
-	;//////////////////////////////Procedures//////////////////////////////////////////////
+;//////////////////////////////Procedures//////////////////////////////////////////////
 initializeGameLoop PROC near                                                                                                            		; draws the game layout, ships, msgBoxes and health bars
 	                              mov                  ax, graphicsModeAX
 	                              mov                  bx, graphicsModeBX
@@ -3251,7 +3239,7 @@ initializeGameLoop PROC near                                                    
 	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
 	                              call                 DrawMsgWithBox
 	;this subroutine is responsible for drawing the ship using its cooardinates
-	                              ENDp
+	                              ENDP
 Validate_Player1_Name PROC near
 
 	; Initializations
@@ -3296,7 +3284,6 @@ Validate_Player1_Name PROC near
 
 	ValidName:                    ret
 Validate_Player1_Name ENDP
-
 movShip1 PROC near
 
 	                              cmp                  al,key_esc                                                                           	; ESC
@@ -3443,7 +3430,6 @@ movShip1 PROC near
 	                              ret
 
 movShip1 ENDP
-
 Validate_Player2_Name PROC near
 
 	; Initializations
@@ -3654,7 +3640,6 @@ updateBullets proc NEAR
 	                              delay                delayDuration
 
 updateBullets endp
-
 BulletChecker PROC NEAR
 
 	                              mov                  BX, 0
@@ -3765,9 +3750,7 @@ BulletChecker PROC NEAR
 
 	ENDCHECKBULLET:               ret
 BulletChecker ENDP
-
-
-GameWinner PROC
+GameWinner  PROC NEAR
 
 	                              mov                  ah, HEALTH1
 	                              mov                  al, 0
@@ -3777,7 +3760,6 @@ GameWinner PROC
 	                              CMP                  ah, al
 	                              JE                   Player1_Winner
 	                              JMP                  EndGameWinner
-
 	Player1_Winner:               
 	                              call                 Eraseship2
 	                              mov                  ax, shipOffsetX2
@@ -3801,7 +3783,6 @@ GameWinner PROC
 	                              int                  21h
 
 	                              jmp                  CONINUE_ENDMSG
-
 	Player2_Winner:               
 	                              call                 Eraseship1
 	                              mov                  ax, shipOffsetX1
@@ -3810,7 +3791,6 @@ GameWinner PROC
 	                              mov                  ExplosionOffsetY, ax
 	                              call                 DrawExplosion
 	                              clearWholeScreen
-
 	                              mov                  ah,09h
 	                              lea                  dx, playerName2 + 2
 	                              int                  21h
@@ -3822,18 +3802,14 @@ GameWinner PROC
 
 	                              mov                  ah,09h
 	                              lea                  dx, congrats                                                                         	; show the bye bye screen
-	                              int                  21h
-	;jmp EndGameWinner
-
-		
-CONINUE_ENDMSG: mov ah, 2
+	                              int                  21h		
+	CONINUE_ENDMSG: 			  mov ah, 2
 	                              mov                  dl, 13
 	                              int                  21h
                 
 	                              mov                  ah, 2
 	                              mov                  dl, 10
 	                              int                  21h
-
                 
 	                              mov                  ah, 09h
 	                              lea                  dx, NewEndGame
@@ -3847,7 +3823,6 @@ CONINUE_ENDMSG: mov ah, 2
 	                              CMP                  ah, 31H
 	                              JE                   EndGameCreator
 	                              JMP                  EndGameWinner
-		
 	EndGameCreator:               
 	                              clearWholeScreen
 	                              mov                  ah,09h
@@ -3857,22 +3832,19 @@ CONINUE_ENDMSG: mov ah, 2
 	                              mov                  ah,4ch
 	                              int                  21h
 	                              JMP                  EndGameWinner
-
 	NewGameCreator:               
 	                              call                 NewGameInitializer
-
-
 	EndGameWinner:                
 	                              ret
 GameWinner ENDP
 
-DrawExplosion Proc near
+DrawExplosion PROC near
 	                              push                 DI
 	                              mov                  rev, 0
 	                              mov                  ers, 0
 	                              editDrawPrams        Explosion1, shipSizeX, shipSizeY, ExplosionOffsetX, ExplosionOffsetY
 	                              mov                  DI, SI
-								  mov				   RECCOLOR, background_Game_Color
+	                              mov                  RECCOLOR, background_Game_Color
 
 	ExplosionAnimate:             
 	                              call                 drawShape
@@ -3919,7 +3891,6 @@ InitalizeBullets PROC NEAR
 	                              JNZ                  InitializeBullet
 	                              ret
 InitalizeBullets ENDP
-
 
 drawShip1 PROC	near
 	; initialize containers
@@ -4008,7 +3979,7 @@ eraseShip1 PROC near
 	                              mov                  ah, 0ch
 	                              cmp                  al, SHIP_DAMAGE_COLOR
 	                              jz                   eraseShip1_drawIt                                                                    	;Draw Pixel Command
-	                              mov                  al, background_Game_Color                                                                               	;to be replaced with background
+	                              mov                  al, background_Game_Color                                                            	;to be replaced with background
 	
 	eraseShip1_drawIt:            
 	                              mov                  bl, [SI]                                                                             	;  use color from array color for testing
@@ -4031,8 +4002,6 @@ eraseShip1 PROC near
 	eraseShip1_allDrawn:          pop                  ax
 	                              ret
 eraseShip1 ENDP
-
-
 
 Drawship2 PROC	near
 	; initialize containers
@@ -4119,7 +4088,7 @@ eraseShip2 PROC near
 	                              mov                  ah, 0ch
 	                              cmp                  al, SHIP_DAMAGE_COLOR
 	                              jz                   eraseShip2_drawIt                                                                    	;Draw Pixel Command
-	                              mov                  al, background_Game_Color                                                                               	;to be replaced with background
+	                              mov                  al, background_Game_Color                                                            	;to be replaced with background
 	
 	eraseShip2_drawIt:            
 	                              mov                  bl, [SI]                                                                             	;  use color from array color for testing
@@ -4223,7 +4192,7 @@ EraseBullet PROC near
 	                              mov                  Cx, BulletXSize                                                                      	;Column X
 	                              mov                  dx, BulletYSize                                                                      	;Row Y
 	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
-	                              mov                  al, background_Game_Color                                                                               	;to be replaced with background
+	                              mov                  al, background_Game_Color                                                            	;to be replaced with background
 	
 	Drawit2Bullet:                
 	                              mov                  bl, [SI]                                                                             	;  use color from array color for testing
@@ -4250,7 +4219,7 @@ EraseBullet PROC near
 	                              mov                  SI, offset Bullet                                                                    	;shipY is (shipX index + size * 2) so we can use Si for both
 
 	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
-	                              mov                  al, background_Game_Color                                                                               	;to be replaced with background
+	                              mov                  al, background_Game_Color                                                            	;to be replaced with background
 	
 	Drawit2BulletREV:             
 	                              mov                  bl, [SI]                                                                             	;  use color from array color for testing
@@ -4482,8 +4451,8 @@ eraseArrows PROC near
 	eraseArrows_allDrawnR:        pop                  ax
 	                              ret
 eraseArrows ENDP
-	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
-DrawMsgWithBox Proc near
+	
+DrawMsgWithBox PROC near ; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
 	                              mov                  cx, bx
 	                              and                  cx, 2
 	                              JNZ                  DRAWMSGUP
@@ -4710,7 +4679,7 @@ DrawHealthbar2 endp
 
 DrawLayout PROC near
 	;///////////////////////////////////UPPER_BAR\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-		                          mov                  RECXEND, 640
+	                              mov                  RECXEND, 640
 	                              mov                  RECYEND, 400
 	                              mov                  RECXSTART, 0
 	                              mov                  RECYSTART, 0
@@ -4987,7 +4956,7 @@ DrawAngry2 PROC NEAR
 	                              ret
 DrawAngry2 ENDP
 
-DrawRec Proc near
+DrawRec PROC near
 	                              mov                  cx, RECXEND                                                                          	;Column X
 	                              mov                  dx, RECYEND                                                                          	;Row Y
 	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
@@ -5005,9 +4974,9 @@ DrawRec Proc near
 	                              jmp                  DRAW_REC1
 	ALL_DRAWN_REC1:               
 	                              ret
-DrawRec endp
+DrawRec ENDP
 
-DrawHorizBorder Proc	near
+DrawHorizBorder PROC	near
 	                              mov                  cx, BorderXEND                                                                       	;Column X
 	                              mov                  dx, BorderYEND                                                                       	;Row Y
 	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
@@ -5034,6 +5003,7 @@ DrawHorizBorder Proc	near
 	ALL_DRAWN_HorizBorder:        
 	                              ret
 DrawHorizBorder ENDP
+
 DrawVertBorder PROC NEAR
 	                              mov                  cx, BorderXEND                                                                       	;Column X
 	                              mov                  dx, BorderYEND                                                                       	;Row Y
@@ -5328,14 +5298,13 @@ drawLogoMin PROC
 	                              jmp                  drawlogoMIN_drawIt
 	drawlogoMIN_allDrawn:         ret
 drawLogoMin ENDP
-
-	;//////////////////////////////Procedures//////////////////////////////////////////////
+;//////////////////////////////Procedures///////////////////////////////////////
         END MAIN
+;///////////////////////////////code segment////////////////////////////////////
 
-	;//////////////////////////////TODO//////////////////////////////////////////////
+;//////////////////////////////TODO/////////////////////////////////////////////
 @comment
-
 		TODO:
 		1.invalid name fill buffer
 @
-	;//////////////////////////////TODO//////////////////////////////////////////////
+;//////////////////////////////TODO//////////////////////////////////////////////
