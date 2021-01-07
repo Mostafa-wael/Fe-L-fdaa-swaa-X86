@@ -23,7 +23,55 @@ printStringAtLoc MACRO string, row, col		; pass the whole string not (string +2)
 	;                               cmp              dl, 0Ah                                                                              	;5.
 	;                               jne              Again
 	; noName:
+ENDM 
+getString MACRO string
+	          mov ah, 0Ah
+	          mov dx, offset string
+	          int 21h
+	ENDM
+checkStringSize MACRO string, size, invalidSizeLabel
+	                mov al, string+1
+	                cmp al, size
+	                JA  invalidSizeLabel
 ENDM
+checkFirstChar MACRO string, invalidCharLabel; check if the first character is a letter
+	               local secondCheck, charIsALetter
+	               mov   al, string+2
+	;
+	               cmp   al, 65                    	; 'A'
+	               JB    invalidCharLabel
+	; 65 <= char
+	               cmp   al, 122                   	; 'z'
+	               JA    invalidCharLabel
+	; 65 <= char <= 122
+	               cmp   al, 90                    	; 'Z'
+	               jA    secondCheck
+	; 65 <= char <= 90
+	               jmp   charIsALetter
+	secondCheck:   
+	               cmp   al, 97                    	; 'a'
+	               jb    invalidCharLabel
+	; 97 <= char <= 122
+	charIsALetter: 
+				   ENDM
+validateName MACRO string, size, validLabel, invalidLabel ; check if the name is valid (size and the first char)
+	                local            invalidNameSize, invalidNameChar
+	                checkStringSize  string, size, invalidNameSize
+	; size is valid
+	                checkFirstChar   string, invalidNameChar
+	; first char is a letter
+	                jmp              validLabel
+	invalidNameSize:
+	                call             DrawRec
+	                call             drawLogoMin
+	                printStringAtLoc enterShorterName, 2, 25
+	                jmp              invalidLabel
+	invalidNameChar:
+	                call             DrawRec
+	                call             drawLogoMin
+	                printStringAtLoc enterValidName, 2, 25
+	                jmp              invalidLabel
+	ENDM
 editDrawPrams MACRO shape, sizeX, sizeY, offsetX, offsetY
 	              MOV AX, sizeX
 	              MOV shapeSizeX, AX
@@ -65,6 +113,17 @@ clearWholeScreen MACRO
 	                 mov al, 3
 	                 INT 10H  	;FOR VIDEO DISPLAY
 	ENDM
+clearRow MACRO row    		; the screen is 80*20
+	         mov ax ,0600h
+	         mov bh ,34h
+
+	         mov cl,0
+	         mov ch,row
+
+	         mov dl,79
+	         mov dh,row
+	         int 10h
+ENDM
 inputToMoveShip macro UP, DOWN, LEFT, RIGHT, FIRE_BTN, movShip_label		; pass the keys and the label to jump to
 	                cmp ah,UP
 	                jz  movShip_label
@@ -1434,10 +1493,11 @@ extra SEGMENT
 	getName2                 DB          "  Player2 Name: $"
 	;
 	enterValidName           DB          "  Please, enter a valid name: $"
-	Is_Valid_Name            DB          1
+	enterShorterName         DB          "  Please, enter a shorter name: $"
 	;
-	playerName1              DB          8,?,7 dup("$")
-	playerName2              DB          8,?,7 dup("$")
+	playerName1              DB          10,?,10 dup("$")
+	playerName2              DB          10,?,10 dup("$")
+	maxPlayerSize            equ         7
 	;////////////////////////////////
 	; some text screens
 	                         firstScreen label byte
@@ -1454,7 +1514,7 @@ extra SEGMENT
 	                         DB          09,'     ||                                                ||',0ah,0dh
 	                         DB          09,'     ||------------------------------------------------||',0ah,0dh
 	                         DB          09,'     ||                                                ||',0ah,0dh
-	                         DB          09,'     ||       Please, Enter your name(max 5 chars)     ||',0ah,0dh
+	                         DB          09,'     ||       Please, Enter your name(max 7 chars)     ||',0ah,0dh
 	                         DB          09,'     ||       Then, choose your favourite character    ||',0ah,0dh
 	                         DB          09,'     ||                                                ||',0ah,0dh
 	                         DB          09,'     ||           **press any key to continue**        ||',0ah,0dh
@@ -1553,7 +1613,6 @@ extra SEGMENT
 	pointerOffsetX           dw          60
 	pointerOffsetY           equ         230
 
-	                         characterC  label byte
 	Mikasa2                  DB          0, 0, 91, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114, 6, 114, 114, 114, 114, 114, 114, 114, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 26, 30, 30, 30
 	                         DB          30, 26, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 91, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 114
 	                         DB          6, 114, 114, 114, 114, 114, 114, 114, 113, 113, 4, 4, 4, 4, 4, 4, 4, 4, 113, 113, 26, 30, 30, 30, 30, 26, 114, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
@@ -2992,30 +3051,18 @@ MAIN PROC FAR
 	                              call                    DrawRec
 	                              call                    drawLogoMin
 	;////////////////////////////// get player1 name
-	;getAndValidatePlayerName playerName1, drawPointer1_Label, Validate_Player2_Name
 	                              printStringAtLoc        getname1, 2, 28
-
+								  
 	GetPlayer1Name:               
-	                              mov                     dl, 1
-	                              mov                     Is_Valid_Name, dl
-	                              lea                     si, playerName1                                                                      	; get player's name
-	                              mov                     ah, 0Ah
-	                              mov                     dx, si
-	                              int                     21h
+	                              getString               playername1
+	                              validateName            playername1, maxPlayerSize, validName1, GetPlayer1Name
+	validName1:                   
 
-	; Validate Player Name
-	                              CALL                    Validate_Player1_Name
-	                              CMP                     Is_Valid_Name, 1
-	                              JE                      drawPointer1_Label
-	                              printStringAtLoc        enterValidName, 2, 28
-	                              JMP                     GetPlayer1Name
-
-	;////////////////////////////////
+	;////////////////////////////// choose character1
 	drawPointer1_Label:           
 	                              drawPointerFirstMenu
 	                              drawCharactersFirstMenu
 	                              drawPlanesFirstMenu
-	;////////////////////////////// choose character1
 	checkFirstScreen:             mov                     ah,0
 	                              int                     16h
 	                              cmp                     ah, key_rightArrow                                                                   	; up pointer
@@ -3084,26 +3131,15 @@ MAIN PROC FAR
 	                              mov                     ax, graphicsModeAX                                                                   	; enter graphicsMode
 	                              mov                     bx, graphicsModeBX                                                                   	; BX = 81FFh
 	                              int                     10h
-	;fill background
 	                              call                    DrawRec
 	                              call                    drawLogoMin
 	;////////////////////////////// get player's name'
-	;getAndValidatePlayerName playerName2, drawPointer2_Label, Validate_Player2_Name
 	                              printStringAtLoc        getname2, 2, 28
-
+								  
 	GetPlayer2Name:               
-	                              mov                     dl, 1
-	                              mov                     Is_Valid_Name, dl
-	                              lea                     si, playerName2                                                                      	; get player's name
-	                              mov                     ah, 0Ah
-	                              mov                     dx, si
-	                              int                     21h
-
-	                              CALL                    Validate_Player2_Name
-	                              CMP                     Is_Valid_Name, 1
-	                              JE                      drawPointer2_Label
-	                              printStringAtLoc        enterValidName, 2, 28
-	                              JMP                     GetPlayer2Name
+	                              getString               playername2
+	                              validateName            playername2, maxPlayerSize, validName2, GetPlayer2Name
+	validName2:                   
 	;////////////////////////////// choose character2
 	drawPointer2_Label:           
 	                              drawPointerFirstMenu
@@ -3243,50 +3279,6 @@ initializeGameLoop PROC near                                                    
 	                              call                    DrawMsgWithBox
 	;this subroutine is responsible for drawing the ship using its cooardinates
 	                              ENDP
-Validate_Player1_Name PROC near
-
-	; Initializations
-	                              mov                     cx, 0
-	                              mov                     cl, playerName1 + 1                                                                  	; Size of player1 name String
-
-	                              CMP                     cx, 0                                                                                	; Check if it is an empty String
-	                              JE                      InValidName
-
-	; Otherwise it isn't an empty String
-	                              MOV                     SI, 0                                                                                	; For Indexing
-	                              lea                     BX,  PlayerName1 + 2                                                                 	; Maybe +2: Player2Name
-	;add BX, 2
-	                              mov                     dx, 0
-	ValidChar:                    
-	                              mov                     dl, 41H
-	                              CMP                     BX[SI], dl                                                                           	; Less than A: not a character --> Invalid
-	                              JL                      InValidName
-
-	                              mov                     dl, 007AH
-	                              CMP                     BX[SI], dl                                                                           	; Greater than z: not a charcter --> Invalid
-	                              JG                      InValidName
-
-	                              mov                     dl, 5AH
-	                              CMP                     BX[SI], dl                                                                           	; Less than or equal to Z
-	                              JLE                     Move_Next_Char
-
-	                              mov                     dl, 61H
-	                              CMP                     BX[SI], dl                                                                           	; If Less than a, and it is greater than Z, then it is invalid
-	                              JL                      InValidName
-	; Otherwise cont. to the next char
-
-	Move_Next_Char:               
-	                              INC                     SI                                                                                   	; Increment the iterator
-	                              CMP                     SI, CX                                                                               	; Compare the iterator to the size of the string
-	                              JNE                     ValidChar                                                                            	; If there aren't empty, then check the next character
-	                              JE                      ValidName                                                                            	; otherwise cont. to the return of the function
-
-	InValidName:                  
-	                              mov                     dl, 0                                                                                	; Set the case to InValid Case
-	                              mov                     Is_Valid_Name, dl
-
-	ValidName:                    ret
-Validate_Player1_Name ENDP
 movShip1 PROC near
 
 	                              cmp                     al,key_esc                                                                           	; ESC
@@ -3433,50 +3425,6 @@ movShip1 PROC near
 	                              ret
 
 movShip1 ENDP
-Validate_Player2_Name PROC near
-
-	; Initializations
-	                              mov                     cx, 0
-	                              mov                     cl, playerName2 + 1                                                                  	; Size of player1 name String
-
-	                              CMP                     cx, 0                                                                                	; Check if it is an empty String
-	                              JE                      InValidName2
-
-	; Otherwise it isn't an empty String
-	                              MOV                     SI, 0                                                                                	; For Indexing
-	                              lea                     BX,  PlayerName2 + 2                                                                 	; Maybe +2: Player2Name
-	;add BX, 2
-	                              mov                     dx, 0
-	ValidChar2:                   
-	                              mov                     dl, 41H
-	                              CMP                     BX[SI], dl                                                                           	; Less than A: not a character --> Invalid
-	                              JL                      InValidName2
-
-	                              mov                     dl, 007AH
-	                              CMP                     BX[SI], dl                                                                           	; Greater than z: not a charcter --> Invalid
-	                              JG                      InValidName2
-
-	                              mov                     dl, 5AH
-	                              CMP                     BX[SI], dl                                                                           	; Less than or equal to Z
-	                              JLE                     Move_Next_Char2
-
-	                              mov                     dl, 61H
-	                              CMP                     BX[SI], dl                                                                           	; If Less than a, and it is greater than Z, then it is invalid
-	                              JL                      InValidName2
-	; Otherwise cont. to the next char
-
-	Move_Next_Char2:              
-	                              INC                     SI                                                                                   	; Increment the iterator
-	                              CMP                     SI, CX                                                                               	; Compare the iterator to the size of the string
-	                              JNE                     ValidChar2                                                                           	; If there aren't empty, then check the next character
-	                              JE                      ValidName2                                                                           	; otherwise cont. to the return of the function
-
-	InValidName2:                 
-	                              mov                     dl, 0                                                                                	; Set the case to InValid Case
-	                              mov                     Is_Valid_Name, dl
-
-	ValidName2:                   ret
-Validate_Player2_Name ENDP
 movShip2 PROC near
 	                              mov                     cx, 0
 	                              cmp                     ah, key_enter
@@ -5222,45 +5170,45 @@ drawLogoMin PROC
 	drawlogoMIN_allDrawn:         ret
 drawLogoMin ENDP
 
-drawShape_extra PROC ; draw shapes in the extra segment
+drawShape_extra PROC                                                                                                                       		; draw shapes in the extra segment
 	; initialize containers
 	;mov SI, offset Shape
-	                      mov                  cx, shapeSizeX
-	                      cmp                  REV, 0
-	                      jz                   DontREVCXDraw_ex
-	                      mov                  cx, 0                	;Column X
-	DontREVCXDraw_ex:        push                 cx
-	                      mov                  dx, shapeSizeY       	;Row Y
-	                      mov                  ah, 0ch              	;Draw Pixel Command
-	drawShape_drawIt_ex:     
-	                      mov                  bl, ES:[SI]          	;use color from array color for testing
-	                      and                  bl, bl
-	                      JZ                   drawShape_back_ex
-	                      add                  cx, shapeOffsetX
-	                      add                  dx, shapeOffsetY
-	                      mov                  al, ES:[SI]
-	                      cmp                  Ers, 0
-	                      jz                   DrawWithPxl_ex
-	                      mov                  al, RECCOLOR         	;  use color from array color for testing
-	DrawWithPxl_ex:          int                  10h                  	;  draw the pixel
-	                      sub                  cx, shapeOffsetX
-	                      sub                  dx, shapeOffsetY
-	drawShape_back_ex:       
-	                      inc                  SI
-	                      cmp                  REV, 1
-	                      JZ                   RevDraw_ex
-	                      DEC                  Cx                   	;  loop iteration in x direction
-	                      jmp                  ContinueDrawLoop_ex
-	RevDraw_ex:              inc                  cx
-	                      cmp                  cx, shapeSizeX
-	ContinueDrawLoop_ex:     JNZ                  drawShape_drawIt_ex     	;  check if we can draw current x and y and excape the y iteration
-	                      pop                  cx
-	                      push                 cx                   	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                      DEC                  DX                   	;  loop iteration in y direction
-	                      JZ                   drawShape_alldrawn_ex   	;  both x and y reached 00 so finish drawing
-	                      jmp                  drawShape_drawIt_ex
-	drawShape_alldrawn_ex:   pop                  cx
-	                      ret
+	                              mov                     cx, shapeSizeX
+	                              cmp                     REV, 0
+	                              jz                      DontREVCXDraw_ex
+	                              mov                     cx, 0                                                                                	;Column X
+	DontREVCXDraw_ex:             push                    cx
+	                              mov                     dx, shapeSizeY                                                                       	;Row Y
+	                              mov                     ah, 0ch                                                                              	;Draw Pixel Command
+	drawShape_drawIt_ex:          
+	                              mov                     bl, ES:[SI]                                                                          	;use color from array color for testing
+	                              and                     bl, bl
+	                              JZ                      drawShape_back_ex
+	                              add                     cx, shapeOffsetX
+	                              add                     dx, shapeOffsetY
+	                              mov                     al, ES:[SI]
+	                              cmp                     Ers, 0
+	                              jz                      DrawWithPxl_ex
+	                              mov                     al, RECCOLOR                                                                         	;  use color from array color for testing
+	DrawWithPxl_ex:               int                     10h                                                                                  	;  draw the pixel
+	                              sub                     cx, shapeOffsetX
+	                              sub                     dx, shapeOffsetY
+	drawShape_back_ex:            
+	                              inc                     SI
+	                              cmp                     REV, 1
+	                              JZ                      RevDraw_ex
+	                              DEC                     Cx                                                                                   	;  loop iteration in x direction
+	                              jmp                     ContinueDrawLoop_ex
+	RevDraw_ex:                   inc                     cx
+	                              cmp                     cx, shapeSizeX
+	ContinueDrawLoop_ex:          JNZ                     drawShape_drawIt_ex                                                                  	;  check if we can draw current x and y and excape the y iteration
+	                              pop                     cx
+	                              push                    cx                                                                                   	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC                     DX                                                                                   	;  loop iteration in y direction
+	                              JZ                      drawShape_alldrawn_ex                                                                	;  both x and y reached 00 so finish drawing
+	                              jmp                     drawShape_drawIt_ex
+	drawShape_alldrawn_ex:        pop                     cx
+	                              ret
 drawShape_extra ENDP
 
 ;//////////////////////////////Procedures///////////////////////////////////////
