@@ -3,16 +3,24 @@
 ;///////////////////////////////
 ;/////////////////////////////// String operations
 ;///////////////////////////////
-printStringAtLoc MACRO string, row, col		; pass the whole string not (string +2)
-	                 mov dh, row       	;Cursor position line
-	                 mov dl, col       	;Cursor position column
-	                 mov ah, 02h       	;Set cursor position function
-	                 mov bl, 0ffh      	; BF color, not working in this mode
-	                 mov bh, 0         	;Page number
-	                 int 10h           	;Interrupt call
+setCursorAt MACRO row, col
+	            mov dh, row 	;Cursor position line
+	            mov dl, col 	;Cursor position column
+	            mov ah, 02h 	;Set cursor position function
+	            mov bl, 0ffh	; BF color, not working in this mode
+	            mov bh, 0   	;Page number
+	            int 10h     	;Interrupt call
+ENDM
+printStringAtLoc MACRO string, row, col		; pass the acctual string i.e. (string +2)
+	                 mov dh, row   	;Cursor position line
+	                 mov dl, col   	;Cursor position column
+	                 mov ah, 02h   	;Set cursor position function
+	                 mov bl, 0ffh  	; BF color, not working in this mode
+	                 mov bh, 0     	;Page number
+	                 int 10h       	;Interrupt call
 
-	                 mov ah,09h        	; print player's name
-	                 lea dx, string + 2
+	                 mov ah,09h    	; print player's name
+	                 lea dx, string
 	                 int 21h
 ENDM 
 printString MACRO string
@@ -1471,6 +1479,8 @@ extra SEGMENT
 	key_a                    equ         1EH
 	key_d                    equ         20h
 	key_f                    equ         21h
+	key_y                    equ         15H
+	key_n                    equ         31H
 	;////////////////////////////////
 	; constrains depend on the graphics mode
 	graphicsModeAX           equ         4F02h
@@ -4328,8 +4338,8 @@ DrawLayout PROC near                                                            
 	                              mov                  BorderYSTART, screenMaxY1+23
 	                              call                 DrawHorizBorder
 	; print player's name
-	                              printStringAtLoc     playerName1, 5, 2
-	                              printStringAtLoc     playerName2, 5, 71
+	                              printStringAtLoc     playerName1[2], 5, 2
+	                              printStringAtLoc     playerName2[2], 5, 71
 	                              ret
 DrawLayout ENDP
 DrawAngry1 PROC NEAR                                                                                                                    		; draw angry character for player 1
@@ -4399,6 +4409,7 @@ DrawAngry2 PROC NEAR                                                            
 DrawAngry2 ENDP
 	;/////////////////////////////// related to the win and lose
 GameWinner PROC NEAR
+	; check for health
 	                              mov                  ah, HEALTH1
 	                              mov                  al, 0
 	                              CMP                  ah, al
@@ -4407,7 +4418,7 @@ GameWinner PROC NEAR
 	                              CMP                  ah, al
 	                              JE                   Player1_Winner
 	                              JMP                  EndGameWinner
-	Player1_Winner:               
+	Player1_Winner:                                                                                                                         	; if player 1 is the winner then, explode ship2
 	                              call                 Eraseship2
 	                              mov                  ax, shipOffsetX2
 	                              mov                  ExplosionOffsetX, ax
@@ -4416,21 +4427,12 @@ GameWinner PROC NEAR
 	                              call                 DrawExplosion
 	                              clearWholeScreen
 
-	                              mov                  ah,09h
-	                              lea                  dx, playerName1 + 2
-	                              int                  21h
-
-	                              mov                  ah, 2H
-	                              mov                  dx, 0
-	                              mov                  dl, playerName1+1
-	                              INT                  10H
-
-	                              mov                  ah,09h
-	                              lea                  dx, congrats
-	                              int                  21h
+	                              printString          playerName1[2]
+	                              printString          playerName1[2]
+	                              printStringAtLoc     congrats, 0, playerName1[1]
 
 	                              jmp                  CONINUE_ENDMSG
-	Player2_Winner:               
+	Player2_Winner:                                                                                                                         	; if player 2 is the winner then, explode ship1
 	                              call                 Eraseship1
 	                              mov                  ax, shipOffsetX1
 	                              mov                  ExplosionOffsetX, ax
@@ -4438,47 +4440,20 @@ GameWinner PROC NEAR
 	                              mov                  ExplosionOffsetY, ax
 	                              call                 DrawExplosion
 	                              clearWholeScreen
-	                              mov                  ah,09h
-	                              lea                  dx, playerName2 + 2
-	                              int                  21h
 
-	                              mov                  ah, 2H
-	                              mov                  dx, 0
-	                              mov                  dl, playerName2+1
-	                              INT                  10H
-
-	                              mov                  ah,09h
-	                              lea                  dx, congrats
-	                              int                  21h
-
-CONINUE_ENDMSG: mov ah, 2
-	                              mov                  dl, 13
-	                              int                  21h
-                
-	                              mov                  ah, 2
-	                              mov                  dl, 10
-	                              int                  21h
-                
-	                              mov                  ah, 09h
-	                              lea                  dx, NewEndGame
-	                              int                  21h
-
-	ReadNewGame:                  checkIfInput
-	                              JZ                   ReadNewGame
-	                              CMP                  ah, 15H
+	                              printString          playerName2[2]
+	                              printStringAtLoc     congrats, 0, playerName2[1]
+CONINUE_ENDMSG:                
+	                              printStringAtLoc      NewEndGame, 1, 0
+	ReadNewGame:                  
+	                              waitForInput
+	                              CMP                  ah, key_y
 	                              JE                   NewGameCreator
-	                              CMP                  ah, 31H
+	                              CMP                  ah, key_n
 	                              JE                   EndGameCreator
-	                              JMP                  EndGameWinner
+	                              JMP                  ReadNewGame
 	EndGameCreator:               
-	                              clearWholeScreen
-	                              mov                  ah,09h
-	                              lea                  dx, byebye                                                                           	; show the bye bye screen
-	                              int                  21h
-
-	                              mov                  ah,4ch
-	                              int                  21h
-	                              JMP                  EndGameWinner
+	                              jmp                  exitProg
 	NewGameCreator:               
 	                              call                 NewGameInitializer
 	EndGameWinner:                
