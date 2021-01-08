@@ -4464,7 +4464,7 @@ checkForWinner PROC NEAR
 	                              printStringAtLoc     playerName2[2], 18, 0
 	                              printStringAtLoc     congrats, 18, playerName2[1]
 CONINUE_ENDMSG:
-	                              printStringAtLoc     NewEndGame, 1, 0
+	                              printStringAtLoc     NewEndGame, 1, 0; show ask for a new game message
 	ReadNewGame:                  
 	                              waitForInput
 	                              CMP                  ah, key_y
@@ -4500,7 +4500,7 @@ DrawExplosion PROC near
 	                              mov                  ExplosionItr, 6
 	                              pop                  DI
 
-	                              delay                8000
+	                              delay                4000
 	                              ret
 DrawExplosion ENDP
 	;/////////////////////////////// related to the main menu and the get name screens
