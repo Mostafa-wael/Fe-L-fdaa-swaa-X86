@@ -174,10 +174,38 @@ inputToMoveShip macro UP, DOWN, LEFT, RIGHT, FIRE_BTN, movShip_label		; pass the
 	                cmp ah, FIRE_BTN
 	                jz  movShip_label
 ENDM
+setCurrentChar MACRO playerID
+	                    local drawShip_secondChar, drawShip_thirdChar, drawShip_fourthChar, drawShip_fifthChar, drawShip_start
+	                    mov   ah, playerID
+
+	                    cmp   ah, 0
+	                    JNE   drawShip_secondChar
+	                    mov   SI, offset Fenn_Plane
+	                    jmp   drawShip_start
+
+	drawShip_secondChar:cmp   ah, 1
+	                    jne   drawShip_thirdChar
+	                    mov   SI, offset Mikasa_Plane
+	                    jmp   drawShip_start
+
+	drawShip_thirdChar: cmp   ah, 2
+	                    jne   drawShip_fourthChar
+	                    mov   SI, offset Hisoka_Plane
+	                    jmp   drawShip_start
+
+	drawShip_fourthChar:cmp   ah, 3
+	                    jne   drawShip_fifthChar
+	                    mov   SI, offset Asta_Plane
+	                    jmp   drawShip_start
+
+	drawShip_fifthChar: 
+	                    mov   SI, offset Meruem_Plane
+	drawShip_start:     
+	ENDM
 ;///////////////////////////////
 ;/////////////////////////////// related to the main menu and the choose character screen
 ;///////////////////////////////
-displayMainMenu MACRO                                                                     		; responsible for drawing the main menu
+displayMainMenu MACRO                                                                    		; responsible for drawing the main menu
 	                call          background
 	                mov           Ers, 0
 	                mov           REV, 0
@@ -199,7 +227,7 @@ displayMainMenu MACRO                                                           
 	                              
 
 	                mov           Rev, 1
-	                editDrawPrams ship1, shipSizeX1, shipSizeY1, arrowOffsetXRev, arrowoffsetY
+	                editDrawPrams ship1, shipSizeX, shipSizeX, arrowOffsetXRev, arrowoffsetY
 	                call          drawShape
 	                mov           Rev, 0
 	                mov           AX, arrowOffsetX
@@ -1469,8 +1497,8 @@ extra SEGMENT
 	;
 	shipOffsetX1             dw          30                                                                                                                                                                                                    	;position of first from left pixel
 	shipOffsetY1             dw          219                                                                                                                                                                                                   	;position of first from top pixel
-	shipSizeX1               equ         32                                                                                                                                                                                                    	;img Width
-	shipSizeY1               equ         32                                                                                                                                                                                                    	;img Height
+	shipSizeX                equ         32                                                                                                                                                                                                    	;img Width
+	shipSizeX                equ         32                                                                                                                                                                                                    	;img Height
 	screenMaxY1              equ         370
 	screenMaxX1              equ         320
 	screenMinY1              equ         100
@@ -3124,13 +3152,13 @@ MAIN ENDP
 	;/////////////////////////////////////////////////////////////////////////
 	;//////////////////////////////Procedures//////////////////////////////////////////////
 	;/////////////////////////////// initialize the game
-initializeGameLoop PROC near                                                                                                            		; draws the game layout, ships, msgBoxes and health bars
+initializeGameLoop PROC near                                                                                                            		; draws the layout and the ships                                                                                           		; draws the game layout, ships, msgBoxes and health bars
 	                              enterGraphicsMode
 	                              call                 DrawLayout
 	                              call                 DrawHealthbar
 	                              call                 DrawHealthbar2
 	                              call                 drawShip1
-	                              call                 Drawship2
+	                              call                 drawShip2
 	                              mov                  bx, 0
 	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
 	                              call                 DrawMsgWithBox
@@ -3138,9 +3166,9 @@ initializeGameLoop PROC near                                                    
 	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
 	                              call                 DrawMsgWithBox
 	;this subroutine is responsible for drawing the ship using its cooardinates
-	ret
+	                              ret
 	                              ENDP
-NewGameInitializer PROC near
+NewGameInitializer PROC near                                                                                                            		; initializes bullets, healthe and ship offsets
 	                              call                 InitalizeBullets
 	                              mov                  dl, 1
 	                              mov                  ISNEWGAME, dl
@@ -3157,7 +3185,7 @@ NewGameInitializer PROC near
 	                              ret
 
 NewGameInitializer ENDP
-InitalizeBullets PROC NEAR
+InitalizeBullets PROC NEAR                                                                                                              		; initializes the bullets
 
 	                              mov                  bx, offset BulletDirection
 	                              mov                  SI, 100
@@ -3169,7 +3197,7 @@ InitalizeBullets PROC NEAR
 	                              ret
 InitalizeBullets ENDP
 	;/////////////////////////////// moving ships
-movShip1 PROC near
+movShip1 PROC near                                                                                                                      		; responsible for moving ship 1
 
 	                              cmp                  al,key_esc                                                                           	; ESC
 	                              jz                   exitProg
@@ -3224,7 +3252,7 @@ movShip1 PROC near
 	;checking for boundaries
 	                              mov                  bx, shipOffsetY1
 	                              mov                  cx, bx
-	                              add                  cx, shipSizeY1
+	                              add                  cx, shipSizeY
 	                              cmp                  cx, screenMaxY1
 	                              jnb                  movShip1_readKey
 	                              add                  bx,shipSpeed1
@@ -3248,7 +3276,7 @@ movShip1 PROC near
 	;checking for boundaries
 	                              mov                  bx, shipOffsetX1
 	                              mov                  cx, bx
-	                              add                  cx, shipSizeX1
+	                              add                  cx, shipSizeX
 	                              cmp                  cx, screenMaxX1
 	                              jnb                  movShip1_readKey
 	                              add                  bx, shipSpeed1
@@ -3283,13 +3311,13 @@ movShip1 PROC near
 	; For x
                     
 	                              mov                  dX, shipOffsetX1
-	                              add                  DX, shipSizeX1
+	                              add                  DX, shipSizeX
 	                              INC                  DX
 	                              MOV                  [DI], DX
                 
 	; For y
 
-	                              mov                  dx, shipSizeY1
+	                              mov                  dx, shipSizeY
 	                              sub                  dx, BulletYSize
 
 	; These steps for division
@@ -3313,7 +3341,7 @@ movShip1 PROC near
 	                              ret
 
 movShip1 ENDP
-movShip2 PROC near
+movShip2 PROC near                                                                                                                      		; responsible for moving ship 2
 	                              mov                  cx, 0
 	                              cmp                  ah, key_enter
 	                              jz                   movShip2_donotErase
@@ -3337,7 +3365,7 @@ movShip2 PROC near
 
 
 	movShip2_readKey:             
-	                              call                 Drawship2
+	                              call                 drawShip2
 
 	                              waitForInput
 
@@ -3443,62 +3471,19 @@ movShip2 PROC near
 	                              mov                  [DI] + 2, dx
 	                              jmp                  movShip1_readFire
 
-	                      ret
+	                              ret
 movShip2 ENDP
 	;
-drawShip1 PROC	near
+drawShip1 PROC	near                                                                                                                     		; drawing ship1
 	; initialize containers
-	                              mov                  ah, playerID1
-
-	                              cmp                  ah, 0
-	                              JNE                  drawShip1_secondChar
-	                              mov                  SI, offset Fenn_Plane
-	                              jmp                  drawShip1_start
-
-	drawShip1_secondChar:         cmp                  ah, 1
-	                              jne                  drawShip1_thirdChar
-	                              mov                  SI, offset Mikasa_Plane
-	                              jmp                  drawShip1_start
-
-	drawShip1_thirdChar:          cmp                  ah, 2
-	                              jne                  drawShip1_fourthChar
-	                              mov                  SI, offset Hisoka_Plane
-	                              jmp                  drawShip1_start
-
-	drawShip1_fourthChar:         cmp                  ah, 3
-	                              jne                  drawShip1_fifthChar
-	                              mov                  SI, offset Asta_Plane
-	                              jmp                  drawShip1_start
-
-	drawShip1_fifthChar:          
-	                              mov                  SI, offset Meruem_Plane
-
-
-	drawShip1_start:              mov                  cx, shipSizeX1                                                                       	;Column X
-	                              mov                  dx, shipSizeY1                                                                       	;Row Y
-	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
-	drawShip1_drawIt:             
-	                              mov                  bl, [SI]                                                                             	;use color from array color for testing
-	                              and                  bl, bl
-	                              JZ                   drawShip1_back
-	                              add                  cx, shipOffsetX1
-	                              add                  dx, shipOffsetY1
-	                              mov                  al, [SI]                                                                             	;  use color from array color for testing
-	                              int                  10h                                                                                  	;  draw the pixel
-	                              sub                  cx, shipOffsetX1
-	                              sub                  dx, shipOffsetY1
-
-	drawShip1_back:               
-	                              inc                  SI
-	                              DEC                  Cx                                                                                   	;  loop iteration in x direction
-	                              JNZ                  drawShip1_drawIt                                                                     	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov                  Cx, shipSizeX1                                                                       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC                  DX                                                                                   	;  loop iteration in y direction
-	                              JZ                   drawShip1_allDrawn                                                                   	;  both x and y reached 00 so finish drawing
-	                              jmp                  drawShip1_drawIt
-	drawShip1_allDrawn:           ret
+	                              mov                  Ers, 0
+	                              mov                  REV, 0
+	                              editDrawPrams        ship1, shipSizeX, shipSizeX, shipOffsetX1, shipOffsetY1                              	; ship1 will be overwritten in the next line
+	                              setCurrentChar       playerID1                                                                            	; add the offest of the plane in SI to be drawn
+	                              call                 drawShape
+	                              ret
 drawShip1 ENDP
-eraseShip1 PROC near
+eraseShip1 PROC near                                                                                                                    		; eraing ship 1
 	; initialize containers
 	                              push                 ax
 	                              mov                  ah, playerID1
@@ -3527,8 +3512,8 @@ eraseShip1 PROC near
 	                              mov                  SI, offset Meruem_Plane
 
 	                                                                            
-	eraseShip1_start:             mov                  cx, shipSizeX1                                                                       	;Column X
-	                              mov                  dx, shipSizeY1                                                                       	;Row Y
+	eraseShip1_start:             mov                  cx, shipSizeX                                                                        	;Column X
+	                              mov                  dx, shipSizeX                                                                        	;Row Y
 	                              
 	                              mov                  ah, 0ch
 	                              cmp                  al, SHIP_DAMAGE_COLOR
@@ -3549,7 +3534,7 @@ eraseShip1 PROC near
 	                              inc                  SI
 	                              DEC                  Cx                                                                                   	;  loop iteration in x direction
 	                              JNZ                  eraseShip1_drawIt                                                                    	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov                  Cx, shipSizeX1                                                                       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              mov                  Cx, shipSizeX                                                                        	;  if loop iteration in y direction, then x should start over so that we sweep the grid
 	                              DEC                  DX                                                                                   	;  loop iteration in y direction
 	                              JZ                   eraseShip1_allDrawn                                                                  	;  both x and y reached 00 so finish drawing
 	                              jmp                  eraseShip1_drawIt
@@ -3557,59 +3542,16 @@ eraseShip1 PROC near
 	                              ret
 eraseShip1 ENDP
 	;
-Drawship2 PROC	near
+drawShip2 PROC	near                                                                                                                     		; drawing ship1
 	; initialize containers
-	                              mov                  ah, playerID2
-
-	                              cmp                  ah, 0
-	                              JNE                  drawShip2_secondChar
-	                              mov                  SI, offset Fenn_Plane
-	                              jmp                  drawShip2_start
-
-	drawShip2_secondChar:         cmp                  ah, 1
-	                              jne                  drawShip2_thirdChar
-	                              mov                  SI, offset Mikasa_Plane
-	                              jmp                  drawShip2_start
-
-	drawShip2_thirdChar:          cmp                  ah, 2
-	                              jne                  drawShip2_fourthChar
-	                              mov                  SI, offset Hisoka_Plane
-	                              jmp                  drawShip2_start
-
-	drawShip2_fourthChar:         cmp                  ah, 3
-	                              jne                  drawShip2_fifthChar
-	                              mov                  SI, offset Asta_Plane
-	                              jmp                  drawShip2_start
-
-	drawShip2_fifthChar:          
-	                              mov                  SI, offset Meruem_Plane
-
-	drawShip2_start:              mov                  cx, 0                                                                                	;Column X
-	                              mov                  dx, shipSizeY1                                                                       	;Row Y
-	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
-	Drawship2_drawIt:             
-	                              mov                  bl, [SI]                                                                             	;use color from array color for testing
-	                              and                  bl, bl
-	                              JZ                   Drawship2_back
-	                              add                  cx, shipOffsetX2
-	                              add                  dx, shipOffsetY2
-	                              mov                  al, [SI]                                                                             	;  use color from array color for testing
-	                              int                  10h                                                                                  	;  draw the pixel
-	                              sub                  cx, shipOffsetX2
-	                              sub                  dx, shipOffsetY2
-
-	Drawship2_back:               
-	                              inc                  SI
-	                              INC                  Cx                                                                                   	;  loop iteration in x direction
-	                              CMP                  CX, shipSizeX1
-	                              JNZ                  Drawship2_drawIt                                                                     	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov                  Cx, 0                                                                                	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC                  DX                                                                                   	;  loop iteration in y direction
-	                              JZ                   Drawship2_allDrawn                                                                   	;  both x and y reached 00 so finish drawing
-	                              jmp                  Drawship2_drawIt
-	Drawship2_allDrawn:           ret
-Drawship2 ENDP
-eraseShip2 PROC near
+	                              mov                  Ers, 0
+	                              mov                  REV, 1
+	                              editDrawPrams        ship1, shipSizeX, shipSizeX, shipOffsetX2, shipOffsetY2                              	; ship1 will be overwritten in the next line
+	                              setCurrentChar       playerID2                                                                            	; add the offest of the plane in SI to be drawn
+	                              call                 drawShape
+	                              ret
+drawShip2 ENDP
+eraseShip2 PROC near                                                                                                                    		; eraing ship 1
 	; initialize containers
 	                              push                 ax
 	                              mov                  ah, playerID2
@@ -3638,7 +3580,7 @@ eraseShip2 PROC near
 	                              mov                  SI, offset Meruem_Plane
 								                                                                   	
 	eraseShip2_start:             mov                  cx, 0                                                                                	;Column X
-	                              mov                  dx, shipSizeY1                                                                       	;Row Y
+	                              mov                  dx, shipSizeX                                                                        	;Row Y
 	                              mov                  ah, 0ch
 	                              cmp                  al, SHIP_DAMAGE_COLOR
 	                              jz                   eraseShip2_drawIt                                                                    	;Draw Pixel Command
@@ -3657,7 +3599,7 @@ eraseShip2 PROC near
 	eraseShip2_back:              
 	                              inc                  SI
 	                              INC                  Cx                                                                                   	;  loop iteration in x direction
-	                              CMP                  CX, shipSizeX1
+	                              CMP                  CX, shipSizeX
 	                              JNZ                  eraseShip2_drawIt                                                                    	;  check if we can draw c urrent x and y and excape the y iteration
 	                              mov                  Cx, 0                                                                                	;  if loop iteration in y direction, then x should start over so that we sweep the grid
 	                              DEC                  DX                                                                                   	;  loop iteration in y direction
@@ -3667,7 +3609,7 @@ eraseShip2 PROC near
 	                              ret
 eraseShip2 ENDP
 	;/////////////////////////////// related to the bullets
-updateBullets proc NEAR
+updateBullets proc NEAR                                                                                                                 		; updateBullets status every frame
 	                              mov                  BX, 0
 	                              LEA                  SI, BulletDirection
 	                              LEA                  DI, BulletOffset
@@ -3698,10 +3640,10 @@ updateBullets proc NEAR
 
 	updateBullets_ContinueBullets:
 	                              delay                delayDuration
-								  ret
+	                              ret
 
 updateBullets endp
-BulletChecker PROC NEAR
+BulletChecker PROC NEAR                                                                                                                 		; check for collisions
 
 	                              mov                  BX, 0
 	                              LEA                  SI, BulletDirection
@@ -3719,7 +3661,7 @@ BulletChecker PROC NEAR
 	                              JGE                  StopBullet
 
 	                              mov                  dx, shipOffsetX1
-	                              add                  dx, shipSizeX1
+	                              add                  dx, shipSizeX
 	                              CMP                  [DI], dx
 	                              JLE                  CheckY1_Up
 
@@ -3742,7 +3684,7 @@ BulletChecker PROC NEAR
 	CheckY1_Down:                 
 	                              mov                  dx, [DI] + 2
 	                              mov                  cx, shipOffsetY1
-	                              add                  cx, shipSizeY1
+	                              add                  cx, shipSizeX
 	                              CMP                  dx, Cx
 	                              jle                  BulletCollusion
 	                              jmp                  ContinueBullet
@@ -3758,7 +3700,7 @@ BulletChecker PROC NEAR
 	CheckY2_down:                 
 	                              mov                  dx, [DI] + 2
 	                              mov                  cx, shipOffsetY2
-	                              add                  cx, shipSizeY1
+	                              add                  cx, shipSizeX
 	                              CMP                  dx, Cx
 	                              jle                  BulletCollusion2
 	                              jmp                  ContinueBullet
@@ -3805,14 +3747,14 @@ BulletChecker PROC NEAR
 	                              cmp                  HEALTH2, HEALTH_ANGRY
 	                              ja                   DontAngry2
 	                              CALL                 DrawAngry2
-	DontAngry2:                   call                 Drawship2
+	DontAngry2:                   call                 drawShip2
 	                              jmp                  ContinueBullet
 
 
 	ENDCHECKBULLET:               ret
 BulletChecker ENDP
 	;
-DrawBullet PROC near
+DrawBullet PROC near                                                                                                                    		; drawing bullets
 	; initialize containers
 	                              push                 SI
 	                              push                 BX
@@ -3877,7 +3819,7 @@ DrawBullet PROC near
 	                              POP                  SI
 	                              ret
 DrawBullet ENDP
-EraseBullet PROC near
+EraseBullet PROC near                                                                                                                   		; erasing bullets
 	; initialize containers
 	                              PUSH                 SI
 	                              PUSH                 BX
@@ -3945,7 +3887,7 @@ EraseBullet PROC near
 	                              POP                  SI
 	                              ret
 EraseBullet ENDP
-Bullet_Offset PROC near
+Bullet_Offset PROC near                                                                                                                 		; update each single bullet offset
                        
 	                              push                 ax
 	                              push                 bx
@@ -3965,7 +3907,7 @@ Bullet_Offset PROC near
 	                              ret
 Bullet_Offset ENDP
 	;/////////////////////////////// game layout
-DrawMsgWithBox PROC near                                                                                                                		; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
+DrawMsgWithBox PROC near                                                                                                                		; drawing the message box                                                                                                             		; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
 	                              mov                  cx, bx
 	                              and                  cx, 2
 	                              JNZ                  DRAWMSGUP
@@ -4048,7 +3990,7 @@ DrawMsgWithBox PROC near                                                        
 
 	MSGtAILEND:                   ret
 DrawMsgWithBox endp
-DrawHealthbar PROC near
+DrawHealthbar PROC near                                                                                                                 		; drawing the health bar of player 1
 	                              push                 bx
 	                              mov                  ch, 0
 	                              mov                  cl, 200                                                                              	;Column X
@@ -4116,7 +4058,7 @@ DrawHealthbar PROC near
 	ALL_DRAWN_H_Border:           pop                  bx
 	                              ret
 DrawHealthbar endp
-DrawHealthbar2 PROC near
+DrawHealthbar2 PROC near                                                                                                                		; drawing the health bar of player 2
 	                              push                 bx
 	                              mov                  cx, 400
 	                              mov                  dx, screenMaxY1+20                                                                   	;Row Y
@@ -4186,7 +4128,7 @@ DrawHealthbar2 PROC near
 	ALL_DRAWN_H_Border2:          pop                  bx
 	                              ret
 DrawHealthbar2 endp
-DrawLayout PROC near
+DrawLayout PROC near                                                                                                                    		; drawing the game layout
 	;///////////////////////////////////UPPER_BAR\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	                              mov                  RECXEND, 640
 	                              mov                  RECYEND, 400
@@ -4390,7 +4332,7 @@ DrawLayout PROC near
 	                              printStringAtLoc     playerName2, 5, 71
 	                              ret
 DrawLayout ENDP
-DrawAngry1 PROC NEAR
+DrawAngry1 PROC NEAR                                                                                                                    		; draw angry character for player 1
 	                              mov                  REV, 0
 	                              mov                  Ers, 0
 
@@ -4423,7 +4365,7 @@ DrawAngry1 PROC NEAR
 
 	                              ret
 DrawAngry1 ENDP
-DrawAngry2 PROC NEAR
+DrawAngry2 PROC NEAR                                                                                                                    		; draw angry char for player 2
 	                              mov                  REV, 1
 	                              mov                  Ers, 0
 	                            
@@ -4455,78 +4397,6 @@ DrawAngry2 PROC NEAR
 	DrawAngry2_start:             call                 drawShape
 	                              ret
 DrawAngry2 ENDP
-DrawRec PROC near
-	                              mov                  cx, RECXEND                                                                          	;Column X
-	                              mov                  dx, RECYEND                                                                          	;Row Y
-	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
-	DRAW_REC1:                    
-	                              mov                  al, RECCOLOR                                                                         	;  use color from array color for testing
-	                              int                  10h                                                                                  	;  draw the pixel
-	BACK_REC1:                    
-	                              DEC                  Cx
-	                              CMP                  CX, RECXSTART                                                                        	;  loop iteration in x direction
-	                              JNZ                  DRAW_REC1                                                                            	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov                  Cx, RECXEND                                                                          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC                  DX
-	                              CMP                  DX,RECYSTART                                                                         	;  loop iteration in x direction
-	                              JZ                   ALL_DRAWN_REC1                                                                       	;  both x and y reached 00 so finish drawing
-	                              jmp                  DRAW_REC1
-	ALL_DRAWN_REC1:               
-	                              ret
-DrawRec ENDP
-DrawHorizBorder PROC	near
-	                              mov                  cx, BorderXEND                                                                       	;Column X
-	                              mov                  dx, BorderYEND                                                                       	;Row Y
-	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
-	DRAW_HorizBorder:             
-	                              mov                  al, BorderDARKColor
-	                              cmp                  dx, BorderMIDDLED1
-	                              jz                   DRAWwithblack_HorizBorder
-	                              cmp                  dx, BorderMIDDLED2
-	                              jz                   DRAWwithblack_HorizBorder
-	                              mov                  al, BorderBRIGHTColor
-	                              cmp                  dx, BorderMIDDLE
-	                              jz                   DRAWwithblack_HorizBorder
-	                              mov                  al, 0h                                                                               	;  use color from array color for testing
-	DRAWwithblack_HorizBorder:    int                  10h                                                                                  	;  draw the pixel
-	                              DEC                  Cx                                                                                   	;  loop iteration in x direction
-	                              cmp                  CX, BorderXSTART
-	                              JNZ                  DRAW_HorizBorder                                                                     	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov                  Cx, BorderXEND                                                                       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC                  DX                                                                                   	;  loop iteration in y direction
-	                              cmp                  dx, BorderYSTART
-	                              JZ                   ALL_DRAWN_HorizBorder                                                                	;  both x and y reached 00 so finish drawing
-	                              jmp                  DRAW_HorizBorder
-
-	ALL_DRAWN_HorizBorder:        
-	                              ret
-DrawHorizBorder ENDP
-DrawVertBorder PROC NEAR
-	                              mov                  cx, BorderXEND                                                                       	;Column X
-	                              mov                  dx, BorderYEND                                                                       	;Row Y
-	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
-	Draw_VertBorder:              
-	                              mov                  al, BorderDARKColor
-	                              cmp                  cx, BorderMIDDLED1
-	                              jz                   DRAWwithblack_VertBorder
-	                              cmp                  cx, BorderMIDDLED2
-	                              jz                   DRAWwithblack_VertBorder
-	                              mov                  al, BorderBRIGHTColor
-	                              cmp                  cx, BorderMIDDLE
-	                              jz                   DRAWwithblack_VertBorder
-	                              mov                  al, 0h                                                                               	;  use color from array color for testing
-	DRAWwithblack_VertBorder:     int                  10h                                                                                  	;  draw the pixel
-	                              DEC                  Cx                                                                                   	;  loop iteration in x direction
-	                              cmp                  CX, BorderXSTART
-	                              JNZ                  Draw_VertBorder                                                                      	;  check if we can draw c urrent x and y and excape the y iteration
-	                              mov                  Cx, BorderXEND                                                                       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	                              DEC                  DX                                                                                   	;  loop iteration in y direction
-	                              cmp                  dx, BorderYSTART
-	                              JZ                   ALL_DRAWN_VertBorder                                                                 	;  both x and y reached 00 so finish drawing
-	                              jmp                  Draw_VertBorder
-	ALL_DRAWN_VertBorder:         
-	                              ret
-DrawVertBorder endp
 	;/////////////////////////////// related to the win and lose
 GameWinner PROC NEAR
 	                              mov                  ah, HEALTH1
@@ -4556,7 +4426,7 @@ GameWinner PROC NEAR
 	                              INT                  10H
 
 	                              mov                  ah,09h
-	                              lea                  dx, congrats                                                                         	
+	                              lea                  dx, congrats
 	                              int                  21h
 
 	                              jmp                  CONINUE_ENDMSG
@@ -4578,7 +4448,7 @@ GameWinner PROC NEAR
 	                              INT                  10H
 
 	                              mov                  ah,09h
-	                              lea                  dx, congrats                                                                         	
+	                              lea                  dx, congrats
 	                              int                  21h
 
 CONINUE_ENDMSG: mov ah, 2
@@ -4639,7 +4509,7 @@ DrawExplosion PROC near
 	                              ret
 DrawExplosion ENDP
 	;/////////////////////////////// related to the main menu and the get name screens
-displayChooseCharScreen proc NEAR                                                                                                       		; draw the characters in the choose character screen
+displayChooseCharScreen proc NEAR                                                                                                       		; display the choose character screen                                                                                                     		; draw the characters in the choose character screen
 	                              editDrawPrams        Fenn, charSizeX, charSizeY, firstCharOffsetX, charOffsetY
 	                              call                 drawShape
 
@@ -4675,7 +4545,7 @@ displayChooseCharScreen proc NEAR                                               
 
 	                              ret
 	                              endp
-getCharID proc                                                                                                                          		; adds the player ID in BL
+getCharID proc                                                                                                                          		; get player's char ID form the choose character screen                                                                                                                		; adds the player ID in BL
 	drawPointer1_Label:           
 	                              call                 displayChooseCharScreen
 	checkFirstScreen:             waitForInput
@@ -4742,7 +4612,7 @@ getCharID proc                                                                  
 								  
 	                              Ret
 	                              endp
-background PROC near
+background PROC near                                                                                                                    		; draws the background -patterns-
 	                              MOV                  CX, 640                                                                              	;set the width (X) up to ff, dont forget to change this number in the loop
 	                              MOV                  DX, 400                                                                              	;set the hieght (Y) up to AA
 	                              jmp                  background_start                                                                     	;Avoid drawing before the calculations
@@ -4783,7 +4653,7 @@ background PROC near
 	ENDING:                       
 	                              RET
 background ENDP
-eraseArrows PROC near
+eraseArrows PROC near                                                                                                                   		; erase the arrows used in the main menu
 	; initialize containers
 	                              mov                  SI, offset arrow                                                                     	;shipY is (shipX index + size * 2) so we can use Si for both
 	                              mov                  cx, arrowSizeX                                                                       	;Column X
@@ -4890,7 +4760,7 @@ eraseArrows PROC near
 	eraseArrows_allDrawnR:        pop                  ax
 	                              ret
 eraseArrows ENDP
-getCurrentChar PROC
+getCurrentChar PROC                                                                                                                     		; gets the character that the pointer is pointing to, to get its ID
 	                              MOV                  BL, pointerAt
 	
 	                              CMP                  BL, 0
@@ -4942,7 +4812,7 @@ getCurrentChar PROC
 	                              editDrawPrams        Meruem2, charSizeX, charSizeY, fifthCharOffsetX, charOffsetY
 	                              ret
 getCurrentChar ENDP
-drawLogo PROC                                                                                                                           		; streched                                                                                                                          		; this function stretches the logo
+drawLogo PROC                                                                                                                           		; draws the logo streched                                                                                                                		; streched                                                                                                                          		; this function stretches the logo
 	; initialize container
 
 	                              mov                  SI, offset logo
@@ -5091,6 +4961,78 @@ Eraseshape PROC near                                                            
 	Eraseshape_alldrawn:          pop                  ax
 	                              ret
 Eraseshape ENDP
+DrawRec PROC near
+	                              mov                  cx, RECXEND                                                                          	;Column X
+	                              mov                  dx, RECYEND                                                                          	;Row Y
+	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_REC1:                    
+	                              mov                  al, RECCOLOR                                                                         	;  use color from array color for testing
+	                              int                  10h                                                                                  	;  draw the pixel
+	BACK_REC1:                    
+	                              DEC                  Cx
+	                              CMP                  CX, RECXSTART                                                                        	;  loop iteration in x direction
+	                              JNZ                  DRAW_REC1                                                                            	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov                  Cx, RECXEND                                                                          	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC                  DX
+	                              CMP                  DX,RECYSTART                                                                         	;  loop iteration in x direction
+	                              JZ                   ALL_DRAWN_REC1                                                                       	;  both x and y reached 00 so finish drawing
+	                              jmp                  DRAW_REC1
+	ALL_DRAWN_REC1:               
+	                              ret
+DrawRec ENDP
+DrawHorizBorder PROC	near
+	                              mov                  cx, BorderXEND                                                                       	;Column X
+	                              mov                  dx, BorderYEND                                                                       	;Row Y
+	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
+	DRAW_HorizBorder:             
+	                              mov                  al, BorderDARKColor
+	                              cmp                  dx, BorderMIDDLED1
+	                              jz                   DRAWwithblack_HorizBorder
+	                              cmp                  dx, BorderMIDDLED2
+	                              jz                   DRAWwithblack_HorizBorder
+	                              mov                  al, BorderBRIGHTColor
+	                              cmp                  dx, BorderMIDDLE
+	                              jz                   DRAWwithblack_HorizBorder
+	                              mov                  al, 0h                                                                               	;  use color from array color for testing
+	DRAWwithblack_HorizBorder:    int                  10h                                                                                  	;  draw the pixel
+	                              DEC                  Cx                                                                                   	;  loop iteration in x direction
+	                              cmp                  CX, BorderXSTART
+	                              JNZ                  DRAW_HorizBorder                                                                     	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov                  Cx, BorderXEND                                                                       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC                  DX                                                                                   	;  loop iteration in y direction
+	                              cmp                  dx, BorderYSTART
+	                              JZ                   ALL_DRAWN_HorizBorder                                                                	;  both x and y reached 00 so finish drawing
+	                              jmp                  DRAW_HorizBorder
+
+	ALL_DRAWN_HorizBorder:        
+	                              ret
+DrawHorizBorder ENDP
+DrawVertBorder PROC NEAR
+	                              mov                  cx, BorderXEND                                                                       	;Column X
+	                              mov                  dx, BorderYEND                                                                       	;Row Y
+	                              mov                  ah, 0ch                                                                              	;Draw Pixel Command
+	Draw_VertBorder:              
+	                              mov                  al, BorderDARKColor
+	                              cmp                  cx, BorderMIDDLED1
+	                              jz                   DRAWwithblack_VertBorder
+	                              cmp                  cx, BorderMIDDLED2
+	                              jz                   DRAWwithblack_VertBorder
+	                              mov                  al, BorderBRIGHTColor
+	                              cmp                  cx, BorderMIDDLE
+	                              jz                   DRAWwithblack_VertBorder
+	                              mov                  al, 0h                                                                               	;  use color from array color for testing
+	DRAWwithblack_VertBorder:     int                  10h                                                                                  	;  draw the pixel
+	                              DEC                  Cx                                                                                   	;  loop iteration in x direction
+	                              cmp                  CX, BorderXSTART
+	                              JNZ                  Draw_VertBorder                                                                      	;  check if we can draw c urrent x and y and excape the y iteration
+	                              mov                  Cx, BorderXEND                                                                       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+	                              DEC                  DX                                                                                   	;  loop iteration in y direction
+	                              cmp                  dx, BorderYSTART
+	                              JZ                   ALL_DRAWN_VertBorder                                                                 	;  both x and y reached 00 so finish drawing
+	                              jmp                  Draw_VertBorder
+	ALL_DRAWN_VertBorder:         
+	                              ret
+DrawVertBorder endp
 ;//////////////////////////////Procedures///////////////////////////////////////
         END MAIN
 ;///////////////////////////////code segment////////////////////////////////////
