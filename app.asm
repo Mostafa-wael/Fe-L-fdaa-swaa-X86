@@ -243,7 +243,7 @@ displayMainMenu MACRO                                                           
 	                Lea           SI, Ship1
 	                call          drawShape
 	ENDM
-checkMainMenuOptions MACRO gameLoop_label, exitProg_label                                              		; remember to add the chatLoop_label
+checkMainMenuOptions MACRO gameLoop_label, exitProg_label, chatLoop_label                              		; remember to add the chatLoop_label
 	                     local        CheckInMainMenu, Make_THE_JMP_CLOSER, downArrow_label, enterKey_label
 	CheckInMainMenu:     
 	                     waitForInput
@@ -297,11 +297,11 @@ checkMainMenuOptions MACRO gameLoop_label, exitProg_label                       
 	                     jne          Make_THE_JMP_CLOSER                                                  	; added to prevent other buttons from doing enter's action
 
 	                     cmp          arrowoffsetY, arrowAtChat
-	;je gameLoop
+	                     je           chatLoop_label
 	                     cmp          arrowoffsetY, arrowAtgame
-	                     je           gameLoop
+	                     je           gameLoop_label
 	                     cmp          arrowoffsetY, arrowAtExit
-	                     je           exitProg
+	                     je           exitProg_label
 	                     jmp          Make_THE_JMP_CLOSER
 	ENDM
 ;///////////////////////////////
@@ -3142,7 +3142,9 @@ MAIN PROC FAR
 	mainMenuLoop:                 
 	                              clearWholeScreen
 	                              displayMainMenu
-	                              checkMainMenuOptions gameLoop, exitProg
+	                              checkMainMenuOptions gameLoop, exitProg, chatLoop
+	;///////////////////////////////Chat////////////////////////////////////
+chatLoop:
 	;///////////////////////////////Game Loop////////////////////////////////////
 	gameLoop:                                                                                                                               	;NOTE:since we are using words, we will use the value '2' to traverse pixels
 	;//////////////////////////////initializations////////////////////////////////////
@@ -4464,7 +4466,7 @@ checkForWinner PROC NEAR
 	                              printStringAtLoc     playerName2[2], 18, 0
 	                              printStringAtLoc     congrats, 18, playerName2[1]
 CONINUE_ENDMSG:
-	                              printStringAtLoc     NewEndGame, 1, 0; show ask for a new game message
+	                              printStringAtLoc     NewEndGame, 1, 0                                                                     	; show ask for a new game message
 	ReadNewGame:                  
 	                              waitForInput
 	                              CMP                  ah, key_y

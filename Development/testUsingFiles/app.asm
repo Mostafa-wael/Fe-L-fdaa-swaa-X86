@@ -1,16 +1,39 @@
+EXTRN CHAT:FAR
 .model COMPACT ; no restrictions on the data segemnt
+.stack 1024
 ;///////////////////////////////Macros////////////////////////////////////
+;///////////////////////////////
+;/////////////////////////////// Cursor operations
+;///////////////////////////////
+setCursorAt_Row_Col_Row_Col MACRO row, col		; the screen is 80*25
+	                    mov dh, row 	;Cursor position line
+	                    mov dl, col 	;Cursor position column
+	                    mov ah, 02h 	;Set cursor position function
+	                    mov bl, 0ffh	; BF color, not working in this mode
+	                    mov bh, 0   	;Page number
+	                    int 10h     	;Interrupt call
+ENDM
+getCursorAt_Row__col MACRO row, col		; the screen is 80*25
+	                     mov ah,3
+	                     mov bx, 0
+	                     int 10h
+	                     mov row, dh
+	                     mov col, dl
+ENDM
+setCursorAt_Row_Col_rowCol MACRO rowCol  		; sets cursor position in DX and in rowCol
+	                   mov ah,2      	;Move Cursor
+	                   mov dx, rowCol
+	                   int 10h
+ENDM
+getCursorAt_rowCol MACRO rowCol  		; returns cursor position in DX and in rowCol
+	                   mov ah,3
+	                   mov bx, 0
+	                   int 10h
+	                   mov rowCol, dx
+ENDM
 ;///////////////////////////////
 ;/////////////////////////////// String operations
 ;///////////////////////////////
-setCursorAt MACRO row, col
-	            mov dh, row 	;Cursor position line
-	            mov dl, col 	;Cursor position column
-	            mov ah, 02h 	;Set cursor position function
-	            mov bl, 0ffh	; BF color, not working in this mode
-	            mov bh, 0   	;Page number
-	            int 10h     	;Interrupt call
-ENDM
 printStringAtLoc MACRO string, row, col		; pass the acctual string i.e. (string +2)
 	                 mov dh, row   	;Cursor position line
 	                 mov dl, col   	;Cursor position column
@@ -33,14 +56,44 @@ getString MACRO string         		; get a string from the user, wait for the user
 	          mov dx, offset string
 	          int 21h
 	ENDM
-waitForInput MACRO   		;  ah:al = scan code: ASCII code, it also fetch the input from the buffer
-	             mov ah,0
+;
+waitForInput MACRO    		;  ah:al = scan code: ASCII code, it also fetch the input from the buffer
+	             mov ax, 0
 	             int 16h
 ENDM
-checkIfInput MACRO   		;  ah:al = scan code: ASCII code
-	             mov ah,1
+checkIfInput MACRO   noInputLabel		; jumps to this label if there is no input		;  ah:al = scan code: ASCII code
+	             mov ah, 1
 	             int 16h
+	             jz  noInputLabel
 	ENDM
+;
+printChar macro char 		; prints the char at the current cursor position
+	          mov ah,2
+	          mov dl,char
+	          int 21h
+endm 
+printCharAtLoc macro char, row, col		; prints the char at row and col
+	               mov dh, row 	;Cursor position line
+	               mov dl, col 	;Cursor position column
+	               mov ah, 02h 	;Set cursor position function
+	               mov bl, 0ffh	; BF color, not working in this mode
+	               mov bh, 0   	;Page number
+	               int 10h     	;Interrupt call
+
+	               mov ah,2
+	               mov dl,char
+	               int 21h
+endm 
+getCharASCII macro    char		;  ah:al = scan code: ASCII code
+	             mov ax, 0
+	             int 16h
+	             mov char, al
+endm 
+getCharScan macro    char		;  ah:al = scan code: ASCII code
+	            mov ax, 0
+	            int 16h
+	            mov char, ah
+endm 
 ;///////////////////////////////
 ;/////////////////////////////// Name operations
 ;///////////////////////////////
@@ -132,15 +185,13 @@ showScreen MACRO screen
 	           lea dx, screen
 	           int 21h
 	ENDM
-clearWholeScreen MACRO                  		; clear the whole screen and return back to the graphics mode
-	                 mov               ah, 0
-	                 mov               al, 3
-	                 INT               10H  	;FOR VIDEO DISPLAY
-
-	                 enterGraphicsMode
-
+;
+clearWholeScreen MACRO    		; clear the whole screen and return back to the graphics mode
+	                 mov ah, 0
+	                 mov al, 3
+	                 INT 10H  	;FOR VIDEO DISPLAY
 	ENDM
-clearRow MACRO row    		; clears a certain row ,the screen is 80*20
+clearRow MACRO row    		; clears a certain row ,the screen is 80*25
 	         mov ax ,0600h
 	         mov bh ,34h
 
@@ -151,6 +202,56 @@ clearRow MACRO row    		; clears a certain row ,the screen is 80*20
 	         mov dh,row
 	         int 10h
 ENDM
+;
+colorScreen MACRO BF_color, topLeftX, topLeftY, bottomRightX, bottomRightY
+	            mov al,0           	; (al = 1 scroll by 1 line) (al=0 change color)
+	            mov bh,BF_color    	; normal video attribute
+	            mov cl,topLeftX    	; upper left X
+	            mov ch,topLeftY    	; upper left Y
+
+	            mov dl,bottomRightX	; lower right X
+	            mov dh,bottomRightY	; lower right Y
+
+	            mov ah,6           	; function 6
+	            int 10h
+    ENDM
+scrollScreen MACRO BF_color, topLeftX, topLeftY, bottomRightX, bottomRightY
+	             mov al,1           	; (al = 1 scroll by 1 line) (al=0 change color)
+	             mov bh,BF_color    	; normal video attribute
+	             mov cl,topLeftX    	; upper left X
+	             mov ch,topLeftY    	; upper left Y
+
+	             mov dl,bottomRightX	; lower right X
+	             mov dh,bottomRightY	; lower right Y
+
+	             mov ah,6           	; function 6
+	             int 10h
+    ENDM
+; can be converted into a procedure
+checkForScrollUpper MACRO row, col
+	                    local               nothing
+	; no need to check for the row!
+	                    cmp                 row, bottomRightY_upper                                                           	; if it is the last row, then, scroll
+	                    JB                  nothing
+	                    scrollScreen        BF_upper, topLeftX_upper, topLeftY_upper, bottomRightX_upper, bottomRightY_upper-1
+	;
+	                    mov                 row_send, bottomRightY_upper -1                                                   	; go to the next line
+	                    mov                 col_send, topLeftX_upper                                                          	; start from column zero
+	                    setCursorAt_Row_Col_Row_Col row_send, col_send                                                                	; set the cursor to the new location
+	nothing:            
+	ENDM
+checkForScrollLower MACRO row, col
+	                    local               nothing
+	; no need to check for the row!
+	                    cmp                 row, bottomRightY_lower                                                           	; if it is the last row, then, scroll
+	                    JB                  nothing
+	                    scrollScreen        BF_lower, topLeftX_lower, topLeftY_lower, bottomRightX_lower, bottomRightY_lower-1
+	;
+	                    mov                 row_rec, bottomRightY_lower -1                                                    	; go to the next line
+	                    mov                 col_rec, topLeftX_lower                                                           	; start from column zero
+	                    setCursorAt_Row_Col_Row_Col row_rec, col_rec                                                                  	; set the cursor to the new location
+	nothing:            
+	ENDM
 ;///////////////////////////////
 ;/////////////////////////////// Draw operations
 ;///////////////////////////////
@@ -211,7 +312,7 @@ setCurrentChar MACRO playerID
 	drawShip_start:     
 	ENDM
 ;///////////////////////////////
-;/////////////////////////////// related to the main menu and the choose character screen
+;/////////////////////////////// related to the main menu and the choosing character screen
 ;///////////////////////////////
 displayMainMenu MACRO                                                                    		; responsible for drawing the main menu
 	                call          background
@@ -243,7 +344,7 @@ displayMainMenu MACRO                                                           
 	                Lea           SI, Ship1
 	                call          drawShape
 	ENDM
-checkMainMenuOptions MACRO gameLoop_label, exitProg_label                                              		; remember to add the chatLoop_label
+checkMainMenuOptions MACRO gameLoop_label, exitProg_label, chatLoop_label                              		; remember to add the chatLoop_label
 	                     local        CheckInMainMenu, Make_THE_JMP_CLOSER, downArrow_label, enterKey_label
 	CheckInMainMenu:     
 	                     waitForInput
@@ -297,12 +398,97 @@ checkMainMenuOptions MACRO gameLoop_label, exitProg_label                       
 	                     jne          Make_THE_JMP_CLOSER                                                  	; added to prevent other buttons from doing enter's action
 
 	                     cmp          arrowoffsetY, arrowAtChat
-	;je gameLoop
+	                     je           chatLoop_label
 	                     cmp          arrowoffsetY, arrowAtgame
-	                     je           gameLoop
+	                     je           gameLoop_label
 	                     cmp          arrowoffsetY, arrowAtExit
-	                     je           exitProg
+	                     je           exitProg_label
 	                     jmp          Make_THE_JMP_CLOSER
+	ENDM
+;///////////////////////////////
+;/////////////////////////////// related to keys
+;///////////////////////////////
+checkIfPrintable MACRO char, notPrintableLabel		;checks if the character is printable, 32D<=printable char<=126D
+	                 mov al, char
+	;
+	                 cmp al, 32
+	                 JB  notPrintableLabel
+	; 32 <= char
+	                 cmp al, 126
+	                 JA  notPrintableLabel
+	; 32 <= char <= 126
+ENDM
+checkIfEnter MACRO char, notEnterLabel		; check if the character is enter
+	             mov al, char
+	;
+	             cmp al, 0Dh      	; enter character
+	             JNE notEnterLabel
+	; else
+ENDM
+checkIfBackSpace MACRO char, notBackSpaceLabel		; check if the character is BackSpace
+	                 mov al, char
+	;
+	                 cmp al, 08h
+	                 JNE notBackSpaceLabel
+ENDM
+checkIfESC MACRO char, notESCLabel		; check if the character is escape
+	           mov al, char
+	;
+	           cmp al, 01Bh
+	           JNE notESCLabel
+	; else
+ENDM
+;///////////////////////////////
+;/////////////////////////////// related to ports
+;///////////////////////////////
+initializaPort MACRO
+	;Set Divisor Latch Access Bit
+	               mov dx,3fbh     	; Line Control Register
+	               mov al,10000000b	;Set Divisor Latch Access Bit
+	               out dx,al       	;Out it
+	;Set LSB byte of the Baud Rate Divisor Latch register.
+	               mov dx,3f8h
+	               mov al,0ch
+	               out dx,al
+	;Set MSB byte of the Baud Rate Divisor Latch register.
+	               mov dx,3f9h
+	               mov al,00h
+	               out dx,al
+	;Set port configuration
+	               mov dx,3fbh
+	; 0:Access to Receiver buffer, Transmitter buffer
+	; 0:Set Break disabled
+	; 011:Even Parity
+	; 0:One Stop Bit
+	; 11:8bits
+	               mov al,00011011b
+	               out dx,al
+ENDM
+; can be converted into a procedure
+port_getChar MACRO  char
+	             mov dx , 03F8H
+	             in  al , dx   	; put the read value in al
+	             mov char, al
+ENDM
+port_sendChar MACRO char
+	              mov dx , 3F8H	; Transmit data register
+	              mov al, char
+	              out dx , al  	; value read from the keyboard is in al
+ENDM
+;
+port_checkCanSend MACRO cannotSendLabel
+	;Check that Transmitter Holding Register is Empty
+	                  mov  dx , 3FDH      	; Line Status Register
+	                  In   al , dx        	; Read Line Status
+	                  test al , 00100000b
+	                  JZ   cannotSendLabel	; Not empty, can't send data then, go to cannotSendLabel
+	ENDM
+port_checkReceive MACRO nothingToReceiveLabel
+	;Check that Data is Ready
+	                  mov  dx , 3FDH            	; Line Status Register
+	                  in   al , dx
+	                  test al , 1
+	                  JZ   nothingToReceiveLabel	; Not Ready, can't get data then, go to nothingToReceiveLabel
 	ENDM
 ;///////////////////////////////
 ;/////////////////////////////// Other operations
@@ -341,6 +527,7 @@ returnToDos MACRO
 	            int 21h
 	ENDM
 ;///////////////////////////////Macros////////////////////////////////////
+
 ;/////////////////////////////////////////////////////////////////////////
 ;///////////////////////////////Extra segment////////////////////////////////////
 extra SEGMENT
@@ -1655,7 +1842,7 @@ extra SEGMENT
 	;////////////////////////////////
 	; messages
 	congrats                 DB           " is the Winner, Congrats!", "$"
-	NewEndGame               DB           " Press Y For New Game (suprise!!!), N To End the Game ", "$"
+	NewEndGame               DB           " Press Y For New Game (suprise!!!), N To return to the main menu ", "$"
 
 
 	MSGTAILXsize             equ          16
@@ -3142,7 +3329,12 @@ MAIN PROC FAR
 	mainMenuLoop:                 
 	                              clearWholeScreen
 	                              displayMainMenu
-	                              checkMainMenuOptions gameLoop, exitProg
+	                              checkMainMenuOptions gameLoop, exitProg, chatLoop
+	;///////////////////////////////Chat Loop////////////////////////////////////
+	chatLoop:                     
+	                              call                 CHAT
+	; if the user left the chat procedure then, he has send esc --> return to the mainMenuLoop 
+								  jmp mainMenuLoop
 	;///////////////////////////////Game Loop////////////////////////////////////
 	gameLoop:                                                                                                                               	;NOTE:since we are using words, we will use the value '2' to traverse pixels
 	;//////////////////////////////initializations////////////////////////////////////
@@ -3159,7 +3351,7 @@ MAIN PROC FAR
 	                              call                 BulletChecker
 	                              call                 updateBullets
 	;////////////////////////////////////check for user input///////////////////////////
-	                              checkIfInput
+	                              checkIfInput gameLoopRoutine
 	                              jz                   gameLoopRoutine                                                                      	; check if there is any input
 
 	                              inputToMoveShip      key_w, key_s, key_a, key_d, key_f, moveShip1_label
@@ -4464,7 +4656,7 @@ checkForWinner PROC NEAR
 	                              printStringAtLoc     playerName2[2], 18, 0
 	                              printStringAtLoc     congrats, 18, playerName2[1]
 CONINUE_ENDMSG:
-	                              printStringAtLoc     NewEndGame, 1, 0; show ask for a new game message
+	                              printStringAtLoc     NewEndGame, 1, 0                                                                     	; show ask for a new game message
 	ReadNewGame:                  
 	                              waitForInput
 	                              CMP                  ah, key_y
@@ -4473,7 +4665,8 @@ CONINUE_ENDMSG:
 	                              JE                   EndGameCreator
 	                              JMP                  ReadNewGame
 	EndGameCreator:               
-	                              jmp                  exitProg
+	                              call                 NewGameInitializer
+	                              jmp                  mainMenuLoop
 	NewGameCreator:               
 	                              call                 NewGameInitializer
 	EndGameWinner:                

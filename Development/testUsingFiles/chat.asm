@@ -1,3 +1,4 @@
+PUBLIC CHAT
 .MODEL SMALL
 initializaPort MACRO
 	;Set Divisor Latch Access Bit
@@ -169,18 +170,18 @@ checkIfEnter MACRO char, notEnterLabel		; check if the character is enter
 	             JNE notEnterLabel
 	; else
 ENDM
+checkIfBackSpace MACRO char, notBackSpaceLabel		; check if the character is BackSpace
+	                 mov al, char
+	;
+	                 cmp al, 08h
+	                 JNE notBackSpaceLabel
+ENDM
 checkIfESC MACRO char, notESCLabel		; check if the character is escape
 	           mov al, char
 	;
 	           cmp al, 01Bh
 	           JNE notESCLabel
 	; else
-ENDM
-checkIfBackSpace MACRO char, notBackSpaceLabel		; check if the character is BackSpace
-	                 mov al, char
-	;
-	                 cmp al, 08h
-	                 JNE notBackSpaceLabel
 ENDM
 ;
 ; can be converted into a procedure
@@ -238,6 +239,7 @@ port_checkReceive MACRO nothingToReceiveLabel
 ;
 .stack 64
 .data
+	; you only need to edit those numbers to specify the cooardinates you want!
 	BF_upper           equ 3Fh
 	topLeftX_upper     equ 0
 	topLeftY_upper     equ 0
@@ -256,15 +258,13 @@ port_checkReceive MACRO nothingToReceiveLabel
 	row_send           DB  topLeftY_upper
 	col_rec            DB  topLeftX_lower
 	row_rec            DB  topLeftY_lower
+	;
 	currentChar DB ?
 .code
-MAIN PROC FAR
+CHAT PROC FAR
 	                   mov                  AX, @data
 	                   mov                  DS, AX
 	                   clearWholeScreen
-	;   mov                aX,4F02h          	; enter the graphics mode
-	;   mov                bx, 0100h
-	;   int                21h
 	                   initializaPort
 	                   colorScreen          BF_upper, topLeftX_upper, topLeftY_upper, bottomRightX_upper, bottomRightY_upper
 	                   colorScreen          BF_lower, topLeftX_lower, topLeftY_lower, bottomRightX_lower, bottomRightY_lower
@@ -306,7 +306,7 @@ MAIN PROC FAR
 	                   JE                   sendNotBackSpace
 	; if not the first row then, dec the row
 	                   dec                  row_send
-	                   mov                  col_send, topLeftX_upper + 80                                                   	; move it to the end of the last line
+	                   mov                  col_send, topLeftX_upper + bottomRightX_upper +1                                	; move it to the end of the last line
 	checkForRowInSend: 
 	;erase the previous character and update the cursor position
 	backSpaceInSend:   dec                  col_send                                                                        	; start from column zero
@@ -315,8 +315,8 @@ MAIN PROC FAR
 	;////////////////////////////////////
 	sendNotBackSpace:  
 	                   checkIfESC           currentChar, sendNotESC
-						port_sendChar        currentChar; if escape then, send it to the other user before closing the program
-	                   jmp                  exitProg
+	                   port_sendChar        currentChar                                                                     	; if escape then, send it to the other user before closing the program
+	                   jmp                  returnToMainApp
 	sendNotESC:        
 	; do nothing!
 	;////////////////////////////////////
@@ -353,7 +353,7 @@ MAIN PROC FAR
 	                   JE                   recNotBackSpace
 	; if not the first row then, dec the row
 	                   dec                  row_rec
-	                   mov                  col_rec, topLeftX_lower + 80                                                    	; move it to the end of the last line
+	                   mov                  col_rec, topLeftX_lower + bottomRightX_lower +1                                 	; move it to the end of the last line
 	checkForRowInRec:  
 	;erase the previous character and update the cursor position
 	backSpaceInRec:    dec                  col_rec                                                                         	; start from column zero
@@ -362,14 +362,16 @@ MAIN PROC FAR
 	;////////////////////////////////////
 	recNotBackSpace:   
 	                   checkIfESC           currentChar, recNotESC
-	                   jmp                  exitProg
-	recNotESC:        
+	                   jmp                  returnToMainApp
+	recNotESC:         
 	; do nothing!
 	;////////////////////////////////////
 	recIsDone:         getCursorAt_Row__col row_rec, col_rec
-	;//////////////////////////////
+	;////////////////////////////////////
 	                   jmp                  startChat
-	exitProg:          mov                  ah,4ch
-	                   int                  21h
-main endp
-END MAIN
+	;//////////////////////////////
+	returnToMainApp:   
+	                   ;clearWholeScreen
+	                   ret
+CHAT endp
+END CHAT
