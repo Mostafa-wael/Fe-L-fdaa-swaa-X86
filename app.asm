@@ -274,7 +274,7 @@ extra SEGMENT
 	        DB  100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
 	        DB  100, 0, 0, 0, 0, 0, 0, 0
 	
-	CHATModulebtn DB  0, 0, 0, 0, 0, 0, 0, 0, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96
+	chatbtn DB  0, 0, 0, 0, 0, 0, 0, 0, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96
 	        DB  96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96
 	        DB  96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96
 	        DB  96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96
@@ -1199,7 +1199,7 @@ extra SEGMENT
 	;////////////////////////////////
 	; main menu buttons
 	gamebtnOffset            dw           226, 204
-	CHATModulebtnOffset            dw           226, 268
+	chatbtnOffset            dw           226, 268
 	exitbtnOffset            dw           226, 332
 	btnsize                  dw           188, 56
 	;
@@ -1224,7 +1224,7 @@ extra SEGMENT
 	arrowSizeY               equ          32
 	arrowStep                equ          64
 	arrowAtgame              equ          216
-	arrowAtCHATModule              equ          280
+	arrowAtChat              equ          280
 	arrowAtExit              equ          344
 	;////////////////////////////////
 	; getting players' names	                                                                                                                                                                                      	;don't make this 0
@@ -2806,9 +2806,9 @@ MAIN PROC FAR
 	mainMenuLoop:                 
 	                              clearWholeScreen
 	                              displayMainMenu
-	                              checkMainMenuOptions gameLoop, exitProg, CHATModuleLoop
+	                              checkMainMenuOptions gameLoop, exitProg, chatLoop
 	;///////////////////////////////CHATModule Loop////////////////////////////////////
-	CHATModuleLoop:                     
+	chatLoop:                     
 	                              call                 CHATModule
 	; if the user left the CHATModule procedure then, he has send esc --> return to the mainMenuLoop 
 								  jmp mainMenuLoop

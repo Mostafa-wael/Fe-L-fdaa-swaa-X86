@@ -35,7 +35,7 @@ CHATModule PROC FAR
 	                   colorScreen          BF_upper, topLeftX_upper, topLeftY_upper, bottomRightX_upper, bottomRightY_upper
 	                   colorScreen          BF_lower, topLeftX_lower, topLeftY_lower, bottomRightX_lower, bottomRightY_lower
 	;//////////////////////////////
-	startCHATModule:         
+	startChat:         
 	;//////////////////////////////
 	;Check that Transmitter Holding Register is Empty
 	sendData:          port_checkCanSend    getData_midLabel1                                                               	; Not empty, can't send data then, go to get data
@@ -134,7 +134,7 @@ CHATModule PROC FAR
 	;////////////////////////////////////
 	recIsDone:         getCursorAt_Row__col row_rec, col_rec
 	;////////////////////////////////////
-	                   jmp                  startCHATModule
+	                   jmp                  startChat
 	;//////////////////////////////
 	returnToMainApp:   
 	                   ret
