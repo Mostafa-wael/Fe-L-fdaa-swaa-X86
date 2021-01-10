@@ -208,6 +208,16 @@ M_checkForScrollLow ENDP
 inGameChat PROC NEAR
 	                      mov                         AX, @data
 	                      mov                         DS, AX
+	; upper cursor
+	                      mov                         GC_col_send, GC_topLeftX_upper
+	                      mov                         GC_row_send, GC_topLeftY_upper
+	                      setCursorAt_Row_Col         GC_row_send, GC_col_send
+	                     
+	;lower cursor
+	                      mov                         GC_col_rec , GC_topLeftX_lower
+	                      mov                         GC_row_rec , GC_topLeftY_lower
+	                      setCursorAt_Row_Col         GC_row_rec, GC_col_rec
+	; upper box
 	;clearWholeScreen_noGraphics
 	                      initializaPort
 	                      colorScreen                 GC_BF_upper, GC_topLeftX_upper, GC_topLeftY_upper, GC_bottomRightX_upper, GC_bottomRightY_upper
