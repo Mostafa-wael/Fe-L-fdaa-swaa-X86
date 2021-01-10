@@ -1,2 +1,10 @@
-Fatal: Unable to open file 'app.obj'
+
+ Start  Stop   Length Name               Class
+
+ 00000H 01BD0H 01BD1H _TEXT              CODE
+ 01BE0H 100D4H 0E4F5H _DATA              DATA
+ 100E0H 1051FH 00440H STACK              STACK
+ 10520H 1B441H 0AF22H EXTRA              
+
+Program entry point at 0000:0000
 
