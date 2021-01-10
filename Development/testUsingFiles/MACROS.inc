@@ -233,30 +233,7 @@ scrollScreen MACRO BF_color, topLeftX, topLeftY, bottomRightX, bottomRightY
 	             int 10h
     ENDM
 ; can be converted into a procedure
-checkForScrollUpper MACRO row, col
-	                    local               nothing
-	; no need to check for the row!
-	                    cmp                 row, bottomRightY_upper                                                           	; if it is the last row, then, scroll
-	                    JB                  nothing
-	                    scrollScreen        BF_upper, topLeftX_upper, topLeftY_upper, bottomRightX_upper, bottomRightY_upper-1
-	;
-	                    mov                 row_send, bottomRightY_upper -1                                                   	; go to the next line
-	                    mov                 col_send, topLeftX_upper                                                          	; start from column zero
-	                    setCursorAt_Row_Col row_send, col_send                                                                	; set the cursor to the new location
-	nothing:            
-	ENDM
-checkForScrollLower MACRO row, col
-	                    local               nothing
-	; no need to check for the row!
-	                    cmp                 row, bottomRightY_lower                                                           	; if it is the last row, then, scroll
-	                    JB                  nothing
-	                    scrollScreen        BF_lower, topLeftX_lower, topLeftY_lower, bottomRightX_lower, bottomRightY_lower-1
-	;
-	                    mov                 row_rec, bottomRightY_lower -1                                                    	; go to the next line
-	                    mov                 col_rec, topLeftX_lower                                                           	; start from column zero
-	                    setCursorAt_Row_Col row_rec, col_rec                                                                  	; set the cursor to the new location
-	nothing:            
-	ENDM
+
 ;///////////////////////////////
 ;/////////////////////////////// Draw operations
 ;///////////////////////////////
