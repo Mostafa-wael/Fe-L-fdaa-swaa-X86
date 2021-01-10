@@ -2821,7 +2821,6 @@ MAIN PROC FAR
 	;////////////////////////////Interacting with the user////////////////////////////
 	gameLoopRoutine:              
 
-								 call inGameChat
 	                              mov                  dl, 0
 	                              mov                  ISNEWGAME, dl
 	                              CALL                 checkForWinner
@@ -2834,7 +2833,12 @@ MAIN PROC FAR
 	;////////////////////////////////////check for user input///////////////////////////
 	                              checkIfInput         gameLoopRoutine
 	                              jz                   gameLoopRoutine                                                                      	; check if there is any input
-
+	                              cmp                  ah, 3Bh                                                                              	; if the input is F1 then, enter the in game chatting
+	                              JNE                  no_GC                                                                                	; if not f1 then, continue the game
+	                              call                 inGameChat; enter the in-game chat module
+	                              ; after leaving the module, return to the loop again without cleaning the boxes
+								  jmp                  gameLoopRoutine
+	no_GC:                        
 	                              inputToMoveShip      key_w, key_s, key_a, key_d, key_f, moveShip1_label
 	                              inputToMoveShip      key_upArrow, key_downArrow, key_leftArrow, key_rightArrow, key_enter, moveShip2_label
 	                             
