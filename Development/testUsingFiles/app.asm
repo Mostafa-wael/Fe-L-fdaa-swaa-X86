@@ -1,4 +1,6 @@
 EXTRN CHATModule:FAR
+EXTRN inGameChat:FAR
+PUBLIC DrawMsgWithBox
 .model COMPACT ; no restrictions on the data segemnt
 .stack 1024
 ;///////////////////////////////Macros////////////////////////////////////
@@ -1124,6 +1126,7 @@ extra SEGMENT
 ;/////////////////////////////////////////////////////////////////////////
 ;///////////////////////////////Data segment////////////////////////////////////
 .data
+	;////////////////////////////////
 	; initializations
 	REV                      DB           0
 	Ers                      DB           0
@@ -2809,14 +2812,16 @@ MAIN PROC FAR
 	;///////////////////////////////CHATModule Loop////////////////////////////////////
 	chatLoop:                     
 	                              call                 CHATModule
-	; if the user left the CHATModule procedure then, he has send esc --> return to the mainMenuLoop 
-								  jmp mainMenuLoop
+	; if the user left the CHATModule procedure then, he has send esc --> return to the mainMenuLoop
+	                              jmp                  mainMenuLoop
 	;///////////////////////////////Game Loop////////////////////////////////////
 	gameLoop:                                                                                                                               	;NOTE:since we are using words, we will use the value '2' to traverse pixels
 	;//////////////////////////////initializations////////////////////////////////////
 	                              call                 initializeGameLoop
 	;////////////////////////////Interacting with the user////////////////////////////
 	gameLoopRoutine:              
+
+								 call inGameChat
 	                              mov                  dl, 0
 	                              mov                  ISNEWGAME, dl
 	                              CALL                 checkForWinner
@@ -2827,7 +2832,7 @@ MAIN PROC FAR
 	                              call                 BulletChecker
 	                              call                 updateBullets
 	;////////////////////////////////////check for user input///////////////////////////
-	                              checkIfInput gameLoopRoutine
+	                              checkIfInput         gameLoopRoutine
 	                              jz                   gameLoopRoutine                                                                      	; check if there is any input
 
 	                              inputToMoveShip      key_w, key_s, key_a, key_d, key_f, moveShip1_label
@@ -2848,6 +2853,7 @@ MAIN PROC FAR
 MAIN ENDP
 	;/////////////////////////////////////////////////////////////////////////
 	;//////////////////////////////Procedures//////////////////////////////////////////////
+	
 	;/////////////////////////////// initialize the game
 initializeGameLoop PROC near                                                                                                            		; draws the layout and the ships                                                                                           		; draws the game layout, ships, msgBoxes and health bars
 	                              enterGraphicsMode
@@ -2893,6 +2899,7 @@ InitalizeBullets PROC NEAR                                                      
 	                              JNZ                  InitializeBullet
 	                              ret
 InitalizeBullets ENDP
+	;/////////////////////////////// Chat
 	;/////////////////////////////// moving ships
 movShip1 PROC near                                                                                                                      		; responsible for moving ship 1
 
