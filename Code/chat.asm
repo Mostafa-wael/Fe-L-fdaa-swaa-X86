@@ -31,9 +31,9 @@ include MACROS.inc
 	;////////////////////////////// In-Game chat Parameters
 	GC_BF_upper           equ 3Fh
 	GC_topLeftX_upper     equ 14
-	GC_topLeftY_upper     equ 1
+	GC_topLeftY_upper     equ 2
 	GC_bottomRightX_upper equ 65
-	GC_bottomRightY_upper equ 2                	; less than M_topLeftY_lower by 2, to leave an empty line between them
+	GC_bottomRightY_upper equ 3                	; less than M_topLeftY_lower by 2, to leave an empty line between them
 	;
 	GC_BF_lower           equ 6Fh
 	GC_topLeftX_lower     equ 14
@@ -160,6 +160,10 @@ CHATModule PROC FAR
 	                      jmp                         startChat
 	;//////////////////////////////
 	returnToMainApp:      
+	                      mov                         M_col_send , M_topLeftX_upper
+	                      mov                         M_row_send , M_topLeftY_upper
+	                      mov                         M_col_rec  , M_topLeftX_lower
+	                      mov                         M_row_rec  , M_topLeftY_lower
 	                      ret
 CHATModule endp
 M_checkForScrollUpper PROC
@@ -272,6 +276,7 @@ inGameChat PROC NEAR
 	                      port_sendChar               currentChar                                                                                    	; if escape then, send it to the other user before closing the program
 	                      jmp                         GC_returnToMainApp
 	GC_sendNotESC:        
+	  
 	; do nothing!
 	;////////////////////////////////////
 	GC_sendIsDone:        port_sendChar               currentChar
@@ -339,9 +344,30 @@ inGameChat PROC NEAR
 	                      jmp                         GC_startChat
 	;//////////////////////////////
 	GC_returnToMainApp:   
+	                      call                        initializaChat_up_low
 	                      ret
-
 inGameChat ENDP
+initializaChat_up_low PROC
+	; upper cursor
+	                      mov                         GC_col_send, GC_topLeftX_upper
+	                      mov                         GC_row_send, GC_topLeftY_upper
+	                      setCursorAt_Row_Col         GC_row_send, GC_col_send
+	                     
+	;lower cursor
+	                      mov                         GC_col_rec , GC_topLeftX_lower
+	                      mov                         GC_row_rec , GC_topLeftY_lower
+	                      setCursorAt_Row_Col         GC_row_rec, GC_col_rec
+	; upper box
+	                      mov                         bx, 3
+	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
+	                      call                        DrawMsgWithBox
+	; lower box
+	                      mov                         bx, 0
+	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
+	                      call                        DrawMsgWithBox
+						  
+	                      ret
+	                      endp
 
 
 
