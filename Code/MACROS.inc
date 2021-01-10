@@ -18,9 +18,9 @@ getCursorAt_Row__col MACRO row, col		; the screen is 80*25
 	                     mov col, dl
 ENDM
 setCursorAt_Row_Col_rowCol MACRO rowCol  		; sets cursor position in DX and in rowCol
-	                   mov ah,2      	;Move Cursor
-	                   mov dx, rowCol
-	                   int 10h
+	                           mov ah,2      	;Move Cursor
+	                           mov dx, rowCol
+	                           int 10h
 ENDM
 getCursorAt_rowCol MACRO rowCol  		; returns cursor position in DX and in rowCol
 	                   mov ah,3
@@ -159,6 +159,7 @@ getPlayersName_ID MACRO                                                         
 	;//// choose character1
 	                  call             getCharID                                             	;  adds the player ID in BL
 	                  MOV              playerID1, BL
+	;//////////////////////////////;//////////////////////////////;//////////////////////////////;//////////////////////////////
 	;////////////////////////////// get player2 name
 	;///// color the background and draw the logo
 	                  call             DrawRec
@@ -184,9 +185,9 @@ showScreen MACRO screen
 	ENDM
 ;
 clearWholeScreen_noGraphics MACRO    		; clear the whole screen and return back to the graphics mode
-	                 mov ah, 0
-	                 mov al, 3
-	                 INT 10H  	;FOR VIDEO DISPLAY
+	                            mov ah, 0
+	                            mov al, 3
+	                            INT 10H  	;FOR VIDEO DISPLAY
 	ENDM
 clearWholeScreen MACRO                  		; clear the whole screen and return back to the graphics mode
 	                 mov               ah, 0
@@ -220,46 +221,59 @@ colorScreen MACRO BF_color, topLeftX, topLeftY, bottomRightX, bottomRightY
 	            mov ah,6           	; function 6
 	            int 10h
     ENDM
-scrollScreen MACRO BF_color, topLeftX, topLeftY, bottomRightX, bottomRightY
-	             mov al,1           	; (al = 1 scroll by 1 line) (al=0 change color)
-	             mov bh,BF_color    	; normal video attribute
-	             mov cl,topLeftX    	; upper left X
-	             mov ch,topLeftY    	; upper left Y
+scrollScreen_graphics MACRO BF_color, topLeftX, topLeftY, bottomRightX, bottomRightY
+	                      mov al,1           	; (al = 1 scroll by 1 line) (al=0 change color)
+	                      mov bh,BF_color    	; normal video attribute
+	                      mov cl,topLeftX    	; upper left X
+	                      mov ch,topLeftY    	; upper left Y
 
-	             mov dl,bottomRightX	; lower right X
-	             mov dh,bottomRightY	; lower right Y
+	                      mov dl,bottomRightX	; lower right X
+	                      mov dh,bottomRightY	; lower right Y
 
-	             mov ah,6           	; function 6
-	             int 10h
+	                      mov ah,6           	; function 6
+	                      int 10h
     ENDM
-; can be converted into a procedure
-checkForScrollUpper MACRO row, col
-	                    local               nothing
-	; no need to check for the row!
-	                    cmp                 row, bottomRightY_upper                                                           	; if it is the last row, then, scroll
-	                    JB                  nothing
-	                    scrollScreen        BF_upper, topLeftX_upper, topLeftY_upper, bottomRightX_upper, bottomRightY_upper-1
-	;
-	                    mov                 row_send, bottomRightY_upper -1                                                   	; go to the next line
-	                    mov                 col_send, topLeftX_upper                                                          	; start from column zero
-	                    setCursorAt_Row_Col row_send, col_send                                                                	; set the cursor to the new location
-	nothing:            
-	ENDM
-checkForScrollLower MACRO row, col
-	                    local               nothing
-	; no need to check for the row!
-	                    cmp                 row, bottomRightY_lower                                                           	; if it is the last row, then, scroll
-	                    JB                  nothing
-	                    scrollScreen        BF_lower, topLeftX_lower, topLeftY_lower, bottomRightX_lower, bottomRightY_lower-1
-	;
-	                    mov                 row_rec, bottomRightY_lower -1                                                    	; go to the next line
-	                    mov                 col_rec, topLeftX_lower                                                           	; start from column zero
-	                    setCursorAt_Row_Col row_rec, col_rec                                                                  	; set the cursor to the new location
-	nothing:            
-	ENDM
-;///////////////////////////////
-;/////////////////////////////// Draw operations
-;///////////////////////////////
+scrollScreen_text MACRO BF_color, topLeftX, topLeftY, bottomRightX, bottomRightY
+	                  LOCAL Loop1
+
+	                  mov   bh,BF_color
+	                  mov   cl,topLeftX
+	                  mov   ch,topLeftY
+
+	Loop1:            mov   dl,cl
+	                  mov   dh,ch
+	                  int   10h
+
+	                  mov   ah,8
+	                  int   10h
+	                  mov   bl,al
+
+	                  mov   ah,2
+	                  mov   dl,' '
+	                  int   21h
+
+	                  mov   dl,cl
+	                  mov   dh,ch
+	                  dec   dh
+	                  int   10h
+
+	                  mov   dl,bl
+	                  int   21h
+
+	                  inc   cl
+	                  cmp   cl,bottomRightX
+	                  jbe   Loop1
+
+	                  mov   cl,topLeftX
+	                  inc   ch
+	                  cmp   ch,bottomRightY
+	                  jbe   Loop1
+	              ENDM 
+	; can be converted into a procedure
+
+	;///////////////////////////////
+	;/////////////////////////////// Draw operations
+	;///////////////////////////////
 editDrawPrams MACRO shape, sizeX, sizeY, offsetX, offsetY		; modifies the draw parameters before the drawShape proc
 	              MOV AX, sizeX
 	              MOV shapeSizeX, AX
