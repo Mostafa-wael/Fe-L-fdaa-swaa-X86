@@ -1,4 +1,4 @@
-PUBLIC CHAT
+PUBLIC CHATModule
 .MODEL SMALL
 .stack 64
 ;///////////////////////////////Macros////////////////////////////////////
@@ -27,7 +27,7 @@ include MACROS.inc
 	;
 	currentChar DB ?
 .code
-CHAT PROC FAR
+CHATModule PROC FAR
 	                   mov                  AX, @data
 	                   mov                  DS, AX
 	                   clearWholeScreen_noGraphics
@@ -35,7 +35,7 @@ CHAT PROC FAR
 	                   colorScreen          BF_upper, topLeftX_upper, topLeftY_upper, bottomRightX_upper, bottomRightY_upper
 	                   colorScreen          BF_lower, topLeftX_lower, topLeftY_lower, bottomRightX_lower, bottomRightY_lower
 	;//////////////////////////////
-	startChat:         
+	startCHATModule:         
 	;//////////////////////////////
 	;Check that Transmitter Holding Register is Empty
 	sendData:          port_checkCanSend    getData_midLabel1                                                               	; Not empty, can't send data then, go to get data
@@ -134,9 +134,9 @@ CHAT PROC FAR
 	;////////////////////////////////////
 	recIsDone:         getCursorAt_Row__col row_rec, col_rec
 	;////////////////////////////////////
-	                   jmp                  startChat
+	                   jmp                  startCHATModule
 	;//////////////////////////////
 	returnToMainApp:   
 	                   ret
-CHAT endp
-END CHAT
+CHATModule endp
+END CHATModule

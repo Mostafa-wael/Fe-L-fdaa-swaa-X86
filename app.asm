@@ -1,4 +1,4 @@
-EXTRN CHAT:FAR
+EXTRN CHATModule:FAR
 .model COMPACT ; no restrictions on the data segemnt
 .stack 1024
 ;///////////////////////////////Macros////////////////////////////////////
@@ -274,7 +274,7 @@ extra SEGMENT
 	        DB  100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
 	        DB  100, 0, 0, 0, 0, 0, 0, 0
 	
-	chatbtn DB  0, 0, 0, 0, 0, 0, 0, 0, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96
+	CHATModulebtn DB  0, 0, 0, 0, 0, 0, 0, 0, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96
 	        DB  96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96
 	        DB  96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96
 	        DB  96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96
@@ -1199,7 +1199,7 @@ extra SEGMENT
 	;////////////////////////////////
 	; main menu buttons
 	gamebtnOffset            dw           226, 204
-	chatbtnOffset            dw           226, 268
+	CHATModulebtnOffset            dw           226, 268
 	exitbtnOffset            dw           226, 332
 	btnsize                  dw           188, 56
 	;
@@ -1224,7 +1224,7 @@ extra SEGMENT
 	arrowSizeY               equ          32
 	arrowStep                equ          64
 	arrowAtgame              equ          216
-	arrowAtChat              equ          280
+	arrowAtCHATModule              equ          280
 	arrowAtExit              equ          344
 	;////////////////////////////////
 	; getting players' names	                                                                                                                                                                                      	;don't make this 0
@@ -2806,11 +2806,11 @@ MAIN PROC FAR
 	mainMenuLoop:                 
 	                              clearWholeScreen
 	                              displayMainMenu
-	                              checkMainMenuOptions gameLoop, exitProg, chatLoop
-	;///////////////////////////////Chat Loop////////////////////////////////////
-	chatLoop:                     
-	                              call                 CHAT
-	; if the user left the chat procedure then, he has send esc --> return to the mainMenuLoop 
+	                              checkMainMenuOptions gameLoop, exitProg, CHATModuleLoop
+	;///////////////////////////////CHATModule Loop////////////////////////////////////
+	CHATModuleLoop:                     
+	                              call                 CHATModule
+	; if the user left the CHATModule procedure then, he has send esc --> return to the mainMenuLoop 
 								  jmp mainMenuLoop
 	;///////////////////////////////Game Loop////////////////////////////////////
 	gameLoop:                                                                                                                               	;NOTE:since we are using words, we will use the value '2' to traverse pixels
