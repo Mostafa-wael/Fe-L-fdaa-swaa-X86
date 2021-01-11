@@ -7,8 +7,8 @@ EXTRN DrawMsgWithBox:FAR
 include MACROS.inc
 ;///////////////////////////////Macros////////////////////////////////////
 .data
-	; you only need to edit those numbers to specify the cooardinates you want!
 	;////////////////////////////// Chat Module Parameters
+	; you only need to edit those numbers to specify the cooardinates you want!
 	M_BF_upper            equ 3Fh
 	M_topLeftX_upper      equ 0
 	M_topLeftY_upper      equ 0
