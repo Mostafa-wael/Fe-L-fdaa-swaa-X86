@@ -250,12 +250,9 @@ ipx=false
 mount c "C:\Users\Mostafa\.vscode\extensions\xsro.masm-tasm-0.7.0\tools"
 set PATH=;c:\masm;c:\tasm;
 
-mount e "E:\CMP 2\Microprocessors\Project\Fe L fdaa swa\PingPong-in-assembly\Development\testUsingFiles\"
+mount e "E:\CMP 2\Microprocessors\Project\Fe L fdaa swa\PingPong-in-assembly\code\"
 e:
 tasm chat.asm
-#tlink chat.obj
-#chat
-
 tasm app.asm
 tlink app.obj+chat.obj;
 app
