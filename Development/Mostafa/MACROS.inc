@@ -64,6 +64,19 @@ checkIfInput MACRO   noInputLabel		; jumps to this label if there is no input		;
 	             jz  noInputLabel
 	ENDM
 ;
+printInMsgBoxUP MACRO string
+	                mov              bx, 2
+	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
+	                call             DrawMsgWithBox
+	                printStringAtLoc string, 2, 20
+ENDM
+printInMsgBoxLow MACRO string
+	                mov              bx, 1
+	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
+	                call             DrawMsgWithBox
+	                printStringAtLoc string, 4, 20
+ENDM
+;
 printChar macro char 		; prints the char at the current cursor position
 	          mov ah,2
 	          mov dl,char
@@ -160,20 +173,20 @@ getPlayersName_ID MACRO                                                         
 	                  call             getCharID                                             	;  adds the player ID in BL
 	                  MOV              playerID1, BL
 	;//////////////////////////////;//////////////////////////////;//////////////////////////////;//////////////////////////////
-	;////////////////////////////// get player2 name
-	;///// color the background and draw the logo
-	                  call             DrawRec
-	                  editDrawPrams    logo, logoSizeX, logoSizeY, logoOffsetX2, logoOffsetY2
-	                  call             drawShape_extra
-	;///// get the name and validate it
-	                  printStringAtLoc getname2, 2, 28
-	GetPlayer2Name:   
-	                  getString        playername2
-	                  validateName     playername2, maxPlayerSize, validName2, GetPlayer2Name
-	validName2:       
-	;//// choose character2
-	                  call             getCharID                                             	;  adds the player ID in BL
-	                  MOV              playerID2, BL
+	; ;////////////////////////////// get player2 name
+	; ;///// color the background and draw the logo
+	;                   call             DrawRec
+	;                   editDrawPrams    logo, logoSizeX, logoSizeY, logoOffsetX2, logoOffsetY2
+	;                   call             drawShape_extra
+	; ;///// get the name and validate it
+	;                   printStringAtLoc getname2, 2, 28
+	; GetPlayer2Name:
+	;                   getString        playername2
+	;                   validateName     playername2, maxPlayerSize, validName2, GetPlayer2Name
+	; validName2:
+	; ;//// choose character2
+	;                   call             getCharID                                             	;  adds the player ID in BL
+	;                   MOV              playerID2, BL
 	ENDM
 ;///////////////////////////////
 ;/////////////////////////////// related to the screen
@@ -269,11 +282,9 @@ scrollScreen_text MACRO BF_color, topLeftX, topLeftY, bottomRightX, bottomRightY
 	                  cmp   ch,bottomRightY
 	                  jbe   Loop1
 	              ENDM 
-	; can be converted into a procedure
-
-	;///////////////////////////////
-	;/////////////////////////////// Draw operations
-	;///////////////////////////////
+;///////////////////////////////
+;/////////////////////////////// Draw operations
+;///////////////////////////////
 editDrawPrams MACRO shape, sizeX, sizeY, offsetX, offsetY		; modifies the draw parameters before the drawShape proc
 	              MOV AX, sizeX
 	              MOV shapeSizeX, AX
@@ -286,8 +297,10 @@ editDrawPrams MACRO shape, sizeX, sizeY, offsetX, offsetY		; modifies the draw p
 	              MOV AX, offsetX
 	              MOV shapeOffsetX, AX
 ENDM
-inputToMoveShip macro UP, DOWN, LEFT, RIGHT, FIRE_BTN, movShip_label		; pass the keys and the label to jump to
-	                cmp ah,UP
+inputToMoveShip macro char, UP, DOWN, LEFT, RIGHT, FIRE_BTN, movShip_label		; pass the keys and the label to jump to
+	                mov ah, char
+					
+					cmp ah,UP
 	                jz  movShip_label
 
 	                cmp ah,DOWN
@@ -333,9 +346,8 @@ setCurrentChar MACRO playerID
 ;///////////////////////////////
 ;/////////////////////////////// related to the main menu and the choosing character screen
 ;///////////////////////////////
-displayMainMenu MACRO                                                                    		; responsible for drawing the main menu
+displayMainMenu MACRO                                                                    		; without the logo                                                                   		; responsible for drawing the main menu
 	                call          background
-	                mov           Ers, 0
 	                mov           REV, 0
 	                editDrawPrams gamebtn, btnsize, btnsize+2, gamebtnOffset, gamebtnOffset+2
 	                call          drawShape_extra
@@ -344,7 +356,7 @@ displayMainMenu MACRO                                                           
 	                editDrawPrams exitbtn, btnsize, btnsize+2, exitbtnOffset, exitbtnOffset+2
 	                call          drawShape_extra
 	
-	                call          drawLogo
+	;call          drawLogo
 	                call          eraseArrows
 	                add           arrowoffsetY, arrowStep
 	                call          eraseArrows
@@ -362,67 +374,6 @@ displayMainMenu MACRO                                                           
 	                mov           shapeOffsetX, AX
 	                Lea           SI, Ship1
 	                call          drawShape
-	ENDM
-checkMainMenuOptions MACRO gameLoop_label, exitProg_label, chatLoop_label                              		; remember to add the chatLoop_label
-	                     local        CheckInMainMenu, Make_THE_JMP_CLOSER, downArrow_label, enterKey_label
-	CheckInMainMenu:     
-	                     waitForInput
-
-	                     cmp          ah, key_upArrow                                                      	; up arrow
-	                     jne          downArrow_label
-	                     cmp          arrowoffsetY, arrowAtgame
-	                     je           CheckInMainMenu
-	                     call         eraseArrows
-	                     mov          AX, arrowStep
-	                     SUB          arrowoffsetY, AX
-	                     mov          Rev, 1
-	                     Lea          SI, Ship1
-	                     mov          AX, arrowOffsetXRev
-	                     mov          shapeOffsetX, AX
-	                     mov          AX, arrowoffsetY
-	                     mov          shapeOffsetY, AX
-	                     call         drawShape
-	                     Lea          SI, Ship1
-
-	                     mov          Rev, 0
-	                     mov          AX, arrowOffsetX
-	                     mov          shapeOffsetX, AX
-	                     call         drawShape
-	Make_THE_JMP_CLOSER: jmp          CheckInMainMenu
-
-	downArrow_label:     cmp          ah, key_downArrow                                                    	; down arrow
-	                     jne          enterKey_label
-	                     cmp          arrowoffsetY, arrowAtExit
-	                     je           CheckInMainMenu
-	                     call         eraseArrows
-
-	                     mov          AX, arrowStep
-	                     ADD          arrowoffsetY, AX
-	                     mov          Rev, 1
-	                     Lea          SI, Ship1
-	                     mov          AX, arrowOffsetXRev
-	                     mov          shapeOffsetX, AX
-	                     mov          AX, arrowoffsetY
-	                     mov          shapeOffsetY, AX
-	                     call         drawShape
-	                     Lea          SI, Ship1
-	                     mov          Rev, 0
-	                     mov          AX, arrowOffsetX
-	                     mov          shapeOffsetX, AX
-	                     call         drawShape
-
-	                     jmp          Make_THE_JMP_CLOSER
-
-	enterKey_label:      cmp          ah, key_enter                                                        	; enter
-	                     jne          Make_THE_JMP_CLOSER                                                  	; added to prevent other buttons from doing enter's action
-
-	                     cmp          arrowoffsetY, arrowAtChat
-	                     je           chatLoop_label
-	                     cmp          arrowoffsetY, arrowAtgame
-	                     je           gameLoop_label
-	                     cmp          arrowoffsetY, arrowAtExit
-	                     je           exitProg_label
-	                     jmp          Make_THE_JMP_CLOSER
 	ENDM
 ;///////////////////////////////
 ;/////////////////////////////// related to keys

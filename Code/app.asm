@@ -5,6 +5,75 @@ PUBLIC DrawMsgWithBox
 .stack 1024
 ;///////////////////////////////Macros////////////////////////////////////
 include MACROS.inc
+checkMainMenuOptions MACRO                                                                                          		; can be converted into a proc
+	                     local        CheckInMainMenu, Make_THE_JMP_CLOSER, downArrow_label, enterKey_label, nothingLeft
+	CheckInMainMenu:     
+	                     waitForInput
+
+	                     cmp          ah, key_upArrow                                                                   	; up arrow
+	                     jne          downArrow_label
+	                     cmp          arrowoffsetY, arrowAtgame
+	                     je           CheckInMainMenu
+	                     call         eraseArrows
+	                     mov          AX, arrowStep
+	                     SUB          arrowoffsetY, AX
+	                     mov          Rev, 1
+	                     Lea          SI, Ship1
+	                     mov          AX, arrowOffsetXRev
+	                     mov          shapeOffsetX, AX
+	                     mov          AX, arrowoffsetY
+	                     mov          shapeOffsetY, AX
+	                     call         drawShape
+	                     Lea          SI, Ship1
+
+	                     mov          Rev, 0
+	                     mov          AX, arrowOffsetX
+	                     mov          shapeOffsetX, AX
+	                     call         drawShape
+	Make_THE_JMP_CLOSER: jmp          CheckInMainMenu
+
+	downArrow_label:     cmp          ah, key_downArrow                                                                 	; down arrow
+	                     jne          enterKey_label
+	                     cmp          arrowoffsetY, arrowAtExit
+	                     je           CheckInMainMenu
+	                     call         eraseArrows
+
+	                     mov          AX, arrowStep
+	                     ADD          arrowoffsetY, AX
+	                     mov          Rev, 1
+	                     Lea          SI, Ship1
+	                     mov          AX, arrowOffsetXRev
+	                     mov          shapeOffsetX, AX
+	                     mov          AX, arrowoffsetY
+	                     mov          shapeOffsetY, AX
+	                     call         drawShape
+	                     Lea          SI, Ship1
+	                     mov          Rev, 0
+	                     mov          AX, arrowOffsetX
+	                     mov          shapeOffsetX, AX
+	                     call         drawShape
+
+	                     jmp          Make_THE_JMP_CLOSER
+
+	enterKey_label:      cmp          ah, key_enter                                                                     	; enter
+	                     jne          Make_THE_JMP_CLOSER                                                               	; added to prevent other buttons from doing enter's action
+	; check for the selected button
+	                     cmp          arrowoffsetY, arrowAtChat
+	                     mov          currentScreen, 2
+	                     je           nothingLeft
+
+	                     cmp          arrowoffsetY, arrowAtgame
+	                     mov          currentScreen, 1
+	                     je           nothingLeft
+
+	                     cmp          arrowoffsetY, arrowAtExit
+	                     mov          currentScreen, 3
+	                     je           nothingLeft
+						 
+	                     jmp          Make_THE_JMP_CLOSER
+	nothingLeft:         
+	ENDM
+
 ;///////////////////////////////Macros////////////////////////////////////
 ;/////////////////////////////////////////////////////////////////////////
 ;///////////////////////////////Extra segment////////////////////////////////////
@@ -1127,6 +1196,12 @@ extra SEGMENT
 ;///////////////////////////////Data segment////////////////////////////////////
 .data
 	;////////////////////////////////
+	; 0-> main menu, 1-> gameloop, 2-> chat, 3-> exit
+	currentScreen            DB           ?
+	invitedScreen            DB           ?
+	isSend                   DB           0
+	isRec                    DB           0
+	;////////////////////////////////
 	; initializations
 	REV                      DB           0
 	Ers                      DB           0
@@ -1230,11 +1305,17 @@ extra SEGMENT
 	arrowAtExit              equ          344
 	;////////////////////////////////
 	; getting players' names	                                                                                                                                                                                      	;don't make this 0
-	getName1                 DB           "  Player1 Name: $"
-	getName2                 DB           "  Player2 Name: $"
+	getName1                 DB           "  Player Name: $"
+	;getName2                 DB           "  Player2 Name: $"
 	;
 	enterValidName           DB           "  Please, enter a valid name: $"
 	enterShorterName         DB           "  Please, enter a shorter name: $"
+	;
+	sentGameInvitation       DB           "  You have sent a Game invitation! $"
+	sentChatInvitation       DB           "  You have sent a chat invitation! $"
+	recGameInvitation        DB           "  You have recieved a Game invitation! $"
+	recChatInvitation        DB           "  You have recieved a chat invitation! $"
+	declinedReq              DB           "  Oops ... Your invitation was declined $"
 	;
 	playerName1              DB           10,?,10 dup("$")
 	playerName2              DB           10,?,10 dup("$")
@@ -2810,8 +2891,63 @@ MAIN PROC FAR
 	;///////////////////////////////Main Menu////////////////////////////////////
 	mainMenuLoop:                 
 	                              clearWholeScreen
-	                              displayMainMenu
-	                              checkMainMenuOptions gameLoop, exitProg, chatLoop
+	                              displayMainMenu                                                                                           	; doesn't draw the logo
+	                              call                 drawLogo
+	                              checkMainMenuOptions
+
+	                              clearWholeScreen
+	                              displayMainMenu                                                                                           	; doesn't draw the logo
+
+	                              cmp                  currentScreen, 1
+	                              JNE                  mm_notGame
+	                              printInMsgBoxUP     sentGameInvitation
+	                              jmp                  mm_sendResponse
+
+	mm_notGame:                   cmp                  currentScreen, 2
+	                              JNE                  mm_notChat
+	                              printInMsgBoxUP     sentChatInvitation
+	                              jmp                  mm_sendResponse
+
+	                            ;   cmp                  currentScreen, 3
+	                            ;   JNE                  mm_notEnd
+	mm_notChat:                                                                                                                             	; caused a jump error  ;je                   exitProg
+	                              clearWholeScreen
+	                              showScreen           byebye
+	                              returnTODos
+	;mm_notEnd:                    
+	
+	mm_sendResponse:              port_checkCanSend    mm_waitForResponse
+	                              port_sendChar        currentScreen
+	                              mov                  isSend, 1
+
+	mm_waitForResponse:           port_checkReceive    mm_sendResponse
+	                              port_getChar         invitedScreen
+	                              mov                  isRec, 1
+									;
+	                              cmp                  isSend, 1
+	                              JNE                  mm_sendResponse
+	                              mov                  isSend, 0
+	                              cmp                  isRec, 1
+	                              JNE                  mm_waitForResponse
+	                              mov                  isRec, 0
+								  ;
+	                              mov                  al, currentScreen
+	                              cmp                  al, invitedScreen
+	                              JE                   mm_goToScreen
+	                              printInMsgBoxLow     declinedReq
+	                              delay                10000
+								  mov currentScreen, 0
+								  mov invitedScreen, 0
+	                              jmp                  mainMenuLoop
+	mm_goToScreen:                cmp                  currentScreen, 2
+	                              je                   chatLoop
+	                              cmp                  currentScreen, 1
+	                              je                   gameLoop
+	                              cmp                  currentScreen, 3
+	                              clearWholeScreen
+	                              showScreen           byebye
+	                              returnTODos
+	;jmp                  mainMenuLoop
 	;///////////////////////////////CHATModule Loop////////////////////////////////////
 	chatLoop:                     
 	                              call                 CHATModule
@@ -2824,7 +2960,6 @@ MAIN PROC FAR
 	;////////////////////////////Interacting with the user////////////////////////////
 	gameLoopRoutine:              
 
-								 call inGameChat
 	                              mov                  dl, 0
 	                              mov                  ISNEWGAME, dl
 	                              CALL                 checkForWinner
@@ -2837,7 +2972,12 @@ MAIN PROC FAR
 	;////////////////////////////////////check for user input///////////////////////////
 	                              checkIfInput         gameLoopRoutine
 	                              jz                   gameLoopRoutine                                                                      	; check if there is any input
-
+	                              cmp                  ah, 3Bh                                                                              	; if the input is F1 then, enter the in game chatting
+	                              JNE                  no_GC                                                                                	; if not f1 then, continue the game
+	                              call                 inGameChat                                                                           	; enter the in-game chat module
+	; after leaving the module, return to the loop again without cleaning the boxes
+	                              jmp                  gameLoopRoutine
+	no_GC:                        
 	                              inputToMoveShip      key_w, key_s, key_a, key_d, key_f, moveShip1_label
 	                              inputToMoveShip      key_upArrow, key_downArrow, key_leftArrow, key_rightArrow, key_enter, moveShip2_label
 	                             
