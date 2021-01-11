@@ -2867,9 +2867,8 @@ extra SEGMENT
 	                         DB           0, 27, 27, 0, 0, 27, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 27, 27, 0, 0, 27, 27, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 27, 27, 0, 0, 0, 0
 	                         DB           0, 0, 27, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 27, 27, 0, 0, 0, 0, 0, 0, 27, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	                         DB           0, 0, 27, 0, 0, 0, 27, 27, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0
-							
-			
 
+			LevelSelect		DB 0
 
 	;///////////////////////////////Data segment////////////////////////////////////
 	;/////////////////////////////////////////////////////////////////////////
@@ -2996,53 +2995,10 @@ MAIN PROC FAR
 MAIN ENDP
 	;/////////////////////////////////////////////////////////////////////////
 	;//////////////////////////////Procedures//////////////////////////////////////////////
-	
-	;/////////////////////////////// initialize the game
-initializeGameLoop PROC near                                                                                                            		; draws the layout and the ships                                                                                           		; draws the game layout, ships, msgBoxes and health bars
-	                              enterGraphicsMode
-	                              call                 DrawLayout
-	                              call                 DrawHealthbar
-	                              call                 DrawHealthbar2
-	                              call                 drawShip1
-	                              call                 drawShip2
-	                              mov                  bx, 0
-	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
-	                              call                 DrawMsgWithBox
-	                              mov                  bx, 3
-	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
-	                              call                 DrawMsgWithBox
-	;this subroutine is responsible for drawing the ship using its cooardinates
-	                              ret
-	                              ENDP
-NewGameInitializer PROC near                                                                                                            		; initializes bullets, healthe and ship offsets
-	                              call                 InitalizeBullets
-	                              mov                  dl, 1
-	                              mov                  ISNEWGAME, dl
-	                              mov                  dl, 200
-	                              mov                  HEALTH1, dl
-	                              mov                  HEALTH2, dl
-	                              mov                  dx, 30
-	                              mov                  shipOffsetX1, dx
-	                              mov                  dx, 219
-	                              mov                  shipOffsetY1, dx
-	                              mov                  shipOffsetY2, dx
-	                              mov                  dx, 578
-	                              mov                  shipOffsetX2, dx
-	                              ret
 
-NewGameInitializer ENDP
-InitalizeBullets PROC NEAR                                                                                                              		; initializes the bullets
 
-	                              mov                  bx, offset BulletDirection
-	                              mov                  SI, 100
-	InitializeBullet:             
-	                              mov                  dx, 0
-	                              mov                  bx[SI], dx
-	                              dec                  SI
-	                              JNZ                  InitializeBullet
-	                              ret
-InitalizeBullets ENDP
-	;/////////////////////////////// Chat
+
+
 	;/////////////////////////////// moving ships
 movShip1 PROC near                                                                                                                      		; responsible for moving ship 1
 
@@ -3068,17 +3024,18 @@ movShip1 PROC near                                                              
 	                              jz                   movShip1_fire
 
 
-	movShip1_readKey:             
-	                              call                 drawShip1
+	movShip1_readKey:         
+							call movShip1_LevelMode    
+	                              ;call                 drawShip1
 
-	                              waitForInput
+	                              ;waitForInput
 
-	                              mov                  cx, 0                                                                                	; initialize cx to use it to iterate over the shipSize
+	                             ; mov                  cx, 0                                                                                	; initialize cx to use it to iterate over the shipSize
 	                              jmp                  gameLoopRoutine
 
 
 	movShip1_readFire:            
-
+								;call movShip1_LevelMode_fire
 	                              waitForInput
 
 	                              mov                  cx, 0                                                                                	; initialize cx to use it to iterate over the Bullet Size
@@ -3188,6 +3145,7 @@ movShip1 PROC near                                                              
 	                              ret
 
 movShip1 ENDP
+
 movShip2 PROC near                                                                                                                      		; responsible for moving ship 2
 	                              mov                  cx, 0
 	                              cmp                  ah, key_enter
@@ -3212,11 +3170,12 @@ movShip2 PROC near                                                              
 
 
 	movShip2_readKey:             
-	                              call                 drawShip2
+								call movShip2_LevelMode
+	                              ;call                 drawShip2
 
-	                              waitForInput
+	                              ;waitForInput
 
-	                              mov                  cx, 0                                                                                	; initialize cx to use it to iterate over the shipSize
+	                              ;mov                  cx, 0                                                                                	; initialize cx to use it to iterate over the shipSize
 	                              jmp                  gameLoopRoutine
 	;///////////////////////////////////////////////////////////////////////////////////////
 	movShip2_moveUp:              
@@ -3321,6 +3280,128 @@ movShip2 PROC near                                                              
 	                              ret
 movShip2 ENDP
 	;
+	
+	;/////////////////////////////// initialize the game
+initializeGameLoop PROC near                                                                                                            		; draws the layout and the ships                                                                                           		; draws the game layout, ships, msgBoxes and health bars
+	                              enterGraphicsMode
+	                              call                 DrawLayout
+	                              call                 DrawHealthbar
+	                              call                 DrawHealthbar2
+							CMP LevelSelect, 1
+							JE initializeGameLoop_withoutShip1
+	                              call                 drawShip1
+							initializeGameLoop_withoutShip1:
+							CMP LevelSelect, 2
+							JE initializeGameLoop_withoutShip2	  
+	                              call                 drawShip2
+						initializeGameLoop_withoutShip2:
+	                              mov                  bx, 0
+	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
+	                              call                 DrawMsgWithBox
+	                              mov                  bx, 3
+	; BX: 0 down character1, 1 down character2, 2 up character1, 3 up character2
+	                              call                 DrawMsgWithBox
+	;this subroutine is responsible for drawing the ship using its cooardinates
+	                              ret
+	                              ENDP
+NewGameInitializer PROC near                                                                                                            		; initializes bullets, healthe and ship offsets
+	                              CMP Health1, 0
+								  JNE NewGameInitializer_NotPlayer2
+								  mov dl, 2
+								  mov LevelSelect, dl
+								  JMP NewGameInitializer_Player2
+								  
+						NewGameInitializer_NotPlayer2:
+									mov dl, 1
+									mov LevelSelect, dl	
+
+
+						NewGameInitializer_Player2:	  
+								  call                 InitalizeBullets
+	                              mov                  dl, 1
+	                              mov                  ISNEWGAME, dl
+	                              mov                  dl, 200
+	                              mov                  HEALTH1, dl
+	                              mov                  HEALTH2, dl
+	                              mov                  dx, 30
+	                              mov                  shipOffsetX1, dx
+	                              mov                  dx, 219
+	                              mov                  shipOffsetY1, dx
+	                              mov                  shipOffsetY2, dx
+	                              mov                  dx, 578
+	                              mov                  shipOffsetX2, dx
+	                              ret
+
+NewGameInitializer ENDP
+InitalizeBullets PROC NEAR                                                                                                              		; initializes the bullets
+
+	                              mov                  bx, offset BulletDirection
+	                              mov                  SI, 100
+	InitializeBullet:             
+	                              mov                  dx, 0
+	                              mov                  bx[SI], dx
+	                              dec                  SI
+	                              JNZ                  InitializeBullet
+	                              ret
+InitalizeBullets ENDP
+	;/////////////////////////////// Chat
+
+movShip1_LevelMode PROC near
+				CMP LevelSelect, 1
+				JE movShip1_LevelMode_without_draw
+	                              call                 drawShip1
+				
+				movShip1_LevelMode_without_draw:
+	                              waitForInput
+
+	                              mov                  cx, 0    
+
+ret
+movShip1_LevelMode endp
+
+
+movShip2_LevelMode PROC near
+				CMP LevelSelect, 2
+				JE movShip2_LevelMode_without_draw
+	                              call                 drawShip2
+				
+				movShip2_LevelMode_without_draw:
+	                              waitForInput
+
+	                              mov                  cx, 0    
+
+ret
+movShip2_LevelMode endp
+
+
+movShip1_LevelMode_fire PROC near
+								CMP LevelSelect, 1
+								JNE movShip1_LevelMode_fire_withoutdraw
+								call drawShip1
+								delay 1000
+								call eraseShip1
+							movShip1_LevelMode_fire_withoutdraw:
+	                              waitForInput
+
+	                              mov                  cx, 0 
+
+ret
+movShip1_LevelMode_fire endp
+
+movShip2_LevelMode_fire PROC near
+								CMP LevelSelect, 2
+								JNE movShip2_LevelMode_fire_withoutdraw
+								call drawShip2
+								delay 1000
+								call eraseShip2
+							movShip2_LevelMode_fire_withoutdraw:
+	                              waitForInput
+
+	                              mov                  cx, 0 
+
+ret
+movShip2_LevelMode_fire endp
+
 drawShip1 PROC	near                                                                                                                     		; drawing ship1
 	; initialize containers
 	                              mov                  Ers, 0
