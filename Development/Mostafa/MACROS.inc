@@ -297,8 +297,10 @@ editDrawPrams MACRO shape, sizeX, sizeY, offsetX, offsetY		; modifies the draw p
 	              MOV AX, offsetX
 	              MOV shapeOffsetX, AX
 ENDM
-inputToMoveShip macro UP, DOWN, LEFT, RIGHT, FIRE_BTN, movShip_label		; pass the keys and the label to jump to
-	                cmp ah,UP
+inputToMoveShip macro char, UP, DOWN, LEFT, RIGHT, FIRE_BTN, movShip_label		; pass the keys and the label to jump to
+	                mov ah, char
+					
+					cmp ah,UP
 	                jz  movShip_label
 
 	                cmp ah,DOWN

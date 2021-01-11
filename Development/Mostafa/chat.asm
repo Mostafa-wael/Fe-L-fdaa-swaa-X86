@@ -223,7 +223,6 @@ inGameChat PROC NEAR
 	                      colorScreen                 GC_BF_upper, GC_topLeftX_upper, GC_topLeftY_upper, GC_bottomRightX_upper, GC_bottomRightY_upper
 	                      colorScreen                 GC_BF_lower, GC_topLeftX_lower, GC_topLeftY_lower, GC_bottomRightX_lower, GC_bottomRightY_lower
 
-	                      initializaPort
 	;//////////////////////////////
 	GC_startChat:         
 	;//////////////////////////////
