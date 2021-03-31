@@ -3,7 +3,7 @@
     <img width="40%" src="Art/logo2.png"> 
 </p>
 
-#### A 2 players Assembly X86 space war game
+#### A 2 players Assembly x86 space war game
 In the game, every player can choose from five different characters. every character has its own spacecraft and special weapon  
 ## Characters
 <img width="100%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/Art/Fenn.png">|<img width="100%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/Art/Mikasa.png">|<img width="100%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/Art/Hisoka2.png">|<img width="100%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/Art/Asta.png">|<img width="100%" src="https://github.com/Mostafa-wael/Fe-L-fdaa-swa/blob/main/Art/Mereum.png">
